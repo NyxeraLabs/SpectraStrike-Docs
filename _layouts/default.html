@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{ page.title }} | {{ site.title }}</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', () => { if (window.mermaid) mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' }); });</script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="{{ '/assets/img/nyxera-logo.png' | relative_url }}" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="{{ '/assets/img/product-logo.png' | relative_url }}" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Static docs and whitepaper portal</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="{{ '/' | relative_url }}">Home</a>
+      <a href="{{ '/docs/end-user/' | relative_url }}">End User</a>
+      <a href="{{ '/docs/sdk/' | relative_url }}">SDK</a>
+      <a href="{{ '/docs/integration/' | relative_url }}">Integration</a>
+      <a href="{{ '/docs/architecture/' | relative_url }}">Architecture</a>
+      <a href="{{ '/docs/whitepaper/' | relative_url }}">Whitepaper</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    {{ content }}
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
