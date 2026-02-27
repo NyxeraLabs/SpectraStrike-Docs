@@ -1,4 +1,4 @@
-name: Deploy static docs to GitHub Pages
+name: Deploy Docs to Cloudflare Pages
 
 on:
   push:
@@ -6,10 +6,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: "gh-pages"
+  group: "cloudflare-pages"
   cancel-in-progress: true
 
 jobs:
@@ -25,9 +25,11 @@ jobs:
           source: ./
           destination: ./_site
 
-      - name: Deploy to gh-pages branch
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site
-          publish_branch: gh-pages
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          projectName: ${{ secrets.CF_PAGES_PROJECT }}
+          directory: ./_site
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
