@@ -1,8 +1,12 @@
 ---
 layout: default
-title: End User
+title: Operator Guide
 ---
 
-# End User Documentation
+# Operator Guide
 
-- [END_USER_GUIDE.md](./END_USER_GUIDE.html)
+Core usage documentation for authorized security operators.
+
+- [End User Guide](./END_USER_GUIDE.html)
+- [Manual: User Guide](../library/manuals/USER_GUIDE.html)
+- [Manual: QA Runbook](../library/manuals/QA_RUNBOOK.html)

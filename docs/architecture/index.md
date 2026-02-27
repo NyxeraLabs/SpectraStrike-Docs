@@ -3,8 +3,11 @@ layout: default
 title: Architecture
 ---
 
-# Architecture Documentation
+# Architecture and Security
 
-- [ARCHITECTURE_SECURITY_OVERVIEW.md](./ARCHITECTURE_SECURITY_OVERVIEW.html)
-- [SECURITY_POLICY.md](./SECURITY_POLICY.html)
-- [ROADMAP.md](./ROADMAP.html)
+System architecture, trust controls, and roadmap references.
+
+- [Architecture Security Overview](./ARCHITECTURE_SECURITY_OVERVIEW.html)
+- [Security Policy](./SECURITY_POLICY.html)
+- [Roadmap](./ROADMAP.html)
+- [Threat Model](../library/THREAT_MODEL.html)

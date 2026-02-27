@@ -3,6 +3,7 @@ layout: default
 title: Whitepaper
 ---
 
-# Whitepaper
+# Whitepaper and Strategic Materials
 
-- [WHITEPAPER.md](./WHITEPAPER.html)
+- [SpectraStrike Whitepaper](./WHITEPAPER.html)
+- [Whitepaper Compliance Notes](../library/manuals/WHITEPAPER_COMPLIANCE.html)

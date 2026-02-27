@@ -5,17 +5,17 @@ title: Home
 
 # SpectraStrike Documentation Portal
 
-This static portal publishes the official SpectraStrike technical documentation set for operators, security engineers, integration teams, and enterprise stakeholders.
+This static documentation portal provides production-oriented guidance for offensive validation operations, attested telemetry workflows, and federated trust integration with VectorVue.
 
-## Documentation Tracks
+## Recommended Reading Paths
 
-- [End User]({{ '/docs/end-user/' | relative_url }})
-- [SDK]({{ '/docs/sdk/' | relative_url }})
-- [Integration]({{ '/docs/integration/' | relative_url }})
-- [Architecture]({{ '/docs/architecture/' | relative_url }})
-- [Whitepaper]({{ '/docs/whitepaper/' | relative_url }})
-- [Full Documentation Library]({{ '/docs/library/' | relative_url }})
+1. [Operator Guide]({{ '/docs/end-user/' | relative_url }})
+2. [SDK & Spec Development]({{ '/docs/sdk/' | relative_url }})
+3. [Secure Integration Patterns]({{ '/docs/integration/' | relative_url }})
+4. [Architecture & Security Model]({{ '/docs/architecture/' | relative_url }})
+5. [Whitepaper]({{ '/docs/whitepaper/' | relative_url }})
+6. [Complete Documentation Library]({{ '/docs/library/' | relative_url }})
 
-## Coverage
+## Scope
 
-The Full Library includes all available source docs from the SpectraStrike repository, including manuals, compliance mappings, threat model material, architecture notes, sprint logs, and integration references.
+This site includes all published docs from the SpectraStrike repository, with preserved Markdown and Mermaid rendering for technical diagrams.
