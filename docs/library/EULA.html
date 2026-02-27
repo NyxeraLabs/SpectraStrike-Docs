@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EULA | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <h1 id="end-user-license-agreement-eula">End-User License Agreement (EULA)</h1>
+<p>SpectraStrike – Nyxera Labs</p>
+
+<p>Effective Date: 2026</p>
+
+<p>This End-User License Agreement (“Agreement”) is a legal agreement between you (“User”) and Nyxera Labs (“Company”) governing the use of SpectraStrike (“Software”).</p>
+
+<h2 id="1-license-grant">1. License Grant</h2>
+
+<p>Subject to compliance with this Agreement, Nyxera Labs grants you:</p>
+
+<ul>
+  <li>A limited</li>
+  <li>Non-exclusive</li>
+  <li>Non-transferable</li>
+  <li>Revocable</li>
+</ul>
+
+<p>license to use SpectraStrike under the Business Source License (BSL 1.1), transitioning to Apache-2.0 in accordance with the project license terms.</p>
+
+<h2 id="2-restrictions">2. Restrictions</h2>
+
+<p>You may NOT:</p>
+
+<ul>
+  <li>Use the Software for unlawful purposes</li>
+  <li>Remove license headers</li>
+  <li>Circumvent technical safeguards</li>
+  <li>Resell the Software without authorization</li>
+  <li>Offer it as a competing managed service without agreement</li>
+</ul>
+
+<h2 id="3-ownership">3. Ownership</h2>
+
+<p>All intellectual property rights remain the property of Nyxera Labs.</p>
+
+<p>The Software contains proprietary detection methodologies, orchestration logic, and risk correlation techniques.</p>
+
+<h2 id="4-compliance-responsibility">4. Compliance Responsibility</h2>
+
+<p>User is fully responsible for:</p>
+
+<ul>
+  <li>Obtaining written authorization before adversary simulation</li>
+  <li>Ensuring lawful deployment</li>
+  <li>Regulatory compliance</li>
+  <li>Data protection compliance</li>
+</ul>
+
+<p>Nyxera Labs is not responsible for misuse.</p>
+
+<h2 id="5-no-warranty">5. No Warranty</h2>
+
+<p>The Software is provided “AS IS”.</p>
+
+<p>No guarantees are made regarding:</p>
+
+<ul>
+  <li>Detection accuracy</li>
+  <li>Availability</li>
+  <li>Fitness for a specific compliance framework</li>
+  <li>Immunity from exploitation</li>
+</ul>
+
+<h2 id="6-limitation-of-liability">6. Limitation of Liability</h2>
+
+<p>To the maximum extent permitted by law, Nyxera Labs shall not be liable for:</p>
+
+<ul>
+  <li>Direct damages</li>
+  <li>Indirect damages</li>
+  <li>Business interruption</li>
+  <li>Data loss</li>
+  <li>Regulatory penalties</li>
+</ul>
+
+<h2 id="7-termination">7. Termination</h2>
+
+<p>Violation of this Agreement results in immediate termination of license rights.</p>
+
+<h2 id="8-governing-law">8. Governing Law</h2>
+
+<p>This Agreement shall be governed by the jurisdiction determined by Nyxera Labs’ principal place of operation.</p>
+
+<hr />
+
+<p>By installing or using SpectraStrike, you acknowledge and agree to this Agreement.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

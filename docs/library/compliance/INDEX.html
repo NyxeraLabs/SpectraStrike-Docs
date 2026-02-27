@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>INDEX | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-32-compliance-package-index">Sprint 32 Compliance Package Index</h1>
+
+<p>This package provides implementation-aligned control mappings for Phase 9 Sprint 32.</p>
+
+<h2 id="included-artifacts">Included Artifacts</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docs/compliance/SOC2_CONTROL_MAPPING.md</code>
+    <ul>
+      <li>SOC 2 Trust Services Criteria mapping to SpectraStrike controls and evidence.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docs/compliance/ISO27001_ANNEXA_MAPPING.md</code>
+    <ul>
+      <li>ISO/IEC 27001 Annex A control mapping with implementation references.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docs/compliance/NIST_800_53_MAPPING.md</code>
+    <ul>
+      <li>NIST SP 800-53 Rev. 5 control mapping for platform security and operations.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docs/compliance/MITRE_ATTACK_TELEMETRY_MAPPING.md</code>
+    <ul>
+      <li>Telemetry and finding normalization mapped to ATT&amp;CK tactics/techniques.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docs/compliance/SECURE_SDLC_PACKAGE.md</code>
+    <ul>
+      <li>Secure SDLC package defining process controls, evidence, and release gates.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="scope-boundary">Scope Boundary</h2>
+
+<ul>
+  <li>These mappings are implementation support artifacts and not a certification claim.</li>
+  <li>Tenant controls, legal scope authorization, and deployment hardening remain customer responsibilities.</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

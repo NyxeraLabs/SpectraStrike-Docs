@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MITRE ATTACK TELEMETRY MAPPING | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="mitre-attck-telemetry-mapping-sprint-32">MITRE ATT&amp;CK Telemetry Mapping (Sprint 32)</h1>
+
+<p>This mapping ties SpectraStrike telemetry normalization and federation payloads to ATT&amp;CK-aligned attributes used by downstream analytics.</p>
+
+<h2 id="telemetry-contract-alignment">Telemetry Contract Alignment</h2>
+
+<ul>
+  <li>Event payloads are normalized with deterministic schema fields (<code class="language-plaintext highlighter-rouge">telemetry.ml.v1</code> path).</li>
+  <li>Federation bridge sets ATT&amp;CK fields from event attributes:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">mitre_techniques</code> (default fallback <code class="language-plaintext highlighter-rouge">T1595</code>)</li>
+      <li><code class="language-plaintext highlighter-rouge">mitre_tactics</code> (default fallback <code class="language-plaintext highlighter-rouge">TA0043</code>)</li>
+    </ul>
+  </li>
+  <li>Federation bridge also injects compliance control tags into outbound payload attributes:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">soc2_controls</code></li>
+      <li><code class="language-plaintext highlighter-rouge">iso27001_annex_a_controls</code></li>
+      <li><code class="language-plaintext highlighter-rouge">nist_800_53_controls</code></li>
+    </ul>
+  </li>
+  <li>Event/finding payloads preserve tenant and execution fingerprint context for traceable ATT&amp;CK analytics.</li>
+</ul>
+
+<p>References:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/telemetry_ingestion.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">src/pkg/integration/vectorvue/rabbitmq_bridge.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">src/pkg/telemetry/sdk.py</code></li>
+</ul>
+
+<h2 id="toolevent-to-attck-mapping-baseline">Tool/Event to ATT&amp;CK Mapping Baseline</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Tool/Event Pattern</th>
+      <th>ATT&amp;CK Technique(s)</th>
+      <th>ATT&amp;CK Tactic(s)</th>
+      <th>Mapping Source</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">nmap_scan_completed</code> / network probing</td>
+      <td>T1595 Active Scanning</td>
+      <td>TA0043 Reconnaissance</td>
+      <td>Event defaults and wrapper attributes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">metasploit_exploit_completed</code></td>
+      <td>T1059 Command and Scripting Interpreter (context dependent)</td>
+      <td>TA0002 Execution</td>
+      <td>Wrapper event metadata + finding normalization</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sliver_command_completed</code></td>
+      <td>T1105 Ingress Tool Transfer / operator command channel context</td>
+      <td>TA0011 Command and Control</td>
+      <td>Sliver wrapper telemetry attributes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">mythic_task_completed</code></td>
+      <td>T1059 Command and Scripting Interpreter (task dependent)</td>
+      <td>TA0002 Execution</td>
+      <td>Mythic wrapper task telemetry attributes</td>
+    </tr>
+    <tr>
+      <td>Generic <code class="language-plaintext highlighter-rouge">PROCESS_ANOMALY</code> federation event</td>
+      <td>technique/tactic passed in attributes or fallback</td>
+      <td>attribute-driven</td>
+      <td><code class="language-plaintext highlighter-rouge">vectorvue/rabbitmq_bridge.py</code> normalization</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="quality-and-integrity-constraints">Quality and Integrity Constraints</h2>
+
+<ul>
+  <li>Tenant boundary: telemetry/finding payloads remain tenant-scoped.</li>
+  <li>Execution integrity: <code class="language-plaintext highlighter-rouge">execution_fingerprint</code> is carried for deterministic cross-system correlation.</li>
+  <li>Signed channel requirement: federation payloads are signed and delivered over mTLS.</li>
+  <li>Replay resistance: nonce and timestamp windows enforced on feedback ingestion path.</li>
+</ul>
+
+<h2 id="scope-notes">Scope Notes</h2>
+
+<ul>
+  <li>ATT&amp;CK mapping is a telemetry enrichment baseline for analytics and compliance evidence.</li>
+  <li>Operational teams can override with richer per-technique tags in tool-specific output attributes.</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

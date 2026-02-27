@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>USER GUIDE | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="spectrastrike-user-guide">SpectraStrike User Guide</h1>
+<p><img src="../../ui/web/assets/images/SprectraStrike_Logo.png" alt="SpectraStrike Logo" /></p>
+
+<h2 id="1-audience-and-purpose">1. Audience and Purpose</h2>
+
+<p>This guide is for security operators and platform engineers running SpectraStrike in a local or on-prem Docker environment.</p>
+
+<p>Goals:</p>
+<ul>
+  <li>deploy the runtime safely</li>
+  <li>operate integrations against remote operator infrastructure</li>
+  <li>execute repeatable security and QA controls</li>
+</ul>
+
+<h2 id="2-runtime-topology">2. Runtime Topology</h2>
+
+<p>Deployed services:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">app</code> (orchestrator runtime)</li>
+  <li><code class="language-plaintext highlighter-rouge">nginx</code> (HTTPS edge, optional mTLS)</li>
+  <li><code class="language-plaintext highlighter-rouge">ui-web</code> (Next.js App Router + Tailwind, routed at <code class="language-plaintext highlighter-rouge">/ui</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">rabbitmq</code> (telemetry broker, TLS-only listener)</li>
+  <li><code class="language-plaintext highlighter-rouge">postgres</code> (state storage, TLS + client-cert verification)</li>
+  <li><code class="language-plaintext highlighter-rouge">redis</code> (cache/buffer, TLS + client-cert verification)</li>
+  <li><code class="language-plaintext highlighter-rouge">loki</code> + <code class="language-plaintext highlighter-rouge">vector</code> (centralized local log pipeline)</li>
+</ul>
+
+<p>Optional tool profile:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">nmap-tool</code></li>
+  <li><code class="language-plaintext highlighter-rouge">metasploit-tool</code></li>
+</ul>
+
+<h2 id="3-initial-setup">3. Initial Setup</h2>
+
+<h3 id="31-prepare-environment">3.1 Prepare environment</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp</span> .env.example .env
+python <span class="nt">-m</span> venv .venv
+<span class="nb">source</span> .venv/bin/activate
+pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
+</code></pre></div></div>
+
+<h3 id="32-generate-certificates">3.2 Generate certificates</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make tls-dev-cert
+make pki-internal
+</code></pre></div></div>
+
+<p>Generated artifacts:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docker/nginx/certs/tls.crt</code>, <code class="language-plaintext highlighter-rouge">docker/nginx/certs/tls.key</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docker/pki/ca.crt</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docker/pki/rabbitmq/server.crt</code>, <code class="language-plaintext highlighter-rouge">docker/pki/rabbitmq/server.key</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docker/pki/postgres/server.crt</code>, <code class="language-plaintext highlighter-rouge">docker/pki/postgres/server.key</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docker/pki/redis/server.crt</code>, <code class="language-plaintext highlighter-rouge">docker/pki/redis/server.key</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docker/pki/app/client.crt</code>, <code class="language-plaintext highlighter-rouge">docker/pki/app/client.key</code></li>
+</ul>
+
+<h3 id="33-configure-secrets">3.3 Configure secrets</h3>
+
+<p>Set strong credentials in:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docker/secrets/rabbitmq_password.txt</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docker/secrets/postgres_password.txt</code></li>
+</ul>
+
+<h2 id="4-start-and-operate-the-stack">4. Start and Operate the Stack</h2>
+
+<h3 id="41-start-core-stack">4.1 Start core stack</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make up
+</code></pre></div></div>
+
+<h3 id="42-start-with-tool-profile">4.2 Start with tool profile</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make up-all
+</code></pre></div></div>
+
+<h3 id="43-centralized-logs">4.3 Centralized logs</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make obs-up
+make obs-down
+</code></pre></div></div>
+
+<h3 id="44-ui-only-operations">4.4 UI-only operations</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make ui-build
+make ui-up
+make ui-logs
+make ui-down
+</code></pre></div></div>
+
+<p>Web UI entrypoint:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">https://localhost:${HOST_PROXY_TLS_PORT}/ui</code></li>
+  <li><code class="language-plaintext highlighter-rouge">https://localhost:${HOST_PROXY_TLS_PORT}/ui/login</code></li>
+  <li><code class="language-plaintext highlighter-rouge">https://localhost:${HOST_PROXY_TLS_PORT}/ui/dashboard</code></li>
+  <li><code class="language-plaintext highlighter-rouge">https://localhost:${HOST_PROXY_TLS_PORT}/ui/dashboard/telemetry</code></li>
+  <li><code class="language-plaintext highlighter-rouge">https://localhost:${HOST_PROXY_TLS_PORT}/ui/dashboard/findings</code></li>
+  <li><code class="language-plaintext highlighter-rouge">https://localhost:${HOST_PROXY_TLS_PORT}/ui/dashboard/findings/FND-2026-001</code></li>
+  <li><code class="language-plaintext highlighter-rouge">https://localhost:${HOST_PROXY_TLS_PORT}/ui/dashboard/findings/FND-2026-001/evidence</code></li>
+</ul>
+
+<h3 id="45-stop-stack">4.5 Stop stack</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make down
+</code></pre></div></div>
+
+<h2 id="5-exposed-ports">5. Exposed Ports</h2>
+
+<p>Configured via <code class="language-plaintext highlighter-rouge">.env</code>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">HOST_PROXY_HTTP_PORT</code> (default <code class="language-plaintext highlighter-rouge">18080</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">HOST_PROXY_TLS_PORT</code> (default <code class="language-plaintext highlighter-rouge">18443</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">HOST_DB_PORT</code> (default <code class="language-plaintext highlighter-rouge">15432</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">HOST_RABBITMQ_MGMT_PORT</code> (default <code class="language-plaintext highlighter-rouge">15672</code>)</li>
+</ul>
+
+<p>All other service ports are internal-only by default.</p>
+
+<h2 id="6-remote-integration-configuration">6. Remote Integration Configuration</h2>
+
+<p>SpectraStrike is remote-operator-first.</p>
+
+<h3 id="61-metasploit-rpc-wrapper">6.1 Metasploit RPC wrapper</h3>
+
+<p>Use env vars:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">MSF_RPC_HOST</code></li>
+  <li><code class="language-plaintext highlighter-rouge">MSF_RPC_PORT</code></li>
+  <li><code class="language-plaintext highlighter-rouge">MSF_RPC_SSL</code></li>
+  <li><code class="language-plaintext highlighter-rouge">MSF_RPC_USERNAME</code></li>
+  <li><code class="language-plaintext highlighter-rouge">MSF_RPC_PASSWORD</code></li>
+  <li>optional pin: <code class="language-plaintext highlighter-rouge">MSF_RPC_TLS_PINNED_CERT_SHA256</code></li>
+</ul>
+
+<h3 id="62-manual-metasploit-ingestion">6.2 Manual Metasploit ingestion</h3>
+
+<p>Use env vars:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">MSF_MANUAL_BASE_URL</code></li>
+  <li><code class="language-plaintext highlighter-rouge">MSF_MANUAL_USERNAME</code></li>
+  <li><code class="language-plaintext highlighter-rouge">MSF_MANUAL_PASSWORD</code></li>
+</ul>
+
+<p>Run sync command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">PYTHONPATH</span><span class="o">=</span>src .venv/bin/python <span class="nt">-m</span> pkg.telemetry.sync_metasploit_manual
+<span class="c"># or explicitly provide tenant context:</span>
+<span class="nv">PYTHONPATH</span><span class="o">=</span>src .venv/bin/python <span class="nt">-m</span> pkg.telemetry.sync_metasploit_manual <span class="nt">--tenant-id</span> tenant-a
+</code></pre></div></div>
+
+<h3 id="63-rabbitmq-publisher">6.3 RabbitMQ publisher</h3>
+
+<p>Use env vars:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">RABBITMQ_HOST</code></li>
+  <li><code class="language-plaintext highlighter-rouge">RABBITMQ_PORT</code> (TLS listener default <code class="language-plaintext highlighter-rouge">5671</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">RABBITMQ_USER</code></li>
+  <li><code class="language-plaintext highlighter-rouge">RABBITMQ_PASSWORD</code></li>
+  <li><code class="language-plaintext highlighter-rouge">RABBITMQ_SSL</code></li>
+  <li><code class="language-plaintext highlighter-rouge">RABBITMQ_SSL_CA_FILE</code></li>
+  <li><code class="language-plaintext highlighter-rouge">RABBITMQ_SSL_CERT_FILE</code></li>
+  <li><code class="language-plaintext highlighter-rouge">RABBITMQ_SSL_KEY_FILE</code></li>
+</ul>
+
+<h2 id="7-security-controls-and-validation">7. Security Controls and Validation</h2>
+
+<h3 id="71-baseline-checks">7.1 Baseline checks</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make security-check
+make policy-check
+</code></pre></div></div>
+
+<h3 id="72-supply-chain-gate-local-dockerized">7.2 Supply-chain gate (local, dockerized)</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make sbom
+make vuln-scan
+make sign-image
+make verify-sign
+make security-gate
+make full-regression
+</code></pre></div></div>
+
+<h3 id="73-firewall-controls-host-level">7.3 Firewall controls (host-level)</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>make firewall-apply
+<span class="nb">sudo </span>make firewall-egress-apply
+</code></pre></div></div>
+
+<h3 id="74-backup-workflows">7.4 Backup workflows</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make backup-postgres
+make backup-redis
+make backup-all
+</code></pre></div></div>
+
+<h2 id="8-enterprise-security-notes">8. Enterprise Security Notes</h2>
+
+<p>Implemented:</p>
+<ul>
+  <li>ingress TLS and hardened proxy headers</li>
+  <li>optional client-certificate validation at edge</li>
+  <li>internal mTLS for telemetry broker path (app &lt;-&gt; rabbitmq)</li>
+  <li>certificate pinning support in outbound integration clients</li>
+  <li>tamper-evident audit chaining</li>
+  <li>optional MFA and lockout in AAA framework</li>
+</ul>
+
+<p>In progress:</p>
+<ul>
+  <li>full service-to-service mTLS for observability pipeline (<code class="language-plaintext highlighter-rouge">vector</code> &lt;-&gt; <code class="language-plaintext highlighter-rouge">loki</code>)</li>
+</ul>
+
+<h2 id="9-troubleshooting">9. Troubleshooting</h2>
+
+<h3 id="91-nginx-tls-health-fails">9.1 Nginx TLS health fails</h3>
+<ul>
+  <li>Ensure <code class="language-plaintext highlighter-rouge">make tls-dev-cert</code> ran successfully.</li>
+  <li>Verify <code class="language-plaintext highlighter-rouge">docker/nginx/certs/tls.crt</code> and <code class="language-plaintext highlighter-rouge">tls.key</code> exist.</li>
+</ul>
+
+<h3 id="92-rabbitmq-tls-handshake-errors">9.2 RabbitMQ TLS handshake errors</h3>
+<ul>
+  <li>Ensure <code class="language-plaintext highlighter-rouge">make pki-internal</code> ran.</li>
+  <li>Verify CA/client cert paths in <code class="language-plaintext highlighter-rouge">.env</code> (<code class="language-plaintext highlighter-rouge">RABBITMQ_SSL_*</code>).</li>
+  <li>Confirm rabbitmq container has mounted <code class="language-plaintext highlighter-rouge">docker/pki</code>.</li>
+</ul>
+
+<h3 id="93-firewall-rules-break-connectivity">9.3 Firewall rules break connectivity</h3>
+<ul>
+  <li>Re-check allowed ports in <code class="language-plaintext highlighter-rouge">.env</code>.</li>
+  <li>Re-apply with updated values.</li>
+  <li>Review host <code class="language-plaintext highlighter-rouge">iptables -S DOCKER-USER</code> and <code class="language-plaintext highlighter-rouge">iptables -S DOCKER-EGRESS</code>.</li>
+</ul>
+
+<h3 id="94-postgresql-mtls-connection-failures">9.4 PostgreSQL mTLS connection failures</h3>
+<ul>
+  <li>Ensure <code class="language-plaintext highlighter-rouge">make pki-internal</code> was re-run after TLS changes.</li>
+  <li>Verify Postgres started with <code class="language-plaintext highlighter-rouge">start-postgres-tls.sh</code> in compose.</li>
+  <li>Confirm client uses CA/client cert/key (<code class="language-plaintext highlighter-rouge">POSTGRES_SSL_*</code> envs).</li>
+</ul>
+
+<h3 id="95-redis-mtls-connection-failures">9.5 Redis mTLS connection failures</h3>
+<ul>
+  <li>Ensure Redis healthcheck is <code class="language-plaintext highlighter-rouge">redis-cli --tls</code> and passing.</li>
+  <li>Validate mounted cert paths under <code class="language-plaintext highlighter-rouge">/etc/redis/pki</code> in container.</li>
+  <li>Confirm client uses <code class="language-plaintext highlighter-rouge">REDIS_TLS_*</code> env variables and port <code class="language-plaintext highlighter-rouge">6380</code>.</li>
+</ul>
+
+<h3 id="96-legal-acceptance-endpoint-errors">9.6 Legal acceptance endpoint errors</h3>
+<ul>
+  <li>In dockerized mode, ensure legal persistence env and volume are present:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">SPECTRASTRIKE_LEGAL_ACCEPTANCE_PATH=/var/lib/spectrastrike/legal/acceptance.json</code></li>
+      <li><code class="language-plaintext highlighter-rouge">ui_legal_data:/var/lib/spectrastrike</code></li>
+    </ul>
+  </li>
+  <li>Verify endpoint:</li>
+</ul>
+
+<h2 id="10-sprint-167-host-integration-smoke">10. Sprint 16.7 Host Integration Smoke</h2>
+
+<p>Run integration validation against host-installed offensive tooling and telemetry contracts.
+Sprint 16.8 uses RabbitMQ broker forwarding for VectorVue validation.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">SPECTRASTRIKE_TENANT_ID</span><span class="o">=</span>tenant-a
+make host-integration-smoke
+</code></pre></div></div>
+
+<p>Optional live-path checks (requires configured endpoints):</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">PYTHONPATH</span><span class="o">=</span>src .venv/bin/python <span class="nt">-m</span> pkg.integration.host_integration_smoke <span class="se">\</span>
+  <span class="nt">--tenant-id</span> <span class="s2">"</span><span class="nv">$SPECTRASTRIKE_TENANT_ID</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--check-metasploit-rpc</span> <span class="se">\</span>
+  <span class="nt">--check-vectorvue</span>
+</code></pre></div></div>
+
+<p>Recommended local federation values for dockerized SpectraStrike -&gt; VectorVue checks:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">SPECTRASTRIKE_TENANT_ID=10000000-0000-0000-0000-000000000001</code></li>
+  <li><code class="language-plaintext highlighter-rouge">VECTORVUE_FEDERATION_URL=https://127.0.0.1</code></li>
+  <li><code class="language-plaintext highlighter-rouge">VECTORVUE_FEDERATION_ENDPOINT=/internal/v1/telemetry</code></li>
+  <li><code class="language-plaintext highlighter-rouge">VECTORVUE_FEDERATION_MTLS_CERT_FILE=/home/xoce/Workspace/VectorVue/deploy/certs/client.crt</code></li>
+  <li><code class="language-plaintext highlighter-rouge">VECTORVUE_FEDERATION_MTLS_KEY_FILE=/home/xoce/Workspace/VectorVue/deploy/certs/client.key</code></li>
+  <li><code class="language-plaintext highlighter-rouge">VECTORVUE_VERIFY_TLS_CA_FILE=/home/xoce/Workspace/VectorVue/deploy/certs/ca.crt</code></li>
+</ul>
+
+<p>Optional VectorVue federation gateway smoke:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make vectorvue-rabbitmq-sync
+</code></pre></div></div>
+
+<p>Expected VectorVue integration result during host smoke:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">rabbitmq_publish_ok=True</code></li>
+  <li><code class="language-plaintext highlighter-rouge">vectorvue_ok=True</code></li>
+  <li><code class="language-plaintext highlighter-rouge">vectorvue_event_status=accepted|replayed</code></li>
+  <li><code class="language-plaintext highlighter-rouge">vectorvue_finding_status=accepted|replayed</code></li>
+  <li><code class="language-plaintext highlighter-rouge">vectorvue_status_poll_status=accepted|partial|replayed</code></li>
+</ul>
+
+<p>Required host binaries:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">nmap</code></li>
+  <li><code class="language-plaintext highlighter-rouge">msfconsole</code></li>
+</ul>
+
+<p>The smoke flow preserves Sprint 16/16.5 controls by enforcing tenant-aware telemetry emission and ingestion.</p>
+
+<h2 id="11-byot-telemetry-sdk">11. BYOT Telemetry SDK</h2>
+
+<p>Sprint 16 adds lightweight SDK helpers for BYOT tool authors to emit telemetry in supported schemas.</p>
+
+<h3 id="111-python-sdk">11.1 Python SDK</h3>
+
+<p>Use <code class="language-plaintext highlighter-rouge">pkg.telemetry.sdk</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pkg.telemetry.sdk</span> <span class="kn">import</span> <span class="n">build_cloudevent_telemetry</span>
+
+<span class="n">payload</span> <span class="o">=</span> <span class="n">build_cloudevent_telemetry</span><span class="p">(</span>
+    <span class="n">event_type</span><span class="o">=</span><span class="s">"com.nyxera.tool.scan.v1"</span><span class="p">,</span>
+    <span class="n">source</span><span class="o">=</span><span class="s">"urn:tool:scanner"</span><span class="p">,</span>
+    <span class="n">subject</span><span class="o">=</span><span class="s">"task-1"</span><span class="p">,</span>
+    <span class="n">tenant_id</span><span class="o">=</span><span class="s">"tenant-a"</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s">"operator_id"</span><span class="p">:</span> <span class="s">"alice"</span><span class="p">,</span> <span class="s">"target_urn"</span><span class="p">:</span> <span class="s">"urn:target:ip:10.0.0.5"</span><span class="p">,</span> <span class="s">"status"</span><span class="p">:</span> <span class="s">"success"</span><span class="p">},</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="112-bash-sdk">11.2 Bash SDK</h3>
+
+<p>Source helper script <code class="language-plaintext highlighter-rouge">scripts/byot_telemetry_sdk.sh</code>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source </span>scripts/byot_telemetry_sdk.sh
+byot_emit_internal <span class="s2">"tool.scan"</span> <span class="s2">"scanner-bot"</span> <span class="s2">"urn:target:ip:10.0.0.5"</span> <span class="s2">"success"</span> <span class="s2">"tenant-a"</span> <span class="s1">'{"ports":[22,443]}'</span>
+</code></pre></div></div>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">POST /ui/api/v1/auth/legal/accept</code></li>
+  <li>If auth/demo access is blocked, confirm legal decision state reports:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">LEGAL_ACCEPTANCE_REQUIRED</code></li>
+    </ul>
+  </li>
+  <li>Local/default path outside containerized runtime:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">.spectrastrike/legal/acceptance.json</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="12-operational-references">12. Operational References</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">README.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">SECURITY.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/manuals/ORCHESTRATOR_ARCHITECTURE.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/manuals/QA_RUNBOOK.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/ROADMAP.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/kanban-board.csv</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/INDEX.md</code></li>
+</ul>
+
+<h2 id="13-known-qa-constraint-sprint-98">13. Known QA Constraint (Sprint 9.8)</h2>
+
+<p>In restricted network environments, Web UI dependency bootstrap may fail due to DNS resolution issues against the npm registry.</p>
+
+<p>Observed command outcomes:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">npm --prefix ui/web install --no-audit --no-fund</code> -&gt; <code class="language-plaintext highlighter-rouge">EAI_AGAIN getaddrinfo EAI_AGAIN registry.npmjs.org</code></li>
+  <li><code class="language-plaintext highlighter-rouge">npm --prefix ui/web run test:unit</code> -&gt; <code class="language-plaintext highlighter-rouge">sh: line 1: vitest: command not found</code></li>
+  <li><code class="language-plaintext highlighter-rouge">npm --prefix ui/web run test:e2e</code> -&gt; <code class="language-plaintext highlighter-rouge">error: unknown command 'test'</code></li>
+</ul>
+
+<p>When this occurs:</p>
+<ul>
+  <li>record the blocker in roadmap and kanban</li>
+  <li>preserve exact command output</li>
+  <li>execute remaining non-web QA gates</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

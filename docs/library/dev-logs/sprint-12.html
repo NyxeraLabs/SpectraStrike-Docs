@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>sprint-12 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-12-engineering-log">Sprint 12 Engineering Log</h1>
+
+<h2 id="program-context">Program Context</h2>
+
+<ul>
+  <li>Phase: Phase 4</li>
+  <li>Sprint: Sprint 12</li>
+  <li>Status: Completed</li>
+  <li>Primary Architecture Layers: Universal Runner, Cryptographic Verification, Sandbox Execution</li>
+</ul>
+
+<h2 id="architectural-intent">Architectural Intent</h2>
+
+<p>Build the Universal Edge Runner as a cryptographically enforced Go execution path that only runs approved Armory artifacts under isolated sandbox controls.</p>
+
+<h2 id="implementation-detail">Implementation Detail</h2>
+
+<ul>
+  <li>Added Go runner module (<code class="language-plaintext highlighter-rouge">src/runner-go</code>) with:
+    <ul>
+      <li>compact JWS verification (<code class="language-plaintext highlighter-rouge">VerifyHS256JWS</code>),</li>
+      <li>execution output -&gt; CloudEvents mapping (<code class="language-plaintext highlighter-rouge">MapToCloudEvent</code>),</li>
+      <li>sandbox command contract and execution wrapper.</li>
+    </ul>
+  </li>
+  <li>Implemented local JWS verification logic:
+    <ul>
+      <li>HS256 verification path for deterministic QA and CI validation.</li>
+    </ul>
+  </li>
+  <li>Implemented signed-tool retrieval policy:
+    <ul>
+      <li>runner resolves only <code class="language-plaintext highlighter-rouge">authorized</code> Armory digests,</li>
+      <li>digest mismatch or missing authorization raises hard failure.</li>
+    </ul>
+  </li>
+  <li>Implemented sandbox command contract:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">--runtime=runsc</code> (gVisor runtime target),</li>
+      <li>AppArmor security profile pinning,</li>
+      <li>read-only, no-capabilities, no-network defaults.</li>
+    </ul>
+  </li>
+  <li>Implemented execution output contract:
+    <ul>
+      <li>captures <code class="language-plaintext highlighter-rouge">stdout</code>, <code class="language-plaintext highlighter-rouge">stderr</code>, <code class="language-plaintext highlighter-rouge">exit_code</code>,</li>
+      <li>maps to CloudEvents v1.0 payload including <code class="language-plaintext highlighter-rouge">manifest_jws</code>, <code class="language-plaintext highlighter-rouge">tenant_id</code>, and task metadata.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="security-and-control-posture">Security and Control Posture</h2>
+
+<ul>
+  <li>Runner enforces deny-by-default on missing/invalid signatures and unauthorized digests.</li>
+  <li>Tool retrieval and execution are strongly bound to signed manifest hash.</li>
+  <li>Output telemetry keeps manifest linkage for non-repudiation traceability.</li>
+</ul>
+
+<h2 id="qa-and-validation-evidence">QA and Validation Evidence</h2>
+
+<ul>
+  <li>Added <code class="language-plaintext highlighter-rouge">tests/unit/test_runner_jws_verify.py</code> for signature verification and forged-token rejection.</li>
+  <li>Added <code class="language-plaintext highlighter-rouge">tests/unit/test_universal_edge_runner.py</code> for digest authorization and CloudEvents execution contract mapping.</li>
+</ul>
+
+<h2 id="risk-register">Risk Register</h2>
+
+<p>ES256 verification backend remains pluggable by design and is not hardwired to a single crypto runtime implementation in this sprint.</p>
+
+<h2 id="forward-linkage">Forward Linkage</h2>
+
+<p>Sprint 13 executes adversarial QA cases for forged signatures, tampered digests, and telemetry contract integrity.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

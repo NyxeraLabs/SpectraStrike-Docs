@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>sprint-17 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-17-engineering-log">Sprint 17 Engineering Log</h1>
+
+<h2 id="program-context">Program Context</h2>
+
+<ul>
+  <li>Phase: Phase 5</li>
+  <li>Sprint: Sprint 17</li>
+  <li>Status: Completed</li>
+  <li>Primary Architecture Layers: Identity and Policy Plane, Execution Plane</li>
+</ul>
+
+<h2 id="architectural-intent">Architectural Intent</h2>
+
+<p>Validate zero-trust denial controls and execution containment guarantees.</p>
+
+<h2 id="implementation-detail">Implementation Detail</h2>
+
+<p>Added explicit Sprint 17 QA suite:</p>
+<ul>
+  <li>OPA denies unauthorized tool hash execution attempts.</li>
+  <li>OPA denies authorized tool execution against unauthorized target URNs.</li>
+  <li>Runner dynamic Cilium policy reflects deny-by-default containment and target egress allowlist.</li>
+  <li>Added carry-over QA gate for Sprint 16.5, 16.7, and 16.8 regressions.</li>
+</ul>
+
+<h2 id="security-and-control-posture">Security and Control Posture</h2>
+
+<ul>
+  <li>OPA pre-sign authorization denials are validated for malicious insider scenarios.</li>
+  <li>Runner network fencing controls are validated for lateral movement resistance.</li>
+  <li>Security posture remains aligned with policy-driven control plane goals in Phase 5.</li>
+</ul>
+
+<h2 id="qa-and-validation-evidence">QA and Validation Evidence</h2>
+
+<p>Command:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">PYTHONPATH=src .venv/bin/pytest -q tests/qa/test_zero_trust_sprint17_qa.py</code></li>
+</ul>
+
+<p>Result:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">3 passed</code></li>
+  <li><code class="language-plaintext highlighter-rouge">28 passed</code> (carry-over validation set for Sprint 16.5/16.7/16.8)</li>
+</ul>
+
+<h2 id="risk-register">Risk Register</h2>
+
+<p>Residual risk is environment-specific Cilium runtime variance outside fixture scope.
+Mitigation is controlled live validation in target cluster lanes.</p>
+
+<h2 id="forward-linkage">Forward Linkage</h2>
+
+<p>Sprint 18 begins C2 gateway architecture baseline.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

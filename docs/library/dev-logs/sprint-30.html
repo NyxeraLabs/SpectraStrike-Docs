@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>sprint-30 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-30-engineering-log">Sprint 30 Engineering Log</h1>
+
+<h2 id="program-context">Program Context</h2>
+
+<ul>
+  <li>Phase: Phase 8</li>
+  <li>Sprint: Sprint 30</li>
+  <li>Status: Implemented (Awaiting Signed Commit Promotion)</li>
+  <li>Primary Architecture Layers: Orchestrator Messaging Layer, Telemetry Ingestion Pipeline</li>
+</ul>
+
+<h2 id="architectural-intent">Architectural Intent</h2>
+
+<p>Implement broker abstraction for RabbitMQ/Kafka compatibility, enforce ordered event streaming,
+and normalize telemetry into an ML-ready schema for high-throughput ingestion.</p>
+
+<h2 id="implementation-detail">Implementation Detail</h2>
+
+<ul>
+  <li>Added Kafka-compatible routing and publishing contracts:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">KafkaRoutingModel</code></li>
+      <li><code class="language-plaintext highlighter-rouge">InMemoryKafkaBroker</code></li>
+      <li><code class="language-plaintext highlighter-rouge">KafkaTelemetryPublisher</code></li>
+    </ul>
+  </li>
+  <li>Preserved RabbitMQ path and added strict ordering enforcement using:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">ordering_key</code></li>
+      <li><code class="language-plaintext highlighter-rouge">stream_position</code></li>
+    </ul>
+  </li>
+  <li>Added telemetry schema normalization envelope for ML ingestion via <code class="language-plaintext highlighter-rouge">ml_record</code> payload with:
+    <ul>
+      <li>fixed <code class="language-plaintext highlighter-rouge">telemetry.ml.v1</code> schema marker</li>
+      <li>status normalization (<code class="language-plaintext highlighter-rouge">status_code</code>)</li>
+      <li>stable feature keys and stream metadata</li>
+    </ul>
+  </li>
+  <li>Extended unit/integration coverage for:
+    <ul>
+      <li>broker abstraction behavior (RabbitMQ and Kafka)</li>
+      <li>ordering violation dead-letter behavior</li>
+      <li>normalized ML payload presence in emitted broker envelopes</li>
+    </ul>
+  </li>
+  <li>Added Sprint 30 high-volume QA test with 2,000-event throughput validation.</li>
+</ul>
+
+<h2 id="security-and-control-posture">Security and Control Posture</h2>
+
+<ul>
+  <li>Broker transport remains decoupled from execution authorization controls.</li>
+  <li>Ordered stream enforcement reduces replay/reordering ambiguity in downstream analytics.</li>
+  <li>Normalized telemetry schema improves deterministic ingestion for ML pipelines.</li>
+</ul>
+
+<h2 id="qa-and-validation-evidence">QA and Validation Evidence</h2>
+
+<p>Validated with unit tests and QA artifact tests, including high-volume stream publishing.</p>
+
+<h2 id="risk-register">Risk Register</h2>
+
+<p>Primary risk is functional drift between in-memory Kafka compatibility and production Kafka transport.
+Mitigation is to add a live Kafka adapter smoke suite in a follow-up sprint.</p>
+
+<h2 id="forward-linkage">Forward Linkage</h2>
+
+<p>Sprint 31 extends this foundation with VectorVue cognitive feedback ingestion and policy-bound adaptation.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

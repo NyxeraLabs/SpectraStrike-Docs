@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VECTORVUE API CLIENT DESIGN | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+
+You may:
+Study
+Modify
+Use for internal security testing
+
+You may NOT:
+Offer as a commercial service
+Sell derived competing products
+-->
+
+<h1 id="vectorvue-api-client-design-sprint-4">VectorVue API Client Design (Sprint 4)</h1>
+<p><img src="../../ui/web/assets/images/SprectraStrike_Logo.png" alt="SpectraStrike Logo" /></p>
+
+<h2 id="goal">Goal</h2>
+<p>Define a secure, testable, and extensible Python API client for delivering SpectraStrike telemetry and findings to VectorVue client and integration APIs.</p>
+
+<h2 id="scope-roadmap-alignment">Scope (Roadmap Alignment)</h2>
+<p>This design maps to <code class="language-plaintext highlighter-rouge">docs/ROADMAP.md</code> Phase 3:</p>
+<ul>
+  <li>Sprint 4:
+    <ul>
+      <li>Implement encrypted data transfer (TLS)</li>
+      <li>Implement retries/backoff</li>
+      <li>Implement event batching</li>
+      <li>Implement message signing for integrity</li>
+    </ul>
+  </li>
+  <li>Sprint 5:
+    <ul>
+      <li>QA test API endpoints</li>
+      <li>Validate encrypted communication</li>
+      <li>Confirm telemetry reaches VectorVue</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="api-surface-vectorvue">API Surface (VectorVue)</h2>
+<p>Base URL (local default): <code class="language-plaintext highlighter-rouge">https://127.0.0.1</code></p>
+
+<p>Authentication:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">POST /api/v1/client/auth/login</code></li>
+  <li>Bearer token required on all follow-up calls</li>
+  <li>JWT must include <code class="language-plaintext highlighter-rouge">tenant_id</code></li>
+</ul>
+
+<p>Primary integration endpoints:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">POST /api/v1/integrations/spectrastrike/events</code></li>
+  <li><code class="language-plaintext highlighter-rouge">POST /api/v1/integrations/spectrastrike/events/batch</code></li>
+  <li><code class="language-plaintext highlighter-rouge">POST /api/v1/integrations/spectrastrike/findings</code></li>
+  <li><code class="language-plaintext highlighter-rouge">POST /api/v1/integrations/spectrastrike/findings/batch</code></li>
+  <li><code class="language-plaintext highlighter-rouge">GET /api/v1/integrations/spectrastrike/ingest/status/{request_id}</code></li>
+</ul>
+
+<p>Optional client telemetry endpoint:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">POST /api/v1/client/events</code></li>
+</ul>
+
+<h2 id="response-contract">Response Contract</h2>
+<p>All SpectraStrike integration endpoints return an envelope with:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">request_id</code></li>
+  <li><code class="language-plaintext highlighter-rouge">status</code> (<code class="language-plaintext highlighter-rouge">accepted | partial | failed | replayed</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">data</code></li>
+  <li><code class="language-plaintext highlighter-rouge">errors[]</code></li>
+  <li>optional <code class="language-plaintext highlighter-rouge">signature</code></li>
+</ul>
+
+<h2 id="proposed-package-layout">Proposed Package Layout</h2>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">src/pkg/integration/vectorvue/__init__.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">src/pkg/integration/vectorvue/client.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">src/pkg/integration/vectorvue/config.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">src/pkg/integration/vectorvue/models.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">src/pkg/integration/vectorvue/exceptions.py</code></li>
+</ul>
+
+<h2 id="primary-interfaces">Primary Interfaces</h2>
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">VectorVueConfig</code>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">base_url: str = "https://127.0.0.1"</code></li>
+      <li><code class="language-plaintext highlighter-rouge">username: str | None</code></li>
+      <li><code class="language-plaintext highlighter-rouge">password: str | None</code></li>
+      <li><code class="language-plaintext highlighter-rouge">tenant_id: str | None</code></li>
+      <li><code class="language-plaintext highlighter-rouge">token: str | None</code> (optional pre-provisioned token)</li>
+      <li><code class="language-plaintext highlighter-rouge">timeout_seconds: float = 10.0</code></li>
+      <li><code class="language-plaintext highlighter-rouge">verify_tls: bool = True</code></li>
+      <li><code class="language-plaintext highlighter-rouge">max_retries: int = 3</code></li>
+      <li><code class="language-plaintext highlighter-rouge">backoff_seconds: float = 0.5</code></li>
+      <li><code class="language-plaintext highlighter-rouge">max_batch_size: int = 100</code></li>
+      <li><code class="language-plaintext highlighter-rouge">signature_secret: str | None</code></li>
+      <li><code class="language-plaintext highlighter-rouge">require_https: bool = True</code></li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">VectorVueClient</code>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">login() -&gt; str</code></li>
+      <li><code class="language-plaintext highlighter-rouge">send_event(event: dict[str, Any], idempotency_key: str | None = None) -&gt; ResponseEnvelope</code></li>
+      <li><code class="language-plaintext highlighter-rouge">send_events_batch(events: list[dict[str, Any]]) -&gt; ResponseEnvelope</code></li>
+      <li><code class="language-plaintext highlighter-rouge">send_finding(finding: dict[str, Any]) -&gt; ResponseEnvelope</code></li>
+      <li><code class="language-plaintext highlighter-rouge">send_findings_batch(findings: list[dict[str, Any]]) -&gt; ResponseEnvelope</code></li>
+      <li><code class="language-plaintext highlighter-rouge">get_ingest_status(request_id: str) -&gt; ResponseEnvelope</code></li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">ResponseEnvelope</code>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">request_id: str | None</code></li>
+      <li><code class="language-plaintext highlighter-rouge">status: str</code></li>
+      <li><code class="language-plaintext highlighter-rouge">data: dict[str, Any] | list[Any] | None</code></li>
+      <li><code class="language-plaintext highlighter-rouge">errors: list[dict[str, Any]]</code></li>
+      <li><code class="language-plaintext highlighter-rouge">signature: str | None</code></li>
+      <li><code class="language-plaintext highlighter-rouge">http_status: int</code></li>
+      <li><code class="language-plaintext highlighter-rouge">headers: dict[str, str]</code></li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="security-and-integrity-requirements">Security and Integrity Requirements</h2>
+<ol>
+  <li>Enforce HTTPS base URL when <code class="language-plaintext highlighter-rouge">require_https=True</code>.</li>
+  <li>Use Bearer JWT for all integration/status calls.</li>
+  <li>Support optional HMAC request signing when <code class="language-plaintext highlighter-rouge">signature_secret</code> is configured:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">X-Timestamp</code></li>
+      <li><code class="language-plaintext highlighter-rouge">X-Signature</code></li>
+    </ul>
+  </li>
+  <li>Redact credentials/tokens/signatures in logs.</li>
+  <li>Preserve tenant isolation guarantees (treat <code class="language-plaintext highlighter-rouge">404</code> on status lookup as possible cross-tenant protection behavior).</li>
+</ol>
+
+<h2 id="idempotency-and-replay-handling">Idempotency and Replay Handling</h2>
+<p>For <code class="language-plaintext highlighter-rouge">POST /events</code>:</p>
+<ul>
+  <li>Include <code class="language-plaintext highlighter-rouge">Idempotency-Key</code> when provided by caller.</li>
+  <li>Same key + same payload: handle replay response (<code class="language-plaintext highlighter-rouge">status=replayed</code> or header <code class="language-plaintext highlighter-rouge">X-Idempotent-Replay: true</code>).</li>
+  <li>Same key + different payload: map <code class="language-plaintext highlighter-rouge">409</code> to typed <code class="language-plaintext highlighter-rouge">idempotency_conflict</code> error.</li>
+</ul>
+
+<h2 id="transport-and-retry-model">Transport and Retry Model</h2>
+<ul>
+  <li>Use <code class="language-plaintext highlighter-rouge">requests.Session</code> for connection pooling.</li>
+  <li>Retry with bounded exponential backoff for transient failures:
+    <ul>
+      <li>connection errors</li>
+      <li>timeouts</li>
+      <li>HTTP <code class="language-plaintext highlighter-rouge">429</code>, <code class="language-plaintext highlighter-rouge">502</code>, <code class="language-plaintext highlighter-rouge">503</code>, <code class="language-plaintext highlighter-rouge">504</code></li>
+    </ul>
+  </li>
+  <li>Do not retry hard validation/auth errors (<code class="language-plaintext highlighter-rouge">400</code>, <code class="language-plaintext highlighter-rouge">401</code>, <code class="language-plaintext highlighter-rouge">403</code>, <code class="language-plaintext highlighter-rouge">404</code>, <code class="language-plaintext highlighter-rouge">409</code>, <code class="language-plaintext highlighter-rouge">422</code>).</li>
+</ul>
+
+<h2 id="validation-model">Validation Model</h2>
+<p>Client-side validation before submit:</p>
+<ul>
+  <li>Ensure batch size &lt;= <code class="language-plaintext highlighter-rouge">max_batch_size</code>.</li>
+  <li>Ensure payload JSON-serializable.</li>
+  <li>Preserve endpoint-specific required fields as pass-through (server remains source of truth).</li>
+</ul>
+
+<p>Server error model expected:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">validation_failed</code></li>
+  <li><code class="language-plaintext highlighter-rouge">batch_too_large</code></li>
+  <li><code class="language-plaintext highlighter-rouge">idempotency_conflict</code></li>
+  <li>auth guard errors (<code class="language-plaintext highlighter-rouge">401</code>)</li>
+</ul>
+
+<h2 id="logging-and-observability">Logging and Observability</h2>
+<p>Emit local logs for each outbound request with:</p>
+<ul>
+  <li>endpoint</li>
+  <li>request_id (when available)</li>
+  <li>tenant_id (if configured)</li>
+  <li>outcome status</li>
+  <li>retry count</li>
+</ul>
+
+<p>Never log raw token, password, or signature material.</p>
+
+<h2 id="test-strategy">Test Strategy</h2>
+<ol>
+  <li>Unit tests:
+    <ul>
+      <li>config validation (<code class="language-plaintext highlighter-rouge">https</code>, auth inputs)</li>
+      <li>signing header generation</li>
+      <li>response envelope parsing</li>
+      <li>retry/non-retry matrix</li>
+      <li>idempotency replay/conflict behavior</li>
+      <li>batch-size guard</li>
+    </ul>
+  </li>
+  <li>Integration-style tests (mock transport):
+    <ul>
+      <li>success for each endpoint</li>
+      <li>partial failure batch handling</li>
+      <li>ingest status polling parse</li>
+      <li>auth failure and validation failure mapping</li>
+    </ul>
+  </li>
+  <li>QA hooks (Roadmap Sprint 5):
+    <ul>
+      <li>smoke script for login + single event + single finding + status poll</li>
+      <li>TLS verification mode test (<code class="language-plaintext highlighter-rouge">verify=True</code> / controlled local cert mode)</li>
+    </ul>
+  </li>
+</ol>
+
+<p>Implemented QA hooks:</p>
+<ul>
+  <li>Live smoke module: <code class="language-plaintext highlighter-rouge">src/pkg/integration/vectorvue/qa_smoke.py</code></li>
+  <li>QA test suite entry: <code class="language-plaintext highlighter-rouge">tests/qa/test_vectorvue_api_qa.py</code></li>
+  <li>Live mode toggle: <code class="language-plaintext highlighter-rouge">VECTORVUE_QA_LIVE=1</code></li>
+</ul>
+
+<h2 id="compatibility">Compatibility</h2>
+<ul>
+  <li>Python 3.12+</li>
+  <li><code class="language-plaintext highlighter-rouge">requests</code>-based sync client initially</li>
+  <li>interface keeps room for async transport later</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

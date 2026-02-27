@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>sprint-34 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-34-engineering-log">Sprint 34 Engineering Log</h1>
+
+<h2 id="program-context">Program Context</h2>
+
+<ul>
+  <li>Phase: Phase 10</li>
+  <li>Sprint: Sprint 34</li>
+  <li>Status: Completed</li>
+  <li>Primary Architecture Layers: Runner isolation, execution trust boundary</li>
+</ul>
+
+<h2 id="architectural-intent">Architectural Intent</h2>
+
+<p>Transition the Universal Runner to a Firecracker-capable microVM backend with explicit hardware-isolation checks and runtime attestation reporting.</p>
+
+<h2 id="implementation-detail">Implementation Detail</h2>
+
+<p>Implemented scope:</p>
+<ul>
+  <li>Added Firecracker runtime module (<code class="language-plaintext highlighter-rouge">src/pkg/runner/firecracker.py</code>)</li>
+  <li>Added simulation/native launch modes to support development without host-level Firecracker installation</li>
+  <li>Added hardware isolation boundary checks (binary availability, KVM presence policy, seccomp hardening, jailer posture)</li>
+  <li>Added microVM runtime attestation report generation bound to execution context</li>
+  <li>Integrated Firecracker backend into universal runner execution path (<code class="language-plaintext highlighter-rouge">src/pkg/runner/universal.py</code>)</li>
+  <li>Added breakout-attempt simulation detection and rejection</li>
+  <li>Added unit and QA coverage for Sprint 34 artifacts and behavior</li>
+</ul>
+
+<h2 id="security-and-control-posture">Security and Control Posture</h2>
+
+<ul>
+  <li>Phase 4+ policy-driven execution path preserved</li>
+  <li>Unified execution fingerprint and ledger pipeline preserved</li>
+  <li>Zero-trust OPA and federation trust model unchanged</li>
+  <li>Firecracker path enforces fail-closed isolation checks in native mode</li>
+</ul>
+
+<h2 id="qa-and-validation-evidence">QA and Validation Evidence</h2>
+
+<p>Validation evidence:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">pytest tests/unit/test_firecracker_microvm_runner.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">pytest tests/unit/test_universal_edge_runner.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">pytest tests/qa/test_sprint34_microvm_transition_qa.py</code></li>
+</ul>
+
+<h2 id="risk-register">Risk Register</h2>
+
+<p>Primary risk is operational mismatch between simulated and native firecracker environments.
+Mitigation:</p>
+<ul>
+  <li>simulation mode default for deterministic CI/dev behavior</li>
+  <li>explicit native-mode precondition checks</li>
+  <li>dedicated runbook for host preparation and E2E validation</li>
+</ul>
+
+<h2 id="forward-linkage">Forward Linkage</h2>
+
+<p>Sprint 35 extends the trust envelope with TPM-backed identity, per-execution ephemeral key derivation, and mutual attestation.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

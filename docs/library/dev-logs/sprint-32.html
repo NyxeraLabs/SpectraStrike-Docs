@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>sprint-32 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-32-engineering-log">Sprint 32 Engineering Log</h1>
+
+<h2 id="program-context">Program Context</h2>
+
+<ul>
+  <li>Phase: Phase 9</li>
+  <li>Sprint: Sprint 32</li>
+  <li>Status: Completed</li>
+  <li>Primary Architecture Layers: Reporting / Compliance</li>
+</ul>
+
+<h2 id="architectural-intent">Architectural Intent</h2>
+
+<p>Implement framework-mapped compliance artifacts aligned to current architecture and telemetry contracts.</p>
+
+<h2 id="implementation-detail">Implementation Detail</h2>
+
+<p>Implemented deliverables:</p>
+<ul>
+  <li>SOC 2 mapping matrix (<code class="language-plaintext highlighter-rouge">docs/compliance/SOC2_CONTROL_MAPPING.md</code>)</li>
+  <li>ISO/IEC 27001 Annex A mapping matrix (<code class="language-plaintext highlighter-rouge">docs/compliance/ISO27001_ANNEXA_MAPPING.md</code>)</li>
+  <li>NIST SP 800-53 Rev. 5 mapping matrix (<code class="language-plaintext highlighter-rouge">docs/compliance/NIST_800_53_MAPPING.md</code>)</li>
+  <li>MITRE ATT&amp;CK telemetry mapping (<code class="language-plaintext highlighter-rouge">docs/compliance/MITRE_ATTACK_TELEMETRY_MAPPING.md</code>)</li>
+  <li>Secure SDLC documentation package (<code class="language-plaintext highlighter-rouge">docs/compliance/SECURE_SDLC_PACKAGE.md</code>)</li>
+  <li>Compliance package index (<code class="language-plaintext highlighter-rouge">docs/compliance/INDEX.md</code>)</li>
+  <li>Manuals index update for compliance package discoverability (<code class="language-plaintext highlighter-rouge">docs/manuals/INDEX.md</code>)</li>
+  <li>Roadmap completion marks for Sprint 32 (<code class="language-plaintext highlighter-rouge">docs/ROADMAP.md</code>)</li>
+</ul>
+
+<h2 id="security-and-control-posture">Security and Control Posture</h2>
+
+<ul>
+  <li>Maintained Phase 4+ policy-driven architecture posture and OPA delegation model.</li>
+  <li>Preserved unified execution fingerprint binding and append-only Merkle ledger references for non-repudiation controls.</li>
+  <li>Preserved federation trust model references for mTLS, signature, replay resistance, and tenant boundary enforcement.</li>
+</ul>
+
+<h2 id="qa-and-validation-evidence">QA and Validation Evidence</h2>
+
+<p>Validation evidence:</p>
+<ul>
+  <li>Added Sprint 32 QA assertions for roadmap state and compliance package completeness (<code class="language-plaintext highlighter-rouge">tests/qa/test_sprint32_compliance_mapping_qa.py</code>).</li>
+  <li>Ran docs QA and Sprint 32 QA checks for release gating.</li>
+</ul>
+
+<h2 id="risk-register">Risk Register</h2>
+
+<p>Primary risk remains documentation drift from implementation.
+Mitigation:</p>
+<ul>
+  <li>dedicated Sprint 32 QA assertions</li>
+  <li>mandatory docs QA gate in runbook</li>
+  <li>explicit source-code reference columns in mapping artifacts</li>
+</ul>
+
+<h2 id="forward-linkage">Forward Linkage</h2>
+
+<p>Sprint 33 focuses on specification publication with backward compatibility guarantees and SDK validation tooling.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

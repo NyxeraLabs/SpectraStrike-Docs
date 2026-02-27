@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FIRECRACKER MICROVM TRANSITION | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="firecracker-microvm-transition-runbook">Firecracker MicroVM Transition Runbook</h1>
+
+<h2 id="1-scope">1. Scope</h2>
+
+<p>This runbook covers Sprint 34 firecracker runtime integration for SpectraStrike runner execution.</p>
+
+<h2 id="2-modes">2. Modes</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">simulate</code> mode (default): no host Firecracker dependency required; used for dev/CI.</li>
+  <li><code class="language-plaintext highlighter-rouge">native</code> mode: requires host Firecracker/jailer and optional KVM enforcement.</li>
+</ul>
+
+<h2 id="3-runtime-contracts">3. Runtime Contracts</h2>
+
+<p>Core module:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">src/pkg/runner/firecracker.py</code></li>
+</ul>
+
+<p>Runner integration:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">src/pkg/runner/universal.py</code></li>
+</ul>
+
+<p>Attestation output:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">runtime=firecracker</code></li>
+  <li><code class="language-plaintext highlighter-rouge">measurement_hash</code></li>
+  <li><code class="language-plaintext highlighter-rouge">isolation_checks</code></li>
+  <li><code class="language-plaintext highlighter-rouge">boot_mode</code> (<code class="language-plaintext highlighter-rouge">snapshot-resume</code> or <code class="language-plaintext highlighter-rouge">cold-boot</code>)</li>
+</ul>
+
+<h2 id="4-host-prerequisites-for-native-mode">4. Host Prerequisites for Native Mode</h2>
+
+<p>Required:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">firecracker</code> binary in PATH</li>
+  <li><code class="language-plaintext highlighter-rouge">jailer</code> binary in PATH when jailer is enabled</li>
+  <li>seccomp hardening level &gt;= 2</li>
+</ul>
+
+<p>Optional (enforced when configured):</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">/dev/kvm</code> available when <code class="language-plaintext highlighter-rouge">require_kvm=true</code></li>
+</ul>
+
+<h2 id="5-security-enforcement">5. Security Enforcement</h2>
+
+<ul>
+  <li>Native launch mode fails closed if isolation checks fail.</li>
+  <li>Breakout indicators (<code class="language-plaintext highlighter-rouge">--privileged</code>, host-network/pid style flags) are explicitly blocked in firecracker backend execution path.</li>
+  <li>Existing OPA, execution fingerprint, and ledger controls remain mandatory and unchanged.</li>
+</ul>
+
+<h2 id="6-validation-commands">6. Validation Commands</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">PYTHONPATH</span><span class="o">=</span>src .venv/bin/pytest <span class="nt">-q</span> <span class="se">\</span>
+  tests/unit/test_firecracker_microvm_runner.py <span class="se">\</span>
+  tests/unit/test_universal_edge_runner.py <span class="se">\</span>
+  tests/qa/test_sprint34_microvm_transition_qa.py
+</code></pre></div></div>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

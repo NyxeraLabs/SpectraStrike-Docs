@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>sprint-11 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-11-engineering-log">Sprint 11 Engineering Log</h1>
+
+<h2 id="program-context">Program Context</h2>
+
+<ul>
+  <li>Phase: Phase 4</li>
+  <li>Sprint: Sprint 11</li>
+  <li>Status: Completed</li>
+  <li>Primary Architecture Layers: Armory Registry, Supply-Chain Security, Operator Control Plane</li>
+</ul>
+
+<h2 id="architectural-intent">Architectural Intent</h2>
+
+<p>Implement The Armory as an internal immutable tool registry to support BYOT onboarding without trust-on-first-use.</p>
+
+<h2 id="implementation-detail">Implementation Detail</h2>
+
+<ul>
+  <li>Added internal OCI registry service (<code class="language-plaintext highlighter-rouge">armory-registry</code>) in dev/prod compose with immutable semantics (<code class="language-plaintext highlighter-rouge">REGISTRY_STORAGE_DELETE_ENABLED=false</code>).</li>
+  <li>Implemented Python Armory service (<code class="language-plaintext highlighter-rouge">pkg.armory.service</code>) with deterministic pipeline:
+    <ul>
+      <li>artifact digest (<code class="language-plaintext highlighter-rouge">sha256</code>) calculation,</li>
+      <li>SBOM generation contract,</li>
+      <li>vulnerability scan summary contract,</li>
+      <li>Cosign/Sigstore-equivalent signing metadata generation.</li>
+    </ul>
+  </li>
+  <li>Implemented file-backed registry persistence (<code class="language-plaintext highlighter-rouge">.spectrastrike/armory/registry.json</code>) and approval workflow for authorized digests.</li>
+  <li>Expanded Web UI Armory controls:
+    <ul>
+      <li>ingest endpoint now emits digest metadata,</li>
+      <li>approve endpoint to authorize specific digests,</li>
+      <li>authorized-list endpoint for execution allowlist visibility.</li>
+    </ul>
+  </li>
+  <li>Expanded Admin TUI with Armory command set:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">armory ingest &lt;tool_name&gt; &lt;image_ref&gt;</code></li>
+      <li><code class="language-plaintext highlighter-rouge">armory list</code></li>
+      <li><code class="language-plaintext highlighter-rouge">armory approve &lt;tool_sha256&gt;</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="security-and-control-posture">Security and Control Posture</h2>
+
+<ul>
+  <li>Digest-based execution authorization is explicit and deny-by-default.</li>
+  <li>Registry modifications are append/replace-by-digest and approval-gated.</li>
+  <li>Armory actions remain bound to authenticated UI/TUI session controls.</li>
+</ul>
+
+<h2 id="qa-and-validation-evidence">QA and Validation Evidence</h2>
+
+<ul>
+  <li>Added <code class="language-plaintext highlighter-rouge">tests/unit/test_armory_service.py</code> for ingest/approve/authorized retrieval behavior.</li>
+  <li>Extended TUI and client unit coverage for Armory command flow.</li>
+</ul>
+
+<h2 id="risk-register">Risk Register</h2>
+
+<p>Current signer and scanner providers are deterministic local adapters pending external Sigstore/Syft/Grype runtime wiring. Contract boundaries are fixed for drop-in replacement.</p>
+
+<h2 id="forward-linkage">Forward Linkage</h2>
+
+<p>Sprint 12 consumes authorized Armory digests in the Universal Edge Runner execution path.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

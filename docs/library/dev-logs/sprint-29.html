@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>sprint-29 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-29-engineering-log">Sprint 29 Engineering Log</h1>
+
+<h2 id="program-context">Program Context</h2>
+
+<ul>
+  <li>Phase: Phase 7</li>
+  <li>Sprint: Sprint 29</li>
+  <li>Status: Completed</li>
+  <li>Primary Architecture Layers: C2 Trust Extension Layer, Audit &amp; State Plane</li>
+</ul>
+
+<h2 id="architectural-intent">Architectural Intent</h2>
+
+<p>Deliver advanced hardened C2 adapters and bind live session execution into verifiable ledger flow.</p>
+
+<h2 id="implementation-detail">Implementation Detail</h2>
+
+<p>Implemented:</p>
+
+<ul>
+  <li>Hardened Sliver adapter runtime with required command/target controls.</li>
+  <li>Mythic adapter scaffold for future command transport expansion.</li>
+  <li>Live session orchestration function that persists C2 execution metadata into Merkle ledger leaves.</li>
+  <li>Zero-trust live-session enforcement by reusing hardened C2 boundary checks before adapter execution.</li>
+</ul>
+
+<h2 id="security-and-control-posture">Security and Control Posture</h2>
+
+<ul>
+  <li>C2 session dispatch is denied unless JWS, policy hash, and execution fingerprint checks pass.</li>
+  <li>Adapter-specific session metadata is immutably recorded in the append-only ledger path.</li>
+  <li>Live session execution remains bound to policy-approved trust context.</li>
+</ul>
+
+<h2 id="qa-and-validation-evidence">QA and Validation Evidence</h2>
+
+<ul>
+  <li>Unit tests cover hardened Sliver behavior, Mythic scaffold behavior, metadata-to-ledger persistence, and zero-trust rejection during forged live sessions.</li>
+  <li>Sprint QA checks assert roadmap completion lines and advanced C2 contract presence.</li>
+</ul>
+
+<h2 id="risk-register">Risk Register</h2>
+
+<ul>
+  <li>Risk: adapter scaffold responses are currently simulated and need real transport integration hardening.</li>
+  <li>Mitigation: Sprint 30+ broker and streaming phases should include live adapter transport security controls.</li>
+</ul>
+
+<h2 id="forward-linkage">Forward Linkage</h2>
+
+<p>Sprint 30 integrates broker abstraction and high-throughput streaming for expanded live telemetry flows.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

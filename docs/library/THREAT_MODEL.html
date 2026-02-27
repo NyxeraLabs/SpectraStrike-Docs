@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>THREAT MODEL | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="spectrastrike-threat-model-v10-sprint-18">SpectraStrike Threat Model v1.0 (Sprint 18)</h1>
+
+<h2 id="1-scope">1. Scope</h2>
+
+<p>This model formalizes threat coverage for Phase 5.5 across four primary planes:</p>
+<ul>
+  <li>Control Plane (API, Orchestrator, OPA client, signing workflows)</li>
+  <li>Runner Plane (Universal Runner, execution isolation, telemetry emission)</li>
+  <li>C2 Adapter Plane (stateful adapters and translation bridges)</li>
+  <li>Key and Secret Plane (Vault/HSM key material, policy bundles, signed config)</li>
+</ul>
+
+<p>Methodology: STRIDE (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege).</p>
+
+<h2 id="2-trust-boundary-diagram">2. Trust Boundary Diagram</h2>
+
+<pre><code class="language-mermaid">flowchart LR
+    Operator["Operator UI/TUI"]
+    Control["Control Plane\n(Orchestrator + OPA client)"]
+    OPA["OPA Policy Engine"]
+    Broker["Broker\n(RabbitMQ)"]
+    Runner["Universal Runner"]
+    C2["C2 Adapter Gateway"]
+    Vault["Vault/HSM"]
+    Ledger["Audit + Ledger + Telemetry Store"]
+
+    Operator --&gt;|OIDC Session + task intent| Control
+    Control --&gt;|policy input| OPA
+    OPA --&gt;|allow/deny + policy hash| Control
+    Control --&gt;|manifest JWS request| Vault
+    Vault --&gt;|signed manifest| Control
+    Control --&gt;|JWS envelope| Broker
+    Broker --&gt;|dispatch| Runner
+    Broker --&gt;|stateful commands| C2
+    Runner --&gt;|events + findings| Broker
+    C2 --&gt;|session telemetry| Broker
+    Broker --&gt;|normalized events| Ledger
+</code></pre>
+
+<p>Trust boundaries:</p>
+<ul>
+  <li>Boundary A: Untrusted human input into Control Plane.</li>
+  <li>Boundary B: Potentially compromised message transport and edge runtime.</li>
+  <li>Boundary C: Cryptographic root of trust (Vault/HSM) separate from dispatch channel.</li>
+  <li>Boundary D: Multi-tenant data segregation and audit storage boundaries.</li>
+</ul>
+
+<h2 id="3-threat-scenarios-by-stride">3. Threat Scenarios by STRIDE</h2>
+
+<h3 id="31-malicious-operator-scenarios">3.1 Malicious Operator Scenarios</h3>
+
+<ul>
+  <li>S1 (Spoofing): operator reuses stolen session token to submit high-risk task.</li>
+  <li>T1 (Tampering): operator modifies task target after policy approval via client-side mutation.</li>
+  <li>R1 (Repudiation): operator denies having approved ingest or break-glass path.</li>
+  <li>I1 (Information Disclosure): operator attempts unauthorized read of other tenant evidence.</li>
+  <li>D1 (Denial of Service): operator floods control APIs with rapid task submissions.</li>
+  <li>E1 (Elevation of Privilege): operator attempts tool execution outside assigned capabilities.</li>
+</ul>
+
+<h3 id="32-compromised-runner-scenarios">3.2 Compromised Runner Scenarios</h3>
+
+<ul>
+  <li>S2 (Spoofing): rogue process impersonates runner identity to receive tasks.</li>
+  <li>T2 (Tampering): attacker alters local execution payload after broker delivery.</li>
+  <li>R2 (Repudiation): runner drops failures and reports only successful telemetry.</li>
+  <li>I2 (Information Disclosure): runner exfiltrates telemetry payloads outside allowlist.</li>
+  <li>D2 (Denial of Service): runner abuse causes queue starvation or stuck consumers.</li>
+  <li>E2 (Elevation of Privilege): runner escapes runtime policy and pivots laterally.</li>
+</ul>
+
+<h3 id="33-supply-chain-compromise-scenarios">3.3 Supply-Chain Compromise Scenarios</h3>
+
+<ul>
+  <li>S3 (Spoofing): forged tool image identity in registry path.</li>
+  <li>T3 (Tampering): mutated dependency or container layer post-approval.</li>
+  <li>R3 (Repudiation): no attributable chain for who approved changed artifact.</li>
+  <li>I3 (Information Disclosure): malicious dependency leaks secrets at build/runtime.</li>
+  <li>D3 (Denial of Service): poisoned dependency blocks reproducible build/test flow.</li>
+  <li>E3 (Elevation of Privilege): signed pipeline token is abused for unrestricted release.</li>
+</ul>
+
+<h3 id="34-cross-tenant-escalation-scenarios">3.4 Cross-Tenant Escalation Scenarios</h3>
+
+<ul>
+  <li>S4 (Spoofing): tenant context token replayed across tenant boundaries.</li>
+  <li>T4 (Tampering): tenant_id stripped or replaced in task/telemetry channel.</li>
+  <li>R4 (Repudiation): tenant admin disputes origin of cross-tenant access.</li>
+  <li>I4 (Information Disclosure): query path bypasses tenant filter and leaks findings.</li>
+  <li>D4 (Denial of Service): one tenant saturates shared broker resources.</li>
+  <li>E4 (Elevation of Privilege): policy gap allows tenant-scoped role to execute global action.</li>
+</ul>
+
+<h2 id="4-threat-to-mitigation-mapping">4. Threat-to-Mitigation Mapping</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Threat IDs</th>
+      <th>Primary mitigations in code/architecture</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>S1, E1, E4</td>
+      <td>AAA role gates (<code class="language-plaintext highlighter-rouge">src/pkg/security/aaa_framework.py</code>), OPA capability policy (<code class="language-plaintext highlighter-rouge">config/opa/policies/capabilities.rego</code>)</td>
+    </tr>
+    <tr>
+      <td>T1, T2, T4</td>
+      <td>JWS manifest signing and verification (<code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/jws.py</code>, <code class="language-plaintext highlighter-rouge">src/pkg/runner/jws_verify.py</code>)</td>
+    </tr>
+    <tr>
+      <td>R1, R2, R3, R4</td>
+      <td>Audit trail chain (<code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/audit_trail.py</code>), legal governance controls (<code class="language-plaintext highlighter-rouge">src/pkg/governance/legal_enforcement.py</code>)</td>
+    </tr>
+    <tr>
+      <td>I1, I4</td>
+      <td>Tenant-aware request guards and authorization checks (<code class="language-plaintext highlighter-rouge">ui/web/app/lib/request-guards.ts</code>, <code class="language-plaintext highlighter-rouge">ui/web/app/lib/auth-store.ts</code>)</td>
+    </tr>
+    <tr>
+      <td>D1, D2, D4</td>
+      <td>Queue-based async dispatch and bounded retry semantics (<code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/messaging.py</code>, <code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/event_loop.py</code>)</td>
+    </tr>
+    <tr>
+      <td>I2, E2</td>
+      <td>Runner network policy fencing (<code class="language-plaintext highlighter-rouge">src/pkg/runner/network_policy.py</code>) and signature checks (<code class="language-plaintext highlighter-rouge">src/pkg/runner/jws_verify.py</code>)</td>
+    </tr>
+    <tr>
+      <td>S3, T3, I3, E3</td>
+      <td>Supply-chain controls (SBOM/signature scripts in <code class="language-plaintext highlighter-rouge">docker/scripts/security/</code>) and Armory authorization checks (<code class="language-plaintext highlighter-rouge">src/pkg/armory/service.py</code>)</td>
+    </tr>
+    <tr>
+      <td>D3</td>
+      <td>QA blocker recording and deterministic CI checks (<code class="language-plaintext highlighter-rouge">docs/manuals/QA_RUNBOOK.md</code>, <code class="language-plaintext highlighter-rouge">tests/qa/test_docs_qa.py</code>)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="5-residual-risk-backlog-link">5. Residual Risk Backlog Link</h2>
+
+<p>Unresolved risks and required remediations are tracked in:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docs/RISK_BACKLOG.md</code> (formal backlog entries for Sprint 18)</li>
+</ul>
+
+<h2 id="6-threat-model-status">6. Threat Model Status</h2>
+
+<ul>
+  <li>STRIDE model coverage: complete for Control, Runner, C2 Adapter, Vault/HSM trust boundaries.</li>
+  <li>Sprint status: Sprint 18 threat model tasks complete except final Git commit handoff.</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

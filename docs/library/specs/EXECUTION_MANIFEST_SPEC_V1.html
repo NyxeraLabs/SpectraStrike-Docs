@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EXECUTION MANIFEST SPEC V1 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="execution-manifest-specification-v1">Execution Manifest Specification v1</h1>
+
+<p>Version: <code class="language-plaintext highlighter-rouge">1.0.0</code>
+Status: Published (Sprint 33)</p>
+
+<h2 id="1-purpose">1. Purpose</h2>
+
+<p>The Execution Manifest is the canonical task-authorization payload used for cryptographic endorsement and deterministic execution fingerprint binding.</p>
+
+<h2 id="2-canonical-json-rules">2. Canonical JSON Rules</h2>
+
+<ul>
+  <li>Manifest payload MUST be JSON object.</li>
+  <li>Serialization MUST be deterministic: sorted keys + compact separators.</li>
+  <li>UTF-8 encoding MUST be used for hashing/signing.</li>
+  <li>Manifest hash MUST be <code class="language-plaintext highlighter-rouge">sha256(canonical_json)</code>.</li>
+</ul>
+
+<p>Reference implementation:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">pkg.orchestrator.manifest.canonical_manifest_json</code></li>
+  <li><code class="language-plaintext highlighter-rouge">pkg.orchestrator.manifest.deterministic_manifest_hash</code></li>
+</ul>
+
+<h2 id="3-required-fields">3. Required Fields</h2>
+
+<p>Top-level required fields:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">manifest_version</code> (semantic version, currently major <code class="language-plaintext highlighter-rouge">1</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">issued_at</code> (ISO-8601)</li>
+  <li><code class="language-plaintext highlighter-rouge">task_context</code> (object)</li>
+  <li><code class="language-plaintext highlighter-rouge">target_urn</code> (URN format)</li>
+  <li><code class="language-plaintext highlighter-rouge">tool_sha256</code> (<code class="language-plaintext highlighter-rouge">sha256:&lt;64 lowercase hex&gt;</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">nonce</code> (8-128 chars <code class="language-plaintext highlighter-rouge">[A-Za-z0-9._:-]</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">parameters</code> (object)</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">task_context</code> required fields:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">task_id</code></li>
+  <li><code class="language-plaintext highlighter-rouge">tenant_id</code></li>
+  <li><code class="language-plaintext highlighter-rouge">operator_id</code></li>
+  <li><code class="language-plaintext highlighter-rouge">source</code></li>
+  <li><code class="language-plaintext highlighter-rouge">action</code></li>
+  <li><code class="language-plaintext highlighter-rouge">requested_at</code></li>
+  <li><code class="language-plaintext highlighter-rouge">correlation_id</code></li>
+</ul>
+
+<h2 id="4-validation-contract">4. Validation Contract</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">target_urn</code> MUST match <code class="language-plaintext highlighter-rouge">urn:&lt;nid&gt;:&lt;nss&gt;</code> style format.</li>
+  <li><code class="language-plaintext highlighter-rouge">tool_sha256</code> MUST match exact lowercase SHA-256 format.</li>
+  <li><code class="language-plaintext highlighter-rouge">manifest_version</code> MUST satisfy semver and supported policy window.</li>
+  <li>Non-canonical submissions MUST be rejected.</li>
+</ul>
+
+<p>Reference validator path:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">pkg.orchestrator.manifest.parse_and_validate_manifest_submission</code></li>
+</ul>
+
+<h2 id="5-security-binding">5. Security Binding</h2>
+
+<p>Manifest fields participate in:</p>
+<ul>
+  <li>pre-sign OPA capability authorization</li>
+  <li>JWS signing in control plane</li>
+  <li>unified execution fingerprint generation</li>
+  <li>Merkle ledger append-only intent/evidence chain</li>
+</ul>
+
+<h2 id="6-example-canonical-json">6. Example (Canonical JSON)</h2>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="nl">"issued_at"</span><span class="p">:</span><span class="s2">"2026-02-27T00:00:05+00:00"</span><span class="p">,</span><span class="nl">"manifest_version"</span><span class="p">:</span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="nl">"nonce"</span><span class="p">:</span><span class="s2">"nonce-0001"</span><span class="p">,</span><span class="nl">"parameters"</span><span class="p">:{</span><span class="nl">"ports"</span><span class="p">:[</span><span class="mi">443</span><span class="p">]},</span><span class="nl">"target_urn"</span><span class="p">:</span><span class="s2">"urn:target:ip:10.0.0.5"</span><span class="p">,</span><span class="nl">"task_context"</span><span class="p">:{</span><span class="nl">"action"</span><span class="p">:</span><span class="s2">"run"</span><span class="p">,</span><span class="nl">"correlation_id"</span><span class="p">:</span><span class="s2">"bc8d85ff-31f2-4b57-9adf-3ce24227de97"</span><span class="p">,</span><span class="nl">"operator_id"</span><span class="p">:</span><span class="s2">"op-001"</span><span class="p">,</span><span class="nl">"requested_at"</span><span class="p">:</span><span class="s2">"2026-02-27T00:00:00+00:00"</span><span class="p">,</span><span class="nl">"source"</span><span class="p">:</span><span class="s2">"api"</span><span class="p">,</span><span class="nl">"task_id"</span><span class="p">:</span><span class="s2">"task-001"</span><span class="p">,</span><span class="nl">"tenant_id"</span><span class="p">:</span><span class="s2">"tenant-a"</span><span class="p">},</span><span class="nl">"tool_sha256"</span><span class="p">:</span><span class="s2">"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SECURE SDLC PACKAGE | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="secure-sdlc-documentation-package-sprint-32">Secure SDLC Documentation Package (Sprint 32)</h1>
+
+<p>This package defines how SpectraStrike enforces secure software lifecycle controls as release-gating evidence.</p>
+
+<h2 id="1-governance-model">1. Governance Model</h2>
+
+<ul>
+  <li>Roadmap-driven delivery and control traceability: <code class="language-plaintext highlighter-rouge">docs/ROADMAP.md</code></li>
+  <li>Task-level tracking and status integrity: <code class="language-plaintext highlighter-rouge">docs/kanban-board.csv</code></li>
+  <li>Sprint engineering evidence and risk documentation: <code class="language-plaintext highlighter-rouge">docs/dev-logs/</code></li>
+  <li>Mandatory QA gate orchestration: <code class="language-plaintext highlighter-rouge">docs/manuals/QA_RUNBOOK.md</code></li>
+</ul>
+
+<h2 id="2-security-design-and-threat-controls">2. Security Design and Threat Controls</h2>
+
+<ul>
+  <li>Threat model and architecture posture:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">docs/THREAT_MODEL.md</code></li>
+      <li><code class="language-plaintext highlighter-rouge">docs/WHITEPAPER.md</code></li>
+      <li><code class="language-plaintext highlighter-rouge">docs/ARCHITECTURE_SECURITY_OVERVIEW.md</code></li>
+    </ul>
+  </li>
+  <li>Zero-trust authorization and policy delegation:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/opa_client.py</code></li>
+      <li><code class="language-plaintext highlighter-rouge">tests/qa/test_zero_trust_sprint17_qa.py</code></li>
+    </ul>
+  </li>
+  <li>Cryptographic execution integrity and anti-repudiation:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/execution_fingerprint.py</code></li>
+      <li><code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/merkle_ledger.py</code></li>
+      <li><code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/anti_repudiation.py</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="3-buildtestrelease-security-gates">3. Build/Test/Release Security Gates</h2>
+
+<p>Minimum release gates:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make policy-check
+make <span class="nb">test
+</span>make security-check
+./.venv/bin/python scripts/check_license_headers.py
+./.venv/bin/pytest <span class="nt">-q</span> tests/qa/test_docs_qa.py
+</code></pre></div></div>
+
+<p>For federation and cognitive integration:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">PYTHONPATH</span><span class="o">=</span>src .venv/bin/pytest <span class="nt">-q</span> <span class="se">\</span>
+  tests/unit/integration/test_vectorvue_client.py <span class="se">\</span>
+  tests/unit/integration/test_vectorvue_rabbitmq_bridge.py <span class="se">\</span>
+  tests/qa/test_sprint30_broker_abstraction_throughput_qa.py <span class="se">\</span>
+  tests/qa/test_sprint31_cognitive_feedback_loop_qa.py
+</code></pre></div></div>
+
+<h2 id="4-control-evidence-expectations">4. Control Evidence Expectations</h2>
+
+<p>Each release candidate must retain:</p>
+<ul>
+  <li>command transcript summary</li>
+  <li>pass/fail QA snapshot</li>
+  <li>blocker and remediation linkage</li>
+  <li>architecture and policy drift assessment</li>
+  <li>compliance mapping snapshot (<code class="language-plaintext highlighter-rouge">docs/compliance/</code>)</li>
+</ul>
+
+<h2 id="5-supply-chain-and-dependency-hygiene">5. Supply Chain and Dependency Hygiene</h2>
+
+<ul>
+  <li>SBOM and vulnerability scanning are mandatory pre-release controls.</li>
+  <li>Tool registry/armory ingestion paths require signing and integrity verification.</li>
+  <li>Third-party license boundaries are preserved; local license-header checker applies to in-scope project files only.</li>
+</ul>
+
+<h2 id="6-roles-and-responsibilities">6. Roles and Responsibilities</h2>
+
+<ul>
+  <li>Engineering: implements sprint scope with tests and control references.</li>
+  <li>Security: validates policy/security gate outcomes and threat-model consistency.</li>
+  <li>QA: executes runbook and captures blocker evidence with reproducible commands.</li>
+  <li>Release owner: approves release only when all mandatory gates pass or accepted risk waiver exists.</li>
+</ul>
+
+<h2 id="7-scope-notes">7. Scope Notes</h2>
+
+<ul>
+  <li>This package documents platform secure development process.</li>
+  <li>External certification/audit outcomes depend on deployment context and organizational controls.</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

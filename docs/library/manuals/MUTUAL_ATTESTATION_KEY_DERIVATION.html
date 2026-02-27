@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MUTUAL ATTESTATION KEY DERIVATION | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="mutual-attestation-and-ephemeral-key-derivation">Mutual Attestation and Ephemeral Key Derivation</h1>
+
+<h2 id="1-scope">1. Scope</h2>
+
+<p>Sprint 35 extends runner trust with:</p>
+<ul>
+  <li>TPM identity evidence contract</li>
+  <li>per-execution key derivation</li>
+  <li>runner-control-plane mutual attestation</li>
+  <li>multi-tenant isolation stress validation</li>
+</ul>
+
+<h2 id="2-core-module">2. Core Module</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">src/pkg/runner/attestation.py</code></li>
+</ul>
+
+<p>Primary classes:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">TPMIdentityProvider</code></li>
+  <li><code class="language-plaintext highlighter-rouge">EphemeralKeyDeriver</code></li>
+  <li><code class="language-plaintext highlighter-rouge">MutualAttestationService</code></li>
+  <li><code class="language-plaintext highlighter-rouge">MultiTenantIsolationStressValidator</code></li>
+</ul>
+
+<h2 id="3-execution-path-integration">3. Execution Path Integration</h2>
+
+<p>Firecracker backend (<code class="language-plaintext highlighter-rouge">src/pkg/runner/universal.py</code>) now emits:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">execution_metadata.tpm_identity</code></li>
+  <li><code class="language-plaintext highlighter-rouge">execution_metadata.ephemeral_key</code></li>
+  <li><code class="language-plaintext highlighter-rouge">execution_metadata.mutual_attestation</code></li>
+  <li>existing runtime attestation report</li>
+</ul>
+
+<p>Mutual attestation failures are terminal and block execution.</p>
+
+<h2 id="4-tenant-isolation-validation">4. Tenant Isolation Validation</h2>
+
+<p>Stress validator rejects session binding reuse across tenants by detecting identical <code class="language-plaintext highlighter-rouge">session_binding_hash</code> values mapped to different tenant identifiers.</p>
+
+<h2 id="5-validation-commands">5. Validation Commands</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">PYTHONPATH</span><span class="o">=</span>src .venv/bin/pytest <span class="nt">-q</span> <span class="se">\</span>
+  tests/unit/test_runner_attestation.py <span class="se">\</span>
+  tests/unit/test_universal_edge_runner.py <span class="se">\</span>
+  tests/qa/test_sprint35_mutual_attestation_qa.py
+</code></pre></div></div>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

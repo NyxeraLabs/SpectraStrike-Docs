@@ -1,0 +1,235 @@
+Name,Description,List,Labels,Checklist
+Initialize Git repo,Setup repository for SpectraStrike,Backlog,Dev,
+Setup Python virtual environment,Setup Python venv and dependencies,Backlog,Dev,
+Install core dependencies (requests; asyncio; logging),Install essential Python libraries,Backlog,Dev,
+Setup Docker dev containers,Prepare development Docker containers,Backlog,Dev,
+Setup IDE configuration,Configure IDE with recommended settings,Backlog,Dev,
+Configure pre-commit hooks,Implement pre-commit hooks for code quality,Backlog,Dev,
+Setup Git branching strategy,Define branching model (main/dev/feature),Backlog,Dev,
+Implement initial CI/CD pipeline (GitHub Actions / GitLab CI),Automate build/test/deploy process,Backlog,Dev,
+Setup logging framework,Implement logging for dev/testing,Backlog,Dev,
+Configure AAA framework (AuthN/AuthZ/Accounting),Setup authentication/authorization/audit,Backlog,Dev,
+Commit initial setup,Commit baseline project structure,Backlog,Dev,
+QA: validate environment consistency,Check all setups work correctly,Backlog,QA,
+QA: run linter & unit test baseline,Run initial code quality checks,Backlog,QA,
+Design orchestrator architecture,Plan SpectraStrike orchestration engine structure,Backlog,Dev,
+Implement event loop,Core async event loop implementation,Backlog,Dev,
+Implement task scheduler,Schedule tasks for pentests and simulations,Backlog,Dev,
+Implement telemetry ingestion,Collect telemetry from tools and manual tests,Backlog,Dev,
+Implement logging & audit trails,Record all events for auditing,Backlog,Dev,
+Implement AAA enforcement at engine level,Ensure AuthN/AuthZ in engine operations,Backlog,Dev,
+Unit tests for orchestrator,Test orchestrator modules,Backlog,Dev,
+Commit orchestrator code,Commit orchestrator implementation,Backlog,Dev,
+QA: run functional tests,Verify orchestrator functionality,Backlog,QA,
+QA: validate telemetry output,Check telemetry correctness,Backlog,QA,
+QA: AAA access verification,Confirm access control is enforced,Backlog,QA,
+Design API client for VectorVue,Plan integration with VectorVue API,Backlog,Integration,
+Implement encrypted data transfer (TLS),Secure communication with VectorVue,Backlog,Integration,
+Implement retries / backoff,Ensure reliable message delivery,Backlog,Integration,
+Implement event batching,Batch telemetry events for efficiency,Backlog,Integration,
+Implement message signing for integrity,Sign messages to guarantee integrity,Backlog,Integration,
+Commit integration code,Commit integration implementation,Backlog,Integration,
+QA: test API endpoints,Verify endpoints are functional,Backlog,QA,
+QA: validate encrypted communication,Confirm TLS encryption works,Backlog,QA,
+QA: confirm telemetry reaches VectorVue,Check end-to-end data delivery,Backlog,QA,
+Create Python wrapper module (Nmap),Nmap wrapper for scans,Backlog,Dev,
+Implement TCP SYN scan (Nmap),Nmap TCP scan,Backlog,Dev,
+Implement UDP scan (Nmap),Nmap UDP scan,Backlog,Dev,
+Implement OS detection (Nmap),Nmap OS detection,Backlog,Dev,
+Parse XML/JSON output (Nmap),Parse scan results,Backlog,Dev,
+Send scan results to orchestrator (Nmap),Send Nmap results to engine,Backlog,Dev,
+Integrate logging & telemetry (Nmap),Log Nmap activity,Backlog,Dev,
+Unit tests for wrapper (Nmap),Test Nmap wrapper,Backlog,Dev,
+Commit wrapper (Nmap),Commit Nmap code,Backlog,Dev,
+QA: validate scan accuracy (Nmap),Check scan correctness,Backlog,QA,
+QA: AAA enforcement (Nmap),Confirm access control,Backlog,QA,
+Connect to Metasploit RPC,Enable remote exploit control,Backlog,Dev,
+Implement module loader (Metasploit),Load exploit modules dynamically,Backlog,Dev,
+Execute exploits (Metasploit),Run automated exploits,Backlog,Dev,
+Capture session output (Metasploit),Capture results and sessions,Backlog,Dev,
+Send results to orchestrator (Metasploit),Push Metasploit output to engine,Backlog,Dev,
+Logging & telemetry (Metasploit),Log events,Backlog,Dev,
+Retry/error handling (Metasploit),Handle failed exploits,Backlog,Dev,
+Unit tests (Metasploit),Test Metasploit wrapper,Backlog,Dev,
+Commit wrapper (Metasploit),Commit Metasploit code,Backlog,Dev,
+QA: validate exploit runs (Metasploit),Check exploit execution,Backlog,QA,
+QA: check telemetry delivery (Metasploit),Confirm telemetry received,Backlog,QA,
+Add unprivileged Nmap execution fallback (-sS to -sT),Allow operator/local runs without root for Nmap scans,Backlog,Dev,
+Validate real Nmap execution path and telemetry handoff,Confirm live scan and pipeline delivery behavior,Backlog,QA,
+Implement manual Metasploit ingestion connector (sessions + session-events),Ingest operator-driven Metasploit activity from data APIs,Backlog,Integration,
+Add checkpoint-based deduplication for Metasploit manual ingestion,Prevent duplicate ingestion across sync runs,Backlog,Integration,
+Add CLI sync entrypoint for operator-driven Metasploit ingestion,Provide repeatable manual sync command for operators,Backlog,DevOps,
+Add tests for manual Metasploit ingestion flow,Validate parsing deduplication and sync behavior,Backlog,QA,
+Commit end-to-end stabilization updates (Nmap + Metasploit manual),Commit hardening and manual-ingestion baseline,Backlog,Dev,
+Select broker standard (Kafka or RabbitMQ),Choose messaging backbone for async telemetry,Done,Architecture,RabbitMQ selected with exchange/queue/DLQ model
+Implement telemetry publisher abstraction (TelemetryPublisher),Create broker-agnostic publisher interface,Done,Dev,Interface and RabbitMQ adapters implemented
+Add broker-backed async telemetry delivery,Publish orchestrator telemetry to queue/topic,Done,Dev,Async flush path publishes telemetry events to broker
+Add retry/dead-letter/idempotency for broker delivery,Harden async telemetry delivery path,Done,Dev,Bounded retry with DLQ and idempotency key dedup
+Integration tests for broker publish/consume flow,Validate queue/topic end-to-end behavior,Done,QA,Integration and unit coverage added for publish/consume
+Add dockerized RabbitMQ wiring + Makefile ops,Provide one-command deploy/test/logs workflows for messaging stack,Done,DevOps,Compose + Makefile targets for dev/prod and tools profile
+Add remote operator endpoint env configuration,Default integrations to remote operator endpoints instead of localhost,Done,DevOps,MSF RPC/manual and RabbitMQ env-based config added
+Commit messaging backbone,Commit messaging implementation,Done,Dev,Sprint 9.5 messaging baseline completed
+Connect to Cobalt Strike API,Cobalt Strike beacon automation,Backlog,Dev,
+Deploy beacon simulation (Cobalt Strike),Simulate attack beacon,Backlog,Dev,
+Capture command output (Cobalt Strike),Capture commands,Backlog,Dev,
+Log telemetry (Cobalt Strike),Log beacon events,Backlog,Dev,
+Implement retry/error handling (Cobalt Strike),Ensure resilience,Backlog,Dev,
+Unit tests (Cobalt Strike),Test wrapper,Backlog,Dev,
+Commit wrapper (Cobalt Strike),Commit code,Backlog,Dev,
+QA: verify beacon behavior (Cobalt Strike),Check beacon simulation,Backlog,QA,
+QA: telemetry integration (Cobalt Strike),Confirm telemetry,Backlog,QA,
+Setup Burp headless mode,Burp Suite web scanner automation,Backlog,Dev,
+Configure target URLs (Burp),Configure targets,Backlog,Dev,
+Automate spidering (Burp),Automate crawling,Backlog,Dev,
+Automate active scanning (Burp),Automate vulnerability scans,Backlog,Dev,
+Capture findings (Burp),Collect scan results,Backlog,Dev,
+Send to orchestrator (Burp),Push Burp data,Backlog,Dev,
+Unit tests (Burp),Test Burp integration,Backlog,Dev,
+Commit wrapper (Burp),Commit Burp code,Backlog,Dev,
+QA: validate scan coverage (Burp),Ensure all targets scanned,Backlog,QA,
+QA: ensure AAA applied (Burp),Verify access control,Backlog,QA,
+Define UI architecture and API contracts,Plan UI interaction model and backend contracts before Cobalt Strike implementation,Done,Architecture,Dockerized UI topology and API contract baseline documented in manuals.
+Implement Web UI foundation with Next.js + Tailwind CSS,Build initial web frontend baseline before Cobalt Strike implementation,Done,Frontend,Dockerized Next.js App Router + Tailwind ui-web service wired to /ui via nginx.
+Implement auth views and operator dashboard shell (Web UI),Create login and operator landing experience,Done,Frontend,Login and dashboard shell routes implemented at /ui/login and /ui/dashboard.
+Implement telemetry feed view (Nmap/Metasploit/Manual ingestion) (Web UI),Display live operational telemetry in web UI,Done,Frontend,Telemetry feed view implemented at /ui/dashboard/telemetry with Nmap Metasploit and manual ingestion stream cards.
+Implement findings and evidence navigation screens (Web UI),Expose findings and evidence browsing in web UI,Done,Frontend,"Findings list, finding detail, and evidence navigation routes implemented under /ui/dashboard/findings."
+Wire Web UI actions to orchestrator and integration endpoints,Connect frontend workflows to SpectraStrike APIs,Done,Frontend,UI quick actions wired to secure BFF routes and orchestrator proxy/fallback endpoints.
+Add Web UI tests (component/unit + basic E2E),Validate web UI behavior and core user flows,Done,QA,"Vitest component/unit tests and Playwright basic E2E flow added under ui/web/tests."
+Implement Interactive Terminal UI (Admin TUI) for operational control,Provide keyboard-first admin operations interface before Cobalt Strike implementation,Done,DevOps,"Dockerized ui-admin terminal shell implemented with authenticated health, telemetry, findings, task submission, and manual sync commands."
+Add Admin TUI command workflows (task submission; telemetry watch; integration sync),Enable admin runtime operations from terminal UI,Done,DevOps,Admin TUI task submission telemetry watch and integration sync workflows implemented
+Add Admin TUI tests and command-level QA checks,Validate admin TUI commands and interaction behavior,Done,QA,Unit and QA command-level coverage added for ui_admin shell workflows
+Commit UI foundation (Web UI + Admin TUI),Commit frontend and terminal UI baseline,Done,Frontend,Sprint 9.6 Web UI and Admin TUI baseline completed
+Implement Dockerized runtime stack for all components,Containerize SpectraStrike services for consistent deployments before Cobalt Strike implementation,Done,DevOps,Dockerfile + compose dev/prod stacks implemented
+Add Nginx reverse proxy container (TLS termination; routing; rate limits),Front proxy and edge security for all HTTP traffic,Done,Security,Nginx reverse proxy with rate limiting and hardened headers
+Add PostgreSQL container for persistent operational data,Persist orchestrator and integration state in relational DB,Done,DevOps,PostgreSQL service with healthcheck and persistent volume
+Add Redis container for cache and near-real-time log/event stream,Support low-latency caching and event/log buffering,Done,DevOps,Redis service with appendonly persistence and healthcheck
+Add secure internal Docker network segmentation between services,Isolate service-to-service traffic with explicit network policy,Done,Security,internal core/tools networks and edge split configured
+Add secrets/config management for credentials and API keys,Protect sensitive runtime configuration and tokens,Done,Security,compose secrets files + env-driven endpoint config
+Add host firewall baseline for published Docker ports,Restrict ingress to explicitly approved exposed service ports,Done,Security,iptables DOCKER-USER baseline script and Make target added
+Add egress allowlist enforcement for Docker traffic,Restrict outbound container traffic to approved network destinations,Done,Security,host egress allowlist script and Make target added
+Add TLS certificate pinning for external integration clients,Defend against rogue certificates for outbound tool/API calls,Done,Security,Metasploit and VectorVue pinning checks implemented
+Add HTTPS edge with optional mTLS in reverse proxy,Encrypt ingress traffic and optionally verify client certificates,Done,Security,Nginx TLS listener with optional mTLS client verification
+Add internal mTLS for telemetry data plane,Encrypt app to broker telemetry transport with mutual certificate validation,Done,Security,RabbitMQ TLS-only listener and app client cert auth added
+Add full service-to-service end-to-end TLS,Encrypt all internal runtime hops including broker and data plane,Done,Security,mTLS enforced for RabbitMQ PostgreSQL and Redis with internal CA and client certificate verification
+Add centralized log pipeline and retention policy in containers,Collect and retain application and security logs,Done,Observability,Vector and Loki stack with local retention enabled
+Add local supply-chain security gate,"Generate SBOM, scan CVEs, and verify signed images before deploy",Done,Security,Dockerized syft grype cosign workflows and Make targets
+Add tamper-evident audit trail chaining,Protect audit stream integrity against silent record tampering,Done,Security,hash-linked audit events implemented in logging framework
+Add stronger AAA controls,Enforce constant-time auth checks optional MFA and lockout policy,Done,Security,AAA lockout and optional MFA code validation added
+Add health checks startup ordering and restart policies for all services,Improve service reliability and self-healing behavior,Done,DevOps,depends_on health conditions and healthchecks configured
+Add backup/restore workflow for PostgreSQL and Redis state,Guarantee recoverability for operational data,Done,DevOps,backup scripts and make targets added
+Add container security baseline (non-root minimal images pinned versions),Reduce container attack surface and supply-chain risk,Done,Security,non-root app read-only fs no-new-privileges and cap-drop
+Add infrastructure integration tests and security QA checks,Validate runtime stack and hardening controls end-to-end,Done,QA,compose config validation and pytest baseline integrated
+Add project Makefile for easy test easy deploy and easy QA operations,Create one-command developer and operator workflows,Done,DevOps,Makefile includes deploy test qa backups and security-check
+Add QA runbook and full-regression command targets,Standardize complete QA execution for local and CI usage,Done,QA,QA_RUNBOOK and full-regression Make target added
+Commit security/container platform baseline,Commit hardened infrastructure baseline,Done,DevOps,Hardening baseline implemented in repo
+Sprint 9.8 QA: validate Sprint 9.5 messaging backbone tests,Run messaging publisher and integration QA suite for RabbitMQ delivery path,Done,QA,pytest tests for telemetry messaging + publish/consume passed
+Sprint 9.8 QA: validate Sprint 9.5 remote endpoint/manual ingestion,Run remote endpoint config and Metasploit manual ingestion QA coverage,Done,QA,pytest remote endpoint and manual-ingestion tests passed
+Sprint 9.8 QA: validate Sprint 9.6 Admin TUI workflows,Run command-level QA checks for task telemetry watch and sync commands,Done,QA,ui_admin unit + QA tests passed
+Sprint 9.8 QA: rerun Sprint 9.6 Web UI tests in dependency-ready runtime,Execute Vitest and Playwright suites after installing ui/web dependencies,Backlog,QA,"Blocked by DNS/npm registry access. Exact outputs: npm --prefix ui/web install --no-audit --no-fund -> EAI_AGAIN getaddrinfo EAI_AGAIN registry.npmjs.org; npm --prefix ui/web run test:unit -> sh: line 1: vitest: command not found; npm --prefix ui/web run test:e2e -> error: unknown command 'test'"
+Sprint 9.8 QA: validate Sprint 9.7 AAA and audit hardening tests,Run AAA framework and audit trail regression suite,Done,QA,pytest AAA and audit QA tests passed
+Sprint 9.8 QA: validate Sprint 9.7 compose policy and config checks,Validate dev/prod compose rendering and hardening policy script,Done,QA,compose config and check_compose_policy.sh passed
+Sprint 9.8 QA: validate docs integrity and schema,Check manuals index links roadmap completion and kanban CSV schema under automated test,Done,QA,tests/qa/test_docs_qa.py added and passing
+Sprint 9.8 QA: validate repository license headers,Run license header enforcement script across repository paths,Done,QA,scripts/check_license_headers.py passed
+Governance: environment-aware legal enforcement service,Implement unified legal enforcement service with environment detection and local/offline behavior,Governance,Architecture,core/governance/legal-enforcement.service.ts added with CLI Web UI and auth middleware hooks
+Governance: versioned legal configuration,Define centralized legal document versions for EULA AUP and Privacy,Governance,Architecture,config/legal.config.ts added and wired into enforcement checks
+Governance: self-hosted acceptance storage,Persist and validate local installation acceptance under .spectrastrike/legal/acceptance.json,Governance,Security,self-hosted acceptance read/write support implemented
+Governance: enterprise installation acceptance model,Draft installation-level enterprise acceptance storage model with optional per-user requirement flag,Governance,Architecture,legal_installation_acceptance SQL draft added
+Governance: saas user-level acceptance schema,Draft SaaS user acceptance schema for login/token gating and version reacceptance,Governance,Architecture,legal_user_acceptance SQL draft added
+Governance: legal middleware integration,Integrate legal enforcement into auth and protected API checks with explicit LEGAL_ACCEPTANCE_REQUIRED error,Governance,Security,login/demo and protected API routes now enforce legal state before access
+Governance: re-acceptance flow support,Support version mismatch invalidation and legal re-acceptance write path,Governance,DevOps,/ui/api/v1/auth/legal/accept endpoint and legal acceptance page added
+Governance: documentation indexing,Index governance legal and security documents in manuals index and README,Governance,Dev,manual index and README legal/governance sections updated
+Governance: SECURITY.md integration,Ensure root security policy references security governance docs and reporting workflow,Governance,Security,SECURITY.md updated to reference docs/SECURITY_POLICY.md and disclosure process
+Sprint 9.9 QA: validate legal acceptance API runtime path,Verify legal acceptance endpoint behavior in dockerized self-hosted mode,Done,QA,"POST /ui/api/v1/auth/legal/accept validated after persistence-path and error-handling hardening"
+Sprint 9.9 QA: validate legal persistence writable path,Confirm acceptance file persistence works in read-only container model,Done,QA,"SPECTRASTRIKE_LEGAL_ACCEPTANCE_PATH mapped to /var/lib/spectrastrike/legal/acceptance.json with dedicated volume"
+Sprint 9.9 QA: validate legal gate auth behavior,Confirm login/demo workflows enforce LEGAL_ACCEPTANCE_REQUIRED until acceptance is recorded,Done,QA,Auth and demo routes verified against legal enforcement decision path
+Sprint 9.9 QA: stabilize ui-web healthcheck startup behavior,Eliminate false-unhealthy startup states during make up flow,Done,DevOps,Healthcheck hardened to probe hostname and loopback paths with resilient status handling
+Sprint 9.9 QA: restore infra startup script execution,Resolve container startup failures caused by non-executable mounted scripts,Done,DevOps,"Executable permissions restored for start-rabbitmq.sh start-postgres-tls.sh and start-redis-tls.sh"
+Sprint 9.9 Docs: update roadmap kanban README manuals and dev-log,Align governance implementation evidence with release documentation,Done,Dev,"Sprint 9.9 entries added to roadmap kanban dev-logs index README and manuals"
+Implement wrapper module (Gobuster / DirBuster),Directory brute-force scanning,Backlog,Dev,
+Configure wordlists (Gobuster / DirBuster),Set up wordlists,Backlog,Dev,
+Automate directory scan (Gobuster / DirBuster),Run directory scans,Backlog,Dev,
+Parse results (Gobuster / DirBuster),Parse directory scan results,Backlog,Dev,
+Send to orchestrator (Gobuster / DirBuster),Push results to engine,Backlog,Dev,
+Unit tests (Gobuster / DirBuster),Test wrapper,Backlog,Dev,
+Commit wrapper (Gobuster / DirBuster),Commit code,Backlog,Dev,
+QA: validate coverage (Gobuster / DirBuster),Check directories found,Backlog,QA,
+QA: telemetry integration (Gobuster / DirBuster),Confirm telemetry sent,Backlog,QA,
+Implement wrapper (Impacket),AD & network protocol tools,Backlog,Dev,
+Execute SMB/LDAP/NTLM tests (Impacket),Run network tests,Backlog,Dev,
+Capture output (Impacket),Collect results,Backlog,Dev,
+Send telemetry (Impacket),Push results to engine,Backlog,Dev,
+Unit tests (Impacket),Test wrapper,Backlog,Dev,
+Commit wrapper (Impacket),Commit code,Backlog,Dev,
+QA: verify network protocol handling (Impacket),Check protocol coverage,Backlog,QA,
+QA: telemetry checks (Impacket),Confirm telemetry,Backlog,QA,
+Execute AD enumeration (BloodHound),Enumerate AD,Backlog,Dev,
+Build graph data (BloodHound),Build AD graph,Backlog,Dev,
+Send to orchestrator (BloodHound),Push results,Backlog,Dev,
+Logging & telemetry (BloodHound),Log events,Backlog,Dev,
+Unit tests (BloodHound),Test wrapper,Backlog,Dev,
+Commit wrapper (BloodHound),Commit code,Backlog,Dev,
+QA: validate AD graph (BloodHound),Check graph accuracy,Backlog,QA,
+QA: telemetry delivery (BloodHound),Confirm telemetry sent,Backlog,QA,
+AWS SDK/Boto3 integration,Collect AWS data,Backlog,Dev,
+Azure SDK integration,Collect Azure data,Backlog,Dev,
+GCP SDK integration,Collect GCP data,Backlog,Dev,
+Jenkins / GitLab / GitHub Actions integration,Collect CI/CD info,Backlog,Dev,
+Terraform / Ansible checks,Infrastructure as code checks,Backlog,Dev,
+Logging & telemetry (Cloud/CI),Log results,Backlog,Dev,
+Unit tests (Cloud/CI),Test cloud/CI wrappers,Backlog,Dev,
+Commit wrapper (Cloud/CI),Commit code,Backlog,Dev,
+QA: verify cloud data collection,Check cloud integrations,Backlog,QA,
+QA: CI/CD pipeline validation,Verify CI/CD info,Backlog,QA,
+Implement mobile scanner integration,Mobile pentest tools,Backlog,Dev,
+API fuzzing tools integration,API pentest automation,Backlog,Dev,
+Web vulnerability scanners (OWASP ZAP),Web app scans,Backlog,Dev,
+Capture results (Mobile/API/Web),Collect findings,Backlog,Dev,
+Send telemetry (Mobile/API/Web),Push results,Backlog,Dev,
+Unit tests (Mobile/API/Web),Test wrappers,Backlog,Dev,
+Commit wrapper (Mobile/API/Web),Commit code,Backlog,Dev,
+QA: validate scans (Mobile/API/Web),Verify scan coverage,Backlog,QA,
+QA: telemetry integration (Mobile/API/Web),Confirm telemetry sent,Backlog,QA,
+Implement ATT&CK scenarios,Red Team simulations,Backlog,Dev,
+Implement Chaos Monkey / Chaos Toolkit scripts,Chaos/Failure simulations,Backlog,Dev,
+Failure simulation scripts,Simulate failures,Backlog,Dev,
+Logging & telemetry (Red Team),Log events,Backlog,Dev,
+Unit tests (Red Team),Test wrapper,Backlog,Dev,
+Commit wrapper (Red Team),Commit code,Backlog,Dev,
+QA: validate simulation scenarios (Red Team),Confirm scenarios work,Backlog,QA,
+QA: telemetry delivery (Red Team),Confirm telemetry sent,Backlog,QA,
+Design manual input API,Manual pentester input ingestion,Backlog,Dev,
+Implement authentication & authorization (Manual),AAA enforcement for manual tests,Backlog,Dev,
+Implement audit logging (Manual),Audit manual submissions,Backlog,Dev,
+Implement Metasploit manual-ingestion connector (pull sessions/events),Ingest manual Metasploit execution results,Backlog,Integration,
+Integrate manual results into orchestrator,Push manual results to engine,Backlog,Dev,
+Unit tests (Manual),Test manual input API,Backlog,Dev,
+Commit code (Manual),Commit code,Backlog,Dev,
+QA: verify manual test ingestion,Confirm manual tests received,Backlog,QA,
+QA: telemetry delivery (Manual),Confirm telemetry sent,Backlog,QA,
+Research AI pentest API,Study AI tools for pentesting,Backlog,Future,
+Design integration layer (AI),Plan AI integration,Backlog,Future,
+Implement AI query module,Query AI for pentesting tasks,Backlog,Future,
+Send/receive results to orchestrator (AI),Push AI output,Backlog,Future,
+Logging & telemetry (AI),Log AI events,Backlog,Future,
+Unit tests (AI),Test AI module,Backlog,Future,
+Commit code (AI),Commit AI integration,Backlog,Future,
+QA: validate AI suggestions,Check AI outputs,Backlog,QA,
+QA: telemetry integration (AI),Confirm telemetry sent,Backlog,QA,
+Finalize API calls for VectorVue,Complete integration,Backlog,Integration,
+Implement secure data push (VectorVue),Securely push results,Backlog,Integration,
+Verify event batching (VectorVue),Ensure batch delivery,Backlog,Integration,
+End-to-end test with SpectraStrike,Full system validation,Backlog,Integration,
+Logging & telemetry (VectorVue),Log all events,Backlog,Integration,
+Unit tests (VectorVue),Test full pipeline,Backlog,Integration,
+Commit code (VectorVue),Commit integration,Backlog,Integration,
+QA: end-to-end validation,Confirm end-to-end functionality,Backlog,QA,
+QA: verify AAA & audit logging,Confirm AAA & audit,Backlog,QA,
+QA: confirm telemetry accuracy,Check telemetry consistency,Backlog,QA,
+Write user documentation,Document usage,Backlog,Dev,
+Write developer documentation,Document code & API,Backlog,Dev,
+Prepare deployment scripts,Scripts for release,Backlog,Dev,
+Final QA review,Final testing,Backlog,QA,
+Final commit,Commit final code,Backlog,Dev,
+Tag release in Git,Tag version release,Backlog,Dev,
+QA: documentation review,Review docs,Backlog,QA,
+QA: final regression tests,Run regression tests,Backlog,QA,

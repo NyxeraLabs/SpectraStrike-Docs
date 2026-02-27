@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>sprint-26 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-26-engineering-log">Sprint 26 Engineering Log</h1>
+
+<h2 id="program-context">Program Context</h2>
+
+<ul>
+  <li>Phase: Phase 6</li>
+  <li>Sprint: Sprint 26</li>
+  <li>Status: Completed</li>
+  <li>Primary Architecture Layers: Audit &amp; State Plane, Cryptographic Integrity</li>
+</ul>
+
+<h2 id="architectural-intent">Architectural Intent</h2>
+
+<p>Implement the append-only Merkle ledger runtime based on Sprint 25 model definitions.</p>
+
+<h2 id="implementation-detail">Implementation Detail</h2>
+
+<p>Implemented:</p>
+
+<ul>
+  <li>Append-only Merkle tree runtime with deterministic left-right growth and duplicate-last odd node strategy.</li>
+  <li>Immutable execution leaf persistence with hash-chained JSONL records.</li>
+  <li>Periodic root generation based on fixed leaf cadence.</li>
+  <li>Root signing using control-plane signing authority contract.</li>
+  <li>Root verification routine that validates both deterministic root recomputation and signature integrity.</li>
+  <li>Tamper simulation coverage that detects immutable record mutation.</li>
+</ul>
+
+<h2 id="security-and-control-posture">Security and Control Posture</h2>
+
+<ul>
+  <li>Immutable leaf chain prevents silent mutation of persisted evidence.</li>
+  <li>Root signing establishes control-plane authority over ledger checkpoints.</li>
+  <li>Verification path fails closed on root mismatch or signature mismatch.</li>
+</ul>
+
+<h2 id="qa-and-validation-evidence">QA and Validation Evidence</h2>
+
+<ul>
+  <li>Unit tests validate deterministic root behavior, persistence, periodic root cadence, signature verification, and tamper detection.</li>
+  <li>Sprint QA test confirms roadmap closure lines and core module contract presence.</li>
+</ul>
+
+<h2 id="risk-register">Risk Register</h2>
+
+<ul>
+  <li>Risk: production authority integration currently relies on abstract signer contract.</li>
+  <li>Mitigation: wire Vault transit-backed signer adapter in Sprint 27/28 verifier runtime.</li>
+</ul>
+
+<h2 id="forward-linkage">Forward Linkage</h2>
+
+<p>Sprint 27 adds inclusion proof API, deterministic rebuild/export, and read-only verifier node workflows.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

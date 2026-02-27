@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>sprint-22 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-22-engineering-log">Sprint 22 Engineering Log</h1>
+
+<h2 id="program-context">Program Context</h2>
+
+<ul>
+  <li>Phase: Phase 5.6</li>
+  <li>Sprint: Sprint 22</li>
+  <li>Status: Completed</li>
+  <li>Primary Architecture Layers: Control Plane, Federation Integration, Audit Plane</li>
+</ul>
+
+<h2 id="architectural-intent">Architectural Intent</h2>
+
+<p>Bind execution identity to telemetry federation using a unified cryptographic fingerprint.</p>
+
+<h2 id="implementation-detail">Implementation Detail</h2>
+
+<p>Completed Sprint 22 controls:</p>
+<ul>
+  <li>Defined unified execution fingerprint schema:
+<code class="language-plaintext highlighter-rouge">manifest_hash + tool_hash + operator_id + tenant_id + policy_decision_hash + timestamp</code>.</li>
+  <li>Implemented fingerprint generation and deterministic canonical encoding.</li>
+  <li>Bound fingerprint generation to RabbitMQ bridge forwarding path before dispatch.</li>
+  <li>Persisted fingerprint bind/validate outcomes in tamper-evident integrity audit stream.</li>
+  <li>Included execution fingerprint inside VectorVue telemetry metadata and federation bundle.</li>
+  <li>Enforced fingerprint validation gate before dispatch to downstream integration target.</li>
+  <li>Rejected forwarding when provided fingerprint mismatched computed fingerprint.</li>
+  <li>Migrated bridge default behavior to federated gateway path with compatibility fallback for legacy direct API mode.</li>
+  <li>Added integration and unit regression coverage for fingerprint integrity controls.</li>
+</ul>
+
+<h2 id="security-and-control-posture">Security and Control Posture</h2>
+
+<ul>
+  <li>Federation transport payloads now carry deterministic execution fingerprint identity.</li>
+  <li>Tampering attempts with execution fingerprint are denied before dispatch.</li>
+  <li>Legacy direct API emission path is no longer default in bridge runtime and is retained only as explicit compatibility mode.</li>
+</ul>
+
+<h2 id="qa-and-validation-evidence">QA and Validation Evidence</h2>
+
+<p>Commands:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">PYTHONPATH=src .venv/bin/pytest -q tests/unit/test_execution_fingerprint.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">PYTHONPATH=src .venv/bin/pytest -q tests/unit/integration/test_vectorvue_rabbitmq_bridge.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">PYTHONPATH=src .venv/bin/pytest -q tests/unit/integration/test_vectorvue_client.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">PYTHONPATH=src .venv/bin/pytest -q tests/qa/test_sprint22_federation_fingerprint_qa.py</code></li>
+</ul>
+
+<h2 id="risk-register">Risk Register</h2>
+
+<p>Residual risk:</p>
+<ul>
+  <li>Full gateway-side mTLS + Ed25519 hard requirement enforcement is planned under Sprint 23 federation channel hardening tasks.</li>
+</ul>
+
+<h2 id="forward-linkage">Forward Linkage</h2>
+
+<p>Sprint 23 enforces single outbound federation gateway and removes remaining legacy direct API paths.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

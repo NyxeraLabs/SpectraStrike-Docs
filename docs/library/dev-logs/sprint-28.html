@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>sprint-28 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-28-engineering-log">Sprint 28 Engineering Log</h1>
+
+<h2 id="program-context">Program Context</h2>
+
+<ul>
+  <li>Phase: Phase 7</li>
+  <li>Sprint: Sprint 28</li>
+  <li>Status: Completed</li>
+  <li>Primary Architecture Layers: C2 Trust Boundary, Zero-Trust Enforcement</li>
+</ul>
+
+<h2 id="architectural-intent">Architectural Intent</h2>
+
+<p>Establish hardened zero-trust boundary controls for C2 adapters before live session expansion.</p>
+
+<h2 id="implementation-detail">Implementation Detail</h2>
+
+<p>Implemented:</p>
+
+<ul>
+  <li>C2 dispatch bundle bound cryptographically to unified execution fingerprint.</li>
+  <li>Mandatory JWS verification gate at adapter boundary.</li>
+  <li>Policy decision hash validation gate at adapter boundary.</li>
+  <li>Hardened execution boundary isolation (adapter allowlist + command token blocking).</li>
+  <li>Malicious adapter behavior simulation and detection path.</li>
+</ul>
+
+<h2 id="security-and-control-posture">Security and Control Posture</h2>
+
+<ul>
+  <li>Dispatch is denied on fingerprint mismatch, invalid signature, or policy hash mismatch.</li>
+  <li>Adapters execute only inside explicit hardened boundary registry.</li>
+  <li>Suspicious payload command tokens are blocked before adapter invocation.</li>
+</ul>
+
+<h2 id="qa-and-validation-evidence">QA and Validation Evidence</h2>
+
+<ul>
+  <li>Unit tests cover fingerprint binding, JWS boundary verification, policy hash mismatch rejection, boundary isolation, and malicious behavior simulation.</li>
+  <li>Sprint QA suite verifies roadmap checkbox completion and required boundary contract symbols.</li>
+</ul>
+
+<h2 id="risk-register">Risk Register</h2>
+
+<ul>
+  <li>Risk: blocked token heuristics may require tuning for certain legitimate command syntaxes.</li>
+  <li>Mitigation: refine boundary command parser with adapter-specific safe grammars in Sprint 29.</li>
+</ul>
+
+<h2 id="forward-linkage">Forward Linkage</h2>
+
+<p>Sprint 29 introduces hardened Sliver implementation and Mythic scaffold over this boundary.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

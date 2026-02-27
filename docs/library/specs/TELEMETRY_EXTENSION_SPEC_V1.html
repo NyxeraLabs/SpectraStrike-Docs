@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TELEMETRY EXTENSION SPEC V1 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="telemetry-extension-specification-v1">Telemetry Extension Specification v1</h1>
+
+<p>Version: <code class="language-plaintext highlighter-rouge">1.0.0</code>
+Status: Published (Sprint 33)</p>
+
+<h2 id="1-purpose">1. Purpose</h2>
+
+<p>Define normalized telemetry contract across orchestrator, broker, and federation bridge for VectorVue ingestion.</p>
+
+<h2 id="2-supported-input-shapes">2. Supported Input Shapes</h2>
+
+<ul>
+  <li>CloudEvents <code class="language-plaintext highlighter-rouge">specversion=1.0</code></li>
+  <li>Internal telemetry event (<code class="language-plaintext highlighter-rouge">event_type</code>, <code class="language-plaintext highlighter-rouge">actor</code>, <code class="language-plaintext highlighter-rouge">target</code>, <code class="language-plaintext highlighter-rouge">status</code>)</li>
+  <li>Legacy compatibility event (<code class="language-plaintext highlighter-rouge">event</code>, <code class="language-plaintext highlighter-rouge">result</code>, <code class="language-plaintext highlighter-rouge">context</code>)</li>
+</ul>
+
+<p>Reference parser:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">pkg.orchestrator.telemetry_schema.TelemetrySchemaParser</code></li>
+</ul>
+
+<h2 id="3-required-normalized-fields">3. Required Normalized Fields</h2>
+
+<p>Canonical event fields after parsing:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">event_type</code></li>
+  <li><code class="language-plaintext highlighter-rouge">actor</code></li>
+  <li><code class="language-plaintext highlighter-rouge">target</code></li>
+  <li><code class="language-plaintext highlighter-rouge">status</code></li>
+  <li><code class="language-plaintext highlighter-rouge">tenant_id</code></li>
+  <li><code class="language-plaintext highlighter-rouge">attributes</code></li>
+</ul>
+
+<h2 id="4-federation-extension-fields">4. Federation Extension Fields</h2>
+
+<p>Outbound federation payload MUST carry:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">execution_hash</code> (unified execution fingerprint)</li>
+  <li><code class="language-plaintext highlighter-rouge">tenant_id</code></li>
+  <li><code class="language-plaintext highlighter-rouge">operator_id</code></li>
+  <li>signed metadata and nonce/timestamp fields</li>
+</ul>
+
+<p>Telemetry enrichment fields:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">mitre_techniques</code></li>
+  <li><code class="language-plaintext highlighter-rouge">mitre_tactics</code></li>
+  <li><code class="language-plaintext highlighter-rouge">soc2_controls</code></li>
+  <li><code class="language-plaintext highlighter-rouge">iso27001_annex_a_controls</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nist_800_53_controls</code></li>
+</ul>
+
+<h2 id="5-integrity-and-trust-requirements">5. Integrity and Trust Requirements</h2>
+
+<ul>
+  <li>mTLS MUST be used for federation transport.</li>
+  <li>Payload signing MUST be enabled for federation requests.</li>
+  <li>Replay detection MUST enforce nonce uniqueness + bounded timestamp freshness.</li>
+  <li>Tenant context MUST remain present and unambiguous across parsing and federation.</li>
+</ul>
+
+<h2 id="6-compatibility-notes">6. Compatibility Notes</h2>
+
+<ul>
+  <li>Unknown attributes are preserved in <code class="language-plaintext highlighter-rouge">attributes</code>.</li>
+  <li>Default ATT&amp;CK/compliance mappings are applied when omitted.</li>
+  <li>Explicit producer-supplied mappings override defaults when present and valid.</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

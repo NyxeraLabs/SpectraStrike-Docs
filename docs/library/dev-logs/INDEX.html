@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>INDEX | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-engineering-logs-index">Sprint Engineering Logs Index</h1>
+
+<p>This folder contains per-sprint architecture and implementation logs used for engineering traceability, QA evidence alignment, and governance review.</p>
+
+<h2 id="implemented-and-qa-consolidated-sprints">Implemented and QA-Consolidated Sprints</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-01.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-02.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-03.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-04.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-05.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-06.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-07.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-08.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-08-5.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-09.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-09-5.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-09-6.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-09-7.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-09-8.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-09-9.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-10.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-11.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-12.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-13.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-14.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-15.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-16.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-17.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-18.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-19.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-20.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-21.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-22.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-23.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-24.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-25.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-26.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-27.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-28.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-29.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-30.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-31.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-32.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-33.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-34.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-35.md</code></li>
+</ul>
+
+<h2 id="planned-sprints">Planned Sprints</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-36.md</code> and beyond</li>
+</ul>
+
+<h2 id="sprint-folders-task-pr-templates">Sprint Folders (Task PR Templates)</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-18/pr-templates/</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-19/pr-templates/</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-20/pr-templates/</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-21/pr-templates/</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-22/pr-templates/</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-23/pr-templates/</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-24/pr-templates/</code></li>
+</ul>
+
+<h2 id="usage">Usage</h2>
+
+<p>Each log captures:</p>
+<ul>
+  <li>architectural intent</li>
+  <li>implementation logic</li>
+  <li>QA evidence expectations</li>
+  <li>risk posture</li>
+  <li>forward linkage to subsequent sprint delivery</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

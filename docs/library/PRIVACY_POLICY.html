@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PRIVACY POLICY | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="spectrastrike-privacy-policy">SpectraStrike Privacy Policy</h1>
+
+<p>Effective date: 2026-02-23</p>
+
+<h2 id="1-policy-scope">1. Policy Scope</h2>
+
+<p>This policy describes how data is handled in relation to SpectraStrike deployments.</p>
+
+<p>It applies to:</p>
+<ul>
+  <li>self-hosted customer deployments</li>
+  <li>enterprise-managed environments</li>
+  <li>future managed/SaaS service models (if offered)</li>
+</ul>
+
+<h2 id="2-data-categories">2. Data Categories</h2>
+
+<h3 id="identity-and-account-data">Identity and Account Data</h3>
+<ul>
+  <li>operator identity metadata</li>
+  <li>role and authorization metadata</li>
+  <li>session and authentication events</li>
+</ul>
+
+<h3 id="telemetry-and-security-data">Telemetry and Security Data</h3>
+<ul>
+  <li>task execution records</li>
+  <li>scanner/integration outputs</li>
+  <li>findings and evidence metadata</li>
+  <li>operational logs and audit traces</li>
+</ul>
+
+<h3 id="technical-platform-metadata">Technical Platform Metadata</h3>
+<ul>
+  <li>API access patterns</li>
+  <li>infrastructure/service error logs</li>
+  <li>service health and control-plane events</li>
+</ul>
+
+<h2 id="3-processing-purpose">3. Processing Purpose</h2>
+
+<p>Data is processed to:</p>
+<ul>
+  <li>execute authorized security validation workflows</li>
+  <li>correlate and score security-relevant telemetry</li>
+  <li>provide audit, reporting, and compliance evidence</li>
+  <li>maintain platform reliability and abuse prevention</li>
+</ul>
+
+<p>No data is sold for advertising purposes.</p>
+
+<h2 id="4-deployment-responsibility-model">4. Deployment Responsibility Model</h2>
+
+<h3 id="self-hosted-mode">Self-Hosted Mode</h3>
+<p>The customer organization is the data controller and retains infrastructure-level custody of platform data unless explicitly configured otherwise.</p>
+
+<h3 id="managedsaas-mode-future">Managed/SaaS Mode (Future)</h3>
+<p>Nyxera Labs may operate as processor/sub-processor under contractual controls and documented security safeguards.</p>
+
+<h2 id="5-security-controls">5. Security Controls</h2>
+
+<p>SpectraStrike supports privacy-aligned security controls, including:</p>
+<ul>
+  <li>TLS/mTLS transport protections</li>
+  <li>role-based access controls</li>
+  <li>auditability for security-relevant actions</li>
+  <li>hardened runtime and governance checks</li>
+</ul>
+
+<h2 id="6-retention-and-deletion">6. Retention and Deletion</h2>
+
+<p>Retention policies are deployment-configurable.
+Customers are responsible for policy configuration and legal compliance in self-hosted mode.</p>
+
+<h2 id="7-data-subject-and-regulatory-requests">7. Data Subject and Regulatory Requests</h2>
+
+<p>Requests regarding access, correction, deletion, or restriction should be submitted through customer governance channels or, where applicable, to Nyxera Labs support and privacy contacts.</p>
+
+<h2 id="8-international-transfer-and-jurisdiction">8. International Transfer and Jurisdiction</h2>
+
+<p>Where data crosses jurisdictions, transfers must be governed by applicable legal mechanisms and enterprise agreements.</p>
+
+<h2 id="9-policy-updates">9. Policy Updates</h2>
+
+<p>This policy may be revised as architecture and service models evolve. Material changes should be recorded with revision date and governance approval.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

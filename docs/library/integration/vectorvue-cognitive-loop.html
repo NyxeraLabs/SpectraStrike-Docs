@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>vectorvue-cognitive-loop | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: Jose Maria Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="spectrastrike-vectorvue-cognitive-loop-integration">SpectraStrike VectorVue Cognitive Loop Integration</h1>
+
+<h2 id="scope">Scope</h2>
+
+<p>Sprint 31 cognitive loop alignment over the internal zero-trust federation channel.</p>
+
+<h2 id="endpoints">Endpoints</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">POST /internal/v1/cognitive/execution-graph</code></li>
+  <li><code class="language-plaintext highlighter-rouge">POST /internal/v1/cognitive/feedback/adjustments/query</code></li>
+</ul>
+
+<h2 id="security-contract">Security Contract</h2>
+
+<ul>
+  <li>mTLS service identity required (<code class="language-plaintext highlighter-rouge">X-Service-Identity</code>, <code class="language-plaintext highlighter-rouge">X-Client-Cert-Sha256</code>)</li>
+  <li>Ed25519 request signature required (<code class="language-plaintext highlighter-rouge">X-Telemetry-Timestamp</code>, <code class="language-plaintext highlighter-rouge">X-Telemetry-Nonce</code>, <code class="language-plaintext highlighter-rouge">X-Telemetry-Signature</code>)</li>
+  <li>Replay protection required (timestamp skew + nonce uniqueness)</li>
+  <li>Feedback response signature required (HMAC-SHA256)</li>
+  <li>Feedback replay protection required (<code class="language-plaintext highlighter-rouge">signed_at</code> window + response nonce uniqueness)</li>
+</ul>
+
+<h2 id="feedback-schema">Feedback Schema</h2>
+
+<p>Each feedback item must include:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">tenant_id</code></li>
+  <li><code class="language-plaintext highlighter-rouge">execution_fingerprint</code></li>
+  <li><code class="language-plaintext highlighter-rouge">target_urn</code></li>
+  <li><code class="language-plaintext highlighter-rouge">action</code></li>
+  <li><code class="language-plaintext highlighter-rouge">confidence</code></li>
+  <li><code class="language-plaintext highlighter-rouge">rationale</code></li>
+  <li><code class="language-plaintext highlighter-rouge">timestamp</code></li>
+  <li><code class="language-plaintext highlighter-rouge">schema_version</code></li>
+</ul>
+
+<p>Cognitive requests must include <code class="language-plaintext highlighter-rouge">operator_id</code>; VectorVue enforces operator-to-tenant mapping for tenant boundary control.</p>
+
+<h2 id="architecture-diagram">Architecture Diagram</h2>
+
+<pre><code class="language-mermaid">flowchart LR
+  SS[SpectraStrike Orchestrator]
+  VV[VectorVue Telemetry Gateway]
+  POL[Feedback Policy Engine]
+  OPA[OPA Decision Layer]
+
+  SS --&gt;|Signed graph metadata + mTLS| VV
+  VV --&gt;|Signed feedback response| SS
+  SS --&gt;|Validated feedback context| POL
+  POL --&gt; OPA
+</code></pre>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

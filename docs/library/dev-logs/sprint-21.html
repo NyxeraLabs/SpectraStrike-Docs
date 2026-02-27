@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>sprint-21 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-21-engineering-log">Sprint 21 Engineering Log</h1>
+
+<h2 id="program-context">Program Context</h2>
+
+<ul>
+  <li>Phase: Phase 5.5</li>
+  <li>Sprint: Sprint 21</li>
+  <li>Status: Completed</li>
+  <li>Primary Architecture Layers: Control Plane, Identity and Policy Plane</li>
+</ul>
+
+<h2 id="architectural-intent">Architectural Intent</h2>
+
+<p>Enforce deterministic execution guarantees for manifest serialization, hashing, and schema compatibility.</p>
+
+<h2 id="implementation-detail">Implementation Detail</h2>
+
+<p>Completed Sprint 21 controls:</p>
+<ul>
+  <li>Added canonical JSON serialization API for execution manifests.</li>
+  <li>Added deterministic SHA-256 manifest hashing API over canonical payloads.</li>
+  <li>Added semantic-version policy enforcement for manifest schema versions.</li>
+  <li>Added strict parser that rejects non-canonical JSON manifest submissions.</li>
+  <li>Added orchestrator runtime validation entrypoint for raw manifest submissions.</li>
+  <li>Added schema regression guard script and CI workflow step.</li>
+</ul>
+
+<h2 id="security-and-control-posture">Security and Control Posture</h2>
+
+<ul>
+  <li>Dispatch integrity now relies on deterministic canonical payload and hash behavior.</li>
+  <li>Non-canonical manifest submissions are explicitly denied before execution admission.</li>
+  <li>Schema version acceptance is bounded by semantic-version compatibility policy.</li>
+</ul>
+
+<h2 id="qa-and-validation-evidence">QA and Validation Evidence</h2>
+
+<p>Commands:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">PYTHONPATH=src .venv/bin/pytest -q tests/unit/test_orchestrator_manifest.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">PYTHONPATH=src .venv/bin/pytest -q tests/unit/test_orchestrator_engine_aaa.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">PYTHONPATH=src .venv/bin/python scripts/manifest_schema_regression.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">PYTHONPATH=src .venv/bin/pytest -q tests/qa/test_sprint21_deterministic_manifest_qa.py</code></li>
+</ul>
+
+<h2 id="risk-register">Risk Register</h2>
+
+<p>Residual risk:</p>
+<ul>
+  <li>Canonical-submission enforcement currently applies to explicit parser path and must be enforced at every external ingress route using raw manifest intake.</li>
+</ul>
+
+<h2 id="forward-linkage">Forward Linkage</h2>
+
+<p>Sprint 22 proceeds with federation trust closure and unified execution fingerprint binding.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

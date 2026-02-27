@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>sprint-35 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-35-engineering-log">Sprint 35 Engineering Log</h1>
+
+<h2 id="program-context">Program Context</h2>
+
+<ul>
+  <li>Phase: Phase 10</li>
+  <li>Sprint: Sprint 35</li>
+  <li>Status: Completed</li>
+  <li>Primary Architecture Layers: Runner identity, attestation, key lifecycle</li>
+</ul>
+
+<h2 id="architectural-intent">Architectural Intent</h2>
+
+<p>Extend hardware-assisted isolation with TPM-backed identity contracts, per-execution ephemeral key derivation, and runner-control-plane mutual attestation.</p>
+
+<h2 id="implementation-detail">Implementation Detail</h2>
+
+<p>Implemented scope:</p>
+<ul>
+  <li>Added Sprint 35 attestation contracts (<code class="language-plaintext highlighter-rouge">src/pkg/runner/attestation.py</code>)</li>
+  <li>Added TPM identity evidence provider (simulation-safe contract)</li>
+  <li>Added per-execution ephemeral key derivation using execution context binding</li>
+  <li>Added mutual attestation service for runner-control-plane session binding</li>
+  <li>Added multi-tenant isolation stress validator for binding-collision checks</li>
+  <li>Integrated mutual attestation + ephemeral key metadata into firecracker execution telemetry (<code class="language-plaintext highlighter-rouge">src/pkg/runner/universal.py</code>)</li>
+  <li>Added unit tests and QA checks for Sprint 35 artifacts</li>
+</ul>
+
+<h2 id="security-and-control-posture">Security and Control Posture</h2>
+
+<ul>
+  <li>Zero-trust delegation and execution fingerprint architecture remain intact.</li>
+  <li>Firecracker execution path now includes additional identity and session-binding metadata.</li>
+  <li>Mutual attestation failures fail closed at execution boundary.</li>
+</ul>
+
+<h2 id="qa-and-validation-evidence">QA and Validation Evidence</h2>
+
+<p>Validation evidence:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">pytest tests/unit/test_runner_attestation.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">pytest tests/unit/test_universal_edge_runner.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">pytest tests/qa/test_sprint35_mutual_attestation_qa.py</code></li>
+</ul>
+
+<h2 id="risk-register">Risk Register</h2>
+
+<p>Primary risk is simulation/native attestation parity gap for on-prem TPM environments.
+Mitigation:</p>
+<ul>
+  <li>deterministic contracts in simulation mode</li>
+  <li>strict fail-closed mutual attestation checks</li>
+  <li>explicit future extension path for real TPM quote verification providers</li>
+</ul>
+
+<h2 id="forward-linkage">Forward Linkage</h2>
+
+<p>Phase 10 closure continues with operational hardening and native host deployment runbooks.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

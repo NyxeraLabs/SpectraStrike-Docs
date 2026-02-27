@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SOC2 CONTROL MAPPING | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="soc-2-control-mapping-sprint-32">SOC 2 Control Mapping (Sprint 32)</h1>
+
+<p>This mapping aligns current SpectraStrike controls to SOC 2 Trust Services Criteria (Security + Availability relevant controls).</p>
+
+<h2 id="mapping-table">Mapping Table</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>SOC 2 Criteria</th>
+      <th>SpectraStrike Control Implementation</th>
+      <th>Primary Evidence Artifacts</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CC6.1 Logical access security</td>
+      <td>AAA enforcement, OPA delegation, tenant-scoped policy checks before execution signing</td>
+      <td><code class="language-plaintext highlighter-rouge">src/pkg/aaa/framework.py</code>, <code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/opa_client.py</code>, <code class="language-plaintext highlighter-rouge">tests/qa/test_opa_policy_schema.py</code></td>
+    </tr>
+    <tr>
+      <td>CC6.2 Authentication</td>
+      <td>Constant-time auth path, lockout support, optional MFA controls</td>
+      <td><code class="language-plaintext highlighter-rouge">src/pkg/aaa/framework.py</code>, <code class="language-plaintext highlighter-rouge">docs/SECURITY_POLICY.md</code>, <code class="language-plaintext highlighter-rouge">tests/unit/test_aaa_framework.py</code></td>
+    </tr>
+    <tr>
+      <td>CC6.6 Least privilege</td>
+      <td>Capability model <code class="language-plaintext highlighter-rouge">[identity + tenant + tool_hash + target]</code> via OPA policy contract</td>
+      <td><code class="language-plaintext highlighter-rouge">docs/WHITEPAPER.md</code>, <code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/opa_client.py</code>, <code class="language-plaintext highlighter-rouge">tests/qa/test_zero_trust_sprint17_qa.py</code></td>
+    </tr>
+    <tr>
+      <td>CC7.2 Change management</td>
+      <td>Sprint-gated roadmap, QA runbook, kanban traceability, dev logs</td>
+      <td><code class="language-plaintext highlighter-rouge">docs/ROADMAP.md</code>, <code class="language-plaintext highlighter-rouge">docs/manuals/QA_RUNBOOK.md</code>, <code class="language-plaintext highlighter-rouge">docs/kanban-board.csv</code>, <code class="language-plaintext highlighter-rouge">docs/dev-logs/</code></td>
+    </tr>
+    <tr>
+      <td>CC7.3 Monitoring and anomaly response</td>
+      <td>Structured telemetry ingestion + audit emission + federation bridge status polling</td>
+      <td><code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/telemetry_ingestion.py</code>, <code class="language-plaintext highlighter-rouge">src/pkg/integration/vectorvue/rabbitmq_bridge.py</code>, <code class="language-plaintext highlighter-rouge">tests/qa/test_vectorvue_api_qa.py</code></td>
+    </tr>
+    <tr>
+      <td>CC7.4 Incident evidence integrity</td>
+      <td>Tamper-evident audit chain and immutable execution intent records</td>
+      <td><code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/anti_repudiation.py</code>, <code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/merkle_ledger.py</code>, <code class="language-plaintext highlighter-rouge">tests/unit/test_merkle_ledger.py</code></td>
+    </tr>
+    <tr>
+      <td>A1.2 Availability processing capacity</td>
+      <td>Broker abstraction and high-throughput deterministic streaming</td>
+      <td><code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/messaging.py</code>, <code class="language-plaintext highlighter-rouge">tests/qa/test_sprint30_broker_abstraction_throughput_qa.py</code></td>
+    </tr>
+    <tr>
+      <td>A1.3 Recovery and continuity support</td>
+      <td>Dockerized service health checks, backup/restore workflows in platform runbooks</td>
+      <td><code class="language-plaintext highlighter-rouge">docs/manuals/QA_RUNBOOK.md</code>, <code class="language-plaintext highlighter-rouge">docs/manuals/USER_GUIDE.md</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="scope-notes">Scope Notes</h2>
+
+<ul>
+  <li>Mapping is implementation-evidence focused and does not assert external SOC 2 attestation status.</li>
+  <li>Customer deployment governance remains required for production controls (key custody, retention, legal scope).</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

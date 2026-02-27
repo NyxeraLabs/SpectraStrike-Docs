@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DISCLAIMER | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <h1 id="spectrastrike--legal-disclaimer">SpectraStrike – Legal Disclaimer</h1>
+
+<p>© 2026 Nyxera Labs. All rights reserved.</p>
+
+<p>SpectraStrike is an advanced detection, telemetry orchestration, and adversary correlation platform designed for defensive security research, controlled adversary simulation, and enterprise validation environments.</p>
+
+<h2 id="intended-use">Intended Use</h2>
+
+<p>SpectraStrike is intended for:</p>
+
+<ul>
+  <li>Authorized red team operations</li>
+  <li>Security validation exercises</li>
+  <li>Controlled adversary simulation</li>
+  <li>Detection engineering research</li>
+  <li>Compliance and telemetry validation</li>
+  <li>Internal enterprise security programs</li>
+</ul>
+
+<h2 id="prohibited-use">Prohibited Use</h2>
+
+<p>SpectraStrike must NOT be used for:</p>
+
+<ul>
+  <li>Unauthorized access to systems</li>
+  <li>Disruption of networks or services</li>
+  <li>Data exfiltration</li>
+  <li>Deployment of malware outside authorized environments</li>
+  <li>Any unlawful activity</li>
+</ul>
+
+<p>Users are solely responsible for ensuring they have proper authorization before deploying or operating SpectraStrike.</p>
+
+<h2 id="no-warranty">No Warranty</h2>
+
+<p>SpectraStrike is provided “AS IS” without warranties of any kind, express or implied, including but not limited to:</p>
+
+<ul>
+  <li>Fitness for a particular purpose</li>
+  <li>Non-infringement</li>
+  <li>Operational continuity</li>
+  <li>Security guarantees</li>
+</ul>
+
+<p>Nyxera Labs shall not be liable for any damages resulting from misuse, misconfiguration, or unauthorized deployment.</p>
+
+<h2 id="export--regulatory-compliance">Export &amp; Regulatory Compliance</h2>
+
+<p>Users are responsible for complying with all applicable:</p>
+
+<ul>
+  <li>Local laws</li>
+  <li>Export regulations</li>
+  <li>Cybersecurity laws</li>
+  <li>Data protection requirements</li>
+</ul>
+
+<p>By using SpectraStrike, you agree to assume full responsibility for its deployment and operation.</p>
+
+<hr />
+
+<p>For enterprise licensing or compliance inquiries:
+contact@nyxeralabs.com</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

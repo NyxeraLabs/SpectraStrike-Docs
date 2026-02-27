@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>sprint-25 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-25-engineering-log">Sprint 25 Engineering Log</h1>
+
+<h2 id="program-context">Program Context</h2>
+
+<ul>
+  <li>Phase: Phase 6</li>
+  <li>Sprint: Sprint 25</li>
+  <li>Status: Completed</li>
+  <li>Primary Architecture Layers: Audit &amp; State Plane, Cryptographic Integrity</li>
+</ul>
+
+<h2 id="architectural-intent">Architectural Intent</h2>
+
+<p>Define the formal Merkle ledger model contracts required for append-only non-repudiation authority.</p>
+
+<h2 id="implementation-detail">Implementation Detail</h2>
+
+<p>Implemented model definitions for:</p>
+
+<ul>
+  <li>Merkle leaf schema bound to unified execution fingerprint and write-ahead intent lineage.</li>
+  <li>Strict append-only insertion order with contiguous index enforcement.</li>
+  <li>Deterministic tree growth rules (left-right pairing, SHA-256, duplicate-last strategy).</li>
+  <li>Root generation cadence based on fixed leaf intervals.</li>
+  <li>Root signing procedure contract using control-plane signing authority and canonical JWS payload.</li>
+  <li>Inclusion proof structure with typed audit path nodes and signature metadata.</li>
+</ul>
+
+<h2 id="security-and-control-posture">Security and Control Posture</h2>
+
+<ul>
+  <li>Ledger model definitions enforce deterministic hashing and immutable ordering constraints.</li>
+  <li>Root signing payload contract is canonicalized to prevent signature ambiguity.</li>
+  <li>Inclusion proof schema fixes verifier-facing structure before implementation in Sprint 27.</li>
+</ul>
+
+<h2 id="qa-and-validation-evidence">QA and Validation Evidence</h2>
+
+<ul>
+  <li>Added unit tests covering deterministic leaf hashing, append-order enforcement, cadence behavior, signing payload validation, and inclusion proof constraints.</li>
+  <li>Added Sprint 25 QA assertions ensuring roadmap checklist and required model contracts are present.</li>
+</ul>
+
+<h2 id="risk-register">Risk Register</h2>
+
+<ul>
+  <li>Risk: model parameters may diverge from upcoming runtime implementation.</li>
+  <li>Mitigation: Sprint 26 must implement against these exact contracts and retain deterministic tests.</li>
+</ul>
+
+<h2 id="forward-linkage">Forward Linkage</h2>
+
+<p>Sprint 26 implements append-only Merkle tree runtime and immutable persistence using this model baseline.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

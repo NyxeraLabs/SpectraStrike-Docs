@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>sprint-10 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-10-engineering-log">Sprint 10 Engineering Log</h1>
+
+<h2 id="program-context">Program Context</h2>
+
+<ul>
+  <li>Phase: Phase 4</li>
+  <li>Sprint: Sprint 10</li>
+  <li>Status: Completed</li>
+  <li>Primary Architecture Layers: Control Plane (Orchestrator Crypto Engine), Execution Contract Layer</li>
+</ul>
+
+<h2 id="architectural-intent">Architectural Intent</h2>
+
+<p>Implement the Cryptographic Payload Engine baseline for the Universal Execution Fabric:</p>
+<ul>
+  <li>Vault/HSM-backed signing key integration in the control plane</li>
+  <li>Compact JWS payload generation for signed execution messages</li>
+  <li>Execution Manifest schema formalization for BYOT-safe task dispatch</li>
+  <li>Anti-replay controls (nonce + timestamp) to prevent broker/network replay abuse</li>
+</ul>
+
+<h2 id="implementation-detail">Implementation Detail</h2>
+
+<h3 id="whitepaper-aligned-high-level-architecture">Whitepaper-Aligned High-Level Architecture</h3>
+<p>Sprint 10 implemented the control-plane cryptographic endorsement path described in <code class="language-plaintext highlighter-rouge">docs/WHITEPAPER.md</code>:</p>
+<ol>
+  <li>Orchestrator constructs canonical execution payloads.</li>
+  <li>Payloads are signed via Vault Transit (HSM-equivalent key custody boundary).</li>
+  <li>Signatures are emitted as compact JWS artifacts for downstream verification.</li>
+  <li>Manifest nonce/timestamp replay guards enforce short-lived, single-use dispatch semantics.</li>
+</ol>
+
+<h3 id="logical-architecture-and-data-flow">Logical Architecture and Data Flow</h3>
+<ol>
+  <li>Task context + execution parameters are normalized into <code class="language-plaintext highlighter-rouge">ExecutionManifest</code>.</li>
+  <li>Manifest payload is canonicalized (<code class="language-plaintext highlighter-rouge">sort_keys=True</code>) for deterministic signing input.</li>
+  <li><code class="language-plaintext highlighter-rouge">VaultTransitSigner</code> requests JWS-compatible signature material from Vault Transit.</li>
+  <li><code class="language-plaintext highlighter-rouge">CompactJWSGenerator</code> assembles <code class="language-plaintext highlighter-rouge">base64url(header).base64url(payload).base64url(signature)</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">AntiReplayGuard</code> validates freshness window and tenant-scoped nonce uniqueness before dispatch.</li>
+</ol>
+
+<h3 id="detailed-engineering-work-by-sprint-10-tasks">Detailed Engineering Work by Sprint 10 Tasks</h3>
+<ol>
+  <li><strong>Vault integration for signing keys</strong>
+    <ul>
+      <li>Added <code class="language-plaintext highlighter-rouge">VaultTransitConfig</code> + <code class="language-plaintext highlighter-rouge">VaultTransitSigner</code> for key create/read/sign operations.</li>
+      <li>Enforced HTTPS-by-default, runtime config validation, and Vault error hardening.</li>
+    </ul>
+  </li>
+  <li><strong>JWS payload generation in Orchestrator</strong>
+    <ul>
+      <li>Added compact JWS builder (<code class="language-plaintext highlighter-rouge">CompactJWSGenerator</code>) with deterministic header/payload encoding.</li>
+      <li>Normalized Vault signature formats to compact JWS signature segment output.</li>
+    </ul>
+  </li>
+  <li><strong>Execution Manifest schema design</strong>
+    <ul>
+      <li>Added <code class="language-plaintext highlighter-rouge">ExecutionTaskContext</code> and <code class="language-plaintext highlighter-rouge">ExecutionManifest</code> typed contracts.</li>
+      <li>Enforced strict validation for <code class="language-plaintext highlighter-rouge">target_urn</code>, <code class="language-plaintext highlighter-rouge">tool_sha256</code>, task context integrity, and manifest versioning.</li>
+    </ul>
+  </li>
+  <li><strong>Anti-Replay mechanisms</strong>
+    <ul>
+      <li>Added manifest <code class="language-plaintext highlighter-rouge">nonce</code> field and timestamp usage contract.</li>
+      <li>Added <code class="language-plaintext highlighter-rouge">AntiReplayConfig</code> + <code class="language-plaintext highlighter-rouge">AntiReplayGuard</code> with max-age, future-skew, and nonce-retention policies.</li>
+      <li>Implemented tenant-scoped nonce keying (<code class="language-plaintext highlighter-rouge">tenant_id + nonce</code>) to preserve isolation semantics.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="security-and-control-posture">Security and Control Posture</h2>
+
+<ul>
+  <li>Cryptographic key custody remains externalized to Vault/HSM boundary; private keys never enter app code.</li>
+  <li>Signed payload format is deterministic and tamper-evident at transport boundary.</li>
+  <li>Replay suppression blocks duplicated nonce use and stale/future timestamp abuse.</li>
+  <li>Manifest schema enforces strict target/tool/task context before signing and dispatch.</li>
+</ul>
+
+<h2 id="qa-and-validation-evidence">QA and Validation Evidence</h2>
+
+<ul>
+  <li>Unit suites for Vault signer, JWS generation, manifest schema, and anti-replay completed.</li>
+  <li>Focused regression command:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">./.venv/bin/python -m pytest -q tests/unit/test_orchestrator_anti_replay.py tests/unit/test_orchestrator_manifest.py tests/unit/test_orchestrator_jws.py tests/unit/test_orchestrator_signing.py</code></li>
+    </ul>
+  </li>
+  <li>Result: passing in local dev workflow during sprint closeout.</li>
+</ul>
+
+<h2 id="risk-register">Risk Register</h2>
+
+<ul>
+  <li>Remaining risk: anti-replay store is in-memory only; production durability/distributed replay cache is deferred to later execution-plane work.</li>
+  <li>Remaining risk: OPA policy pre-sign authorization hooks are scheduled for Phase 5 and not yet enforced in this sprint.</li>
+  <li>Remaining risk: edge-side JWS verification enforcement is scheduled in Sprint 12 runner implementation.</li>
+</ul>
+
+<h2 id="forward-linkage">Forward Linkage</h2>
+
+<p>Sprint 11 proceeds with Armory implementation (immutable tool registry, ingestion pipeline, and tool-signing supply-chain controls).</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

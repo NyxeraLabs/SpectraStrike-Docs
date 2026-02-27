@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VALIDATION SDK | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="validation-sdk">Validation SDK</h1>
+
+<p>Status: Published (Sprint 33)
+Module: <code class="language-plaintext highlighter-rouge">pkg.specs.validation_sdk</code></p>
+
+<h2 id="1-purpose">1. Purpose</h2>
+
+<p>Provide a lightweight SDK surface for validating:</p>
+<ul>
+  <li>execution manifest payloads (v1)</li>
+  <li>telemetry extension payloads (v1)</li>
+  <li>capability policy input payloads (v1)</li>
+</ul>
+
+<h2 id="2-api-surface">2. API Surface</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">validate_execution_manifest_v1(payload)</code></li>
+  <li><code class="language-plaintext highlighter-rouge">validate_telemetry_extension_v1(payload)</code></li>
+  <li><code class="language-plaintext highlighter-rouge">validate_capability_policy_input_v1(payload)</code></li>
+  <li><code class="language-plaintext highlighter-rouge">validate_spec_bundle_v1(manifest_payload, telemetry_payload, capability_payload)</code></li>
+</ul>
+
+<p>Return model:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ValidationResult(ok: bool, errors: list[str], normalized: dict[str, Any] | None)</code></li>
+</ul>
+
+<h2 id="3-example">3. Example</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pkg.specs.validation_sdk</span> <span class="kn">import</span> <span class="n">validate_spec_bundle_v1</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">validate_spec_bundle_v1</span><span class="p">(</span>
+    <span class="n">manifest_payload</span><span class="o">=</span><span class="n">manifest_payload</span><span class="p">,</span>
+    <span class="n">telemetry_payload</span><span class="o">=</span><span class="n">telemetry_payload</span><span class="p">,</span>
+    <span class="n">capability_payload</span><span class="o">=</span><span class="n">capability_payload</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">[</span><span class="s">"manifest"</span><span class="p">].</span><span class="n">ok</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="nb">RuntimeError</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s">"manifest"</span><span class="p">].</span><span class="n">errors</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="4-notes">4. Notes</h2>
+
+<ul>
+  <li>SDK is deterministic and schema-focused.</li>
+  <li>Runtime trust checks (mTLS, signature verification, replay windows) still occur in production control paths.</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

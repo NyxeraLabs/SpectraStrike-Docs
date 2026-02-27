@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Full Library | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <h1 id="full-documentation-library">Full Documentation Library</h1>
+
+<p>Complete imported documentation from <code class="language-plaintext highlighter-rouge">SpectraStrike/docs</code>.</p>
+
+<ul>
+  <li><a href="./.federation-assessment-local.html">.federation-assessment-local.md</a></li>
+  <li><a href="./.federation-audit-local.html">.federation-audit-local.md</a></li>
+  <li><a href="./ACCEPTABLE_USE_POLICY.html">ACCEPTABLE_USE_POLICY.md</a></li>
+  <li><a href="./ARCHITECTURE_SECURITY_OVERVIEW.html">ARCHITECTURE_SECURITY_OVERVIEW.md</a></li>
+  <li><a href="./COMPLIANCE_STATEMENT.html">COMPLIANCE_STATEMENT.md</a></li>
+  <li><a href="./DISCLAIMER.html">DISCLAIMER.md</a></li>
+  <li><a href="./E2E_EXECUTION_AUDIT_REPORT.html">E2E_EXECUTION_AUDIT_REPORT.md</a></li>
+  <li><a href="./END_USER_GUIDE.html">END_USER_GUIDE.md</a></li>
+  <li><a href="./EULA.html">EULA.md</a></li>
+  <li><a href="./FULL_FEDERATION_INTEGRATION.html">FULL_FEDERATION_INTEGRATION.md</a></li>
+  <li><a href="./PRIVACY_POLICY.html">PRIVACY_POLICY.md</a></li>
+  <li><a href="./RISK_BACKLOG.html">RISK_BACKLOG.md</a></li>
+  <li><a href="./ROADMAP.html">ROADMAP.md</a></li>
+  <li><a href="./SDK_DEVELOPER_GUIDE.html">SDK_DEVELOPER_GUIDE.md</a></li>
+  <li><a href="./SECURITY_POLICY.html">SECURITY_POLICY.md</a></li>
+  <li><a href="./THREAT_MODEL.html">THREAT_MODEL.md</a></li>
+  <li><a href="./USER_REGISTRATION_POLICY.html">USER_REGISTRATION_POLICY.md</a></li>
+  <li><a href="./WHITEPAPER.html">WHITEPAPER.md</a></li>
+  <li><a href="./compliance/INDEX.html">compliance/INDEX.md</a></li>
+  <li><a href="./compliance/ISO27001_ANNEXA_MAPPING.html">compliance/ISO27001_ANNEXA_MAPPING.md</a></li>
+  <li><a href="./compliance/MITRE_ATTACK_TELEMETRY_MAPPING.html">compliance/MITRE_ATTACK_TELEMETRY_MAPPING.md</a></li>
+  <li><a href="./compliance/NIST_800_53_MAPPING.html">compliance/NIST_800_53_MAPPING.md</a></li>
+  <li><a href="./compliance/SECURE_SDLC_PACKAGE.html">compliance/SECURE_SDLC_PACKAGE.md</a></li>
+  <li><a href="./compliance/SOC2_CONTROL_MAPPING.html">compliance/SOC2_CONTROL_MAPPING.md</a></li>
+  <li><a href="./dev-logs/INDEX.html">dev-logs/INDEX.md</a></li>
+  <li><a href="./dev-logs/sprint-01.html">dev-logs/sprint-01.md</a></li>
+  <li><a href="./dev-logs/sprint-02.html">dev-logs/sprint-02.md</a></li>
+  <li><a href="./dev-logs/sprint-03.html">dev-logs/sprint-03.md</a></li>
+  <li><a href="./dev-logs/sprint-04.html">dev-logs/sprint-04.md</a></li>
+  <li><a href="./dev-logs/sprint-05.html">dev-logs/sprint-05.md</a></li>
+  <li><a href="./dev-logs/sprint-06.html">dev-logs/sprint-06.md</a></li>
+  <li><a href="./dev-logs/sprint-07.html">dev-logs/sprint-07.md</a></li>
+  <li><a href="./dev-logs/sprint-08-5.html">dev-logs/sprint-08-5.md</a></li>
+  <li><a href="./dev-logs/sprint-08.html">dev-logs/sprint-08.md</a></li>
+  <li><a href="./dev-logs/sprint-09-5.html">dev-logs/sprint-09-5.md</a></li>
+  <li><a href="./dev-logs/sprint-09-6.html">dev-logs/sprint-09-6.md</a></li>
+  <li><a href="./dev-logs/sprint-09-7.html">dev-logs/sprint-09-7.md</a></li>
+  <li><a href="./dev-logs/sprint-09-8.html">dev-logs/sprint-09-8.md</a></li>
+  <li><a href="./dev-logs/sprint-09-9.html">dev-logs/sprint-09-9.md</a></li>
+  <li><a href="./dev-logs/sprint-09.html">dev-logs/sprint-09.md</a></li>
+  <li><a href="./dev-logs/sprint-10.html">dev-logs/sprint-10.md</a></li>
+  <li><a href="./dev-logs/sprint-11.html">dev-logs/sprint-11.md</a></li>
+  <li><a href="./dev-logs/sprint-12.html">dev-logs/sprint-12.md</a></li>
+  <li><a href="./dev-logs/sprint-13.html">dev-logs/sprint-13.md</a></li>
+  <li><a href="./dev-logs/sprint-14.html">dev-logs/sprint-14.md</a></li>
+  <li><a href="./dev-logs/sprint-15.html">dev-logs/sprint-15.md</a></li>
+  <li><a href="./dev-logs/sprint-16.html">dev-logs/sprint-16.md</a></li>
+  <li><a href="./dev-logs/sprint-17.html">dev-logs/sprint-17.md</a></li>
+  <li><a href="./dev-logs/sprint-18.html">dev-logs/sprint-18.md</a></li>
+  <li><a href="./dev-logs/sprint-18/pr-templates/task-01-stride-threat-model.html">dev-logs/sprint-18/pr-templates/task-01-stride-threat-model.md</a></li>
+  <li><a href="./dev-logs/sprint-18/pr-templates/task-02-trust-boundary-diagram.html">dev-logs/sprint-18/pr-templates/task-02-trust-boundary-diagram.md</a></li>
+  <li><a href="./dev-logs/sprint-18/pr-templates/task-03-malicious-operator-scenarios.html">dev-logs/sprint-18/pr-templates/task-03-malicious-operator-scenarios.md</a></li>
+  <li><a href="./dev-logs/sprint-18/pr-templates/task-04-compromised-runner-scenarios.html">dev-logs/sprint-18/pr-templates/task-04-compromised-runner-scenarios.md</a></li>
+  <li><a href="./dev-logs/sprint-18/pr-templates/task-05-supply-chain-scenarios.html">dev-logs/sprint-18/pr-templates/task-05-supply-chain-scenarios.md</a></li>
+  <li><a href="./dev-logs/sprint-18/pr-templates/task-06-cross-tenant-scenarios.html">dev-logs/sprint-18/pr-templates/task-06-cross-tenant-scenarios.md</a></li>
+  <li><a href="./dev-logs/sprint-18/pr-templates/task-07-threat-mitigation-mapping.html">dev-logs/sprint-18/pr-templates/task-07-threat-mitigation-mapping.md</a></li>
+  <li><a href="./dev-logs/sprint-18/pr-templates/task-08-unresolved-risk-backlog.html">dev-logs/sprint-18/pr-templates/task-08-unresolved-risk-backlog.md</a></li>
+  <li><a href="./dev-logs/sprint-18/pr-templates/task-09-commit-threat-model-v1.html">dev-logs/sprint-18/pr-templates/task-09-commit-threat-model-v1.md</a></li>
+  <li><a href="./dev-logs/sprint-19.html">dev-logs/sprint-19.md</a></li>
+  <li><a href="./dev-logs/sprint-19/pr-templates/task-01-signed-config-enforcement.html">dev-logs/sprint-19/pr-templates/task-01-signed-config-enforcement.md</a></li>
+  <li><a href="./dev-logs/sprint-19/pr-templates/task-02-reject-unsigned-config.html">dev-logs/sprint-19/pr-templates/task-02-reject-unsigned-config.md</a></li>
+  <li><a href="./dev-logs/sprint-19/pr-templates/task-03-opa-policy-hash-pinning.html">dev-logs/sprint-19/pr-templates/task-03-opa-policy-hash-pinning.md</a></li>
+  <li><a href="./dev-logs/sprint-19/pr-templates/task-04-policy-hash-mismatch-detection.html">dev-logs/sprint-19/pr-templates/task-04-policy-hash-mismatch-detection.md</a></li>
+  <li><a href="./dev-logs/sprint-19/pr-templates/task-05-vault-key-rotation-workflow.html">dev-logs/sprint-19/pr-templates/task-05-vault-key-rotation-workflow.md</a></li>
+  <li><a href="./dev-logs/sprint-19/pr-templates/task-06-vault-unseal-hardening.html">dev-logs/sprint-19/pr-templates/task-06-vault-unseal-hardening.md</a></li>
+  <li><a href="./dev-logs/sprint-19/pr-templates/task-07-runtime-binary-baseline.html">dev-logs/sprint-19/pr-templates/task-07-runtime-binary-baseline.md</a></li>
+  <li><a href="./dev-logs/sprint-19/pr-templates/task-08-integrity-audit-channel.html">dev-logs/sprint-19/pr-templates/task-08-integrity-audit-channel.md</a></li>
+  <li><a href="./dev-logs/sprint-19/pr-templates/task-09-immutable-config-history.html">dev-logs/sprint-19/pr-templates/task-09-immutable-config-history.md</a></li>
+  <li><a href="./dev-logs/sprint-20.html">dev-logs/sprint-20.md</a></li>
+  <li><a href="./dev-logs/sprint-20/pr-templates/task-01-hardware-mfa-privileged-actions.html">dev-logs/sprint-20/pr-templates/task-01-hardware-mfa-privileged-actions.md</a></li>
+  <li><a href="./dev-logs/sprint-20/pr-templates/task-02-dual-control-tool-ingestion.html">dev-logs/sprint-20/pr-templates/task-02-dual-control-tool-ingestion.md</a></li>
+  <li><a href="./dev-logs/sprint-20/pr-templates/task-03-dual-signature-high-risk.html">dev-logs/sprint-20/pr-templates/task-03-dual-signature-high-risk.md</a></li>
+  <li><a href="./dev-logs/sprint-20/pr-templates/task-04-break-glass-irreversible-audit.html">dev-logs/sprint-20/pr-templates/task-04-break-glass-irreversible-audit.md</a></li>
+  <li><a href="./dev-logs/sprint-20/pr-templates/task-05-time-bound-elevation-tokens.html">dev-logs/sprint-20/pr-templates/task-05-time-bound-elevation-tokens.md</a></li>
+  <li><a href="./dev-logs/sprint-20/pr-templates/task-06-privileged-session-recording.html">dev-logs/sprint-20/pr-templates/task-06-privileged-session-recording.md</a></li>
+  <li><a href="./dev-logs/sprint-21.html">dev-logs/sprint-21.md</a></li>
+  <li><a href="./dev-logs/sprint-21/pr-templates/task-01-canonical-json-serialization.html">dev-logs/sprint-21/pr-templates/task-01-canonical-json-serialization.md</a></li>
+  <li><a href="./dev-logs/sprint-21/pr-templates/task-02-deterministic-manifest-hash.html">dev-logs/sprint-21/pr-templates/task-02-deterministic-manifest-hash.md</a></li>
+  <li><a href="./dev-logs/sprint-21/pr-templates/task-03-manifest-schema-semver.html">dev-logs/sprint-21/pr-templates/task-03-manifest-schema-semver.md</a></li>
+  <li><a href="./dev-logs/sprint-21/pr-templates/task-04-schema-regression-ci.html">dev-logs/sprint-21/pr-templates/task-04-schema-regression-ci.md</a></li>
+  <li><a href="./dev-logs/sprint-21/pr-templates/task-05-reject-non-canonical-submissions.html">dev-logs/sprint-21/pr-templates/task-05-reject-non-canonical-submissions.md</a></li>
+  <li><a href="./dev-logs/sprint-22.html">dev-logs/sprint-22.md</a></li>
+  <li><a href="./dev-logs/sprint-22/pr-templates/task-01-fingerprint-schema.html">dev-logs/sprint-22/pr-templates/task-01-fingerprint-schema.md</a></li>
+  <li><a href="./dev-logs/sprint-22/pr-templates/task-02-generate-before-dispatch.html">dev-logs/sprint-22/pr-templates/task-02-generate-before-dispatch.md</a></li>
+  <li><a href="./dev-logs/sprint-22/pr-templates/task-03-tamper-evident-fingerprint-audit.html">dev-logs/sprint-22/pr-templates/task-03-tamper-evident-fingerprint-audit.md</a></li>
+  <li><a href="./dev-logs/sprint-22/pr-templates/task-04-vectorvue-payload-fingerprint.html">dev-logs/sprint-22/pr-templates/task-04-vectorvue-payload-fingerprint.md</a></li>
+  <li><a href="./dev-logs/sprint-22/pr-templates/task-05-validate-before-c2-dispatch.html">dev-logs/sprint-22/pr-templates/task-05-validate-before-c2-dispatch.md</a></li>
+  <li><a href="./dev-logs/sprint-22/pr-templates/task-06-reject-fingerprint-mismatch.html">dev-logs/sprint-22/pr-templates/task-06-reject-fingerprint-mismatch.md</a></li>
+  <li><a href="./dev-logs/sprint-22/pr-templates/task-07-fingerprint-integration-tests.html">dev-logs/sprint-22/pr-templates/task-07-fingerprint-integration-tests.md</a></li>
+  <li><a href="./dev-logs/sprint-22/pr-templates/task-08-commit-sprint22.html">dev-logs/sprint-22/pr-templates/task-08-commit-sprint22.md</a></li>
+  <li><a href="./dev-logs/sprint-23.html">dev-logs/sprint-23.md</a></li>
+  <li><a href="./dev-logs/sprint-23/pr-templates/task-01-single-outbound-gateway.html">dev-logs/sprint-23/pr-templates/task-01-single-outbound-gateway.md</a></li>
+  <li><a href="./dev-logs/sprint-23/pr-templates/task-02-remove-legacy-direct-api-paths.html">dev-logs/sprint-23/pr-templates/task-02-remove-legacy-direct-api-paths.md</a></li>
+  <li><a href="./dev-logs/sprint-23/pr-templates/task-03-mtls-only-federation.html">dev-logs/sprint-23/pr-templates/task-03-mtls-only-federation.md</a></li>
+  <li><a href="./dev-logs/sprint-23/pr-templates/task-04-signed-telemetry-required.html">dev-logs/sprint-23/pr-templates/task-04-signed-telemetry-required.md</a></li>
+  <li><a href="./dev-logs/sprint-23/pr-templates/task-05-producer-replay-detection.html">dev-logs/sprint-23/pr-templates/task-05-producer-replay-detection.md</a></li>
+  <li><a href="./dev-logs/sprint-23/pr-templates/task-06-bounded-retry-idempotent-fingerprint.html">dev-logs/sprint-23/pr-templates/task-06-bounded-retry-idempotent-fingerprint.md</a></li>
+  <li><a href="./dev-logs/sprint-23/pr-templates/task-07-federation-smoke-suite.html">dev-logs/sprint-23/pr-templates/task-07-federation-smoke-suite.md</a></li>
+  <li><a href="./dev-logs/sprint-23/pr-templates/task-08-commit-sprint23.html">dev-logs/sprint-23/pr-templates/task-08-commit-sprint23.md</a></li>
+  <li><a href="./dev-logs/sprint-24.html">dev-logs/sprint-24.md</a></li>
+  <li><a href="./dev-logs/sprint-24/pr-templates/task-01-operator-identity-fingerprint-binding.html">dev-logs/sprint-24/pr-templates/task-01-operator-identity-fingerprint-binding.md</a></li>
+  <li><a href="./dev-logs/sprint-24/pr-templates/task-02-write-ahead-intent-record.html">dev-logs/sprint-24/pr-templates/task-02-write-ahead-intent-record.md</a></li>
+  <li><a href="./dev-logs/sprint-24/pr-templates/task-03-execution-intent-verification-api.html">dev-logs/sprint-24/pr-templates/task-03-execution-intent-verification-api.md</a></li>
+  <li><a href="./dev-logs/sprint-24/pr-templates/task-04-operator-execution-reconciliation-test.html">dev-logs/sprint-24/pr-templates/task-04-operator-execution-reconciliation-test.md</a></li>
+  <li><a href="./dev-logs/sprint-24/pr-templates/task-05-repudiation-simulation-detection.html">dev-logs/sprint-24/pr-templates/task-05-repudiation-simulation-detection.md</a></li>
+  <li><a href="./dev-logs/sprint-24/pr-templates/task-06-commit-sprint24.html">dev-logs/sprint-24/pr-templates/task-06-commit-sprint24.md</a></li>
+  <li><a href="./dev-logs/sprint-25.html">dev-logs/sprint-25.md</a></li>
+  <li><a href="./dev-logs/sprint-26.html">dev-logs/sprint-26.md</a></li>
+  <li><a href="./dev-logs/sprint-27.html">dev-logs/sprint-27.md</a></li>
+  <li><a href="./dev-logs/sprint-28.html">dev-logs/sprint-28.md</a></li>
+  <li><a href="./dev-logs/sprint-29.html">dev-logs/sprint-29.md</a></li>
+  <li><a href="./dev-logs/sprint-30.html">dev-logs/sprint-30.md</a></li>
+  <li><a href="./dev-logs/sprint-31.html">dev-logs/sprint-31.md</a></li>
+  <li><a href="./dev-logs/sprint-32.html">dev-logs/sprint-32.md</a></li>
+  <li><a href="./dev-logs/sprint-33.html">dev-logs/sprint-33.md</a></li>
+  <li><a href="./dev-logs/sprint-34.html">dev-logs/sprint-34.md</a></li>
+  <li><a href="./dev-logs/sprint-35.html">dev-logs/sprint-35.md</a></li>
+  <li><a href="./index.html">index.md</a></li>
+  <li><a href="./integration/vectorvue-cognitive-loop.html">integration/vectorvue-cognitive-loop.md</a></li>
+  <li><a href="./manuals/ARMORY_RUNNER_EXECUTION_FABRIC.html">manuals/ARMORY_RUNNER_EXECUTION_FABRIC.md</a></li>
+  <li><a href="./manuals/FIRECRACKER_MICROVM_TRANSITION.html">manuals/FIRECRACKER_MICROVM_TRANSITION.md</a></li>
+  <li><a href="./manuals/INDEX.html">manuals/INDEX.md</a></li>
+  <li><a href="./manuals/MUTUAL_ATTESTATION_KEY_DERIVATION.html">manuals/MUTUAL_ATTESTATION_KEY_DERIVATION.md</a></li>
+  <li><a href="./manuals/ORCHESTRATOR_ARCHITECTURE.html">manuals/ORCHESTRATOR_ARCHITECTURE.md</a></li>
+  <li><a href="./manuals/QA_RUNBOOK.html">manuals/QA_RUNBOOK.md</a></li>
+  <li><a href="./manuals/UI_ARCHITECTURE_API_CONTRACTS.html">manuals/UI_ARCHITECTURE_API_CONTRACTS.md</a></li>
+  <li><a href="./manuals/UI_TUI_DESIGN_SYSTEM.html">manuals/UI_TUI_DESIGN_SYSTEM.md</a></li>
+  <li><a href="./manuals/USER_GUIDE.html">manuals/USER_GUIDE.md</a></li>
+  <li><a href="./manuals/VECTORVUE_API_CLIENT_DESIGN.html">manuals/VECTORVUE_API_CLIENT_DESIGN.md</a></li>
+  <li><a href="./manuals/WHITEPAPER_COMPLIANCE.html">manuals/WHITEPAPER_COMPLIANCE.md</a></li>
+  <li><a href="./specs/BACKWARD_COMPATIBILITY_GUARANTEES.html">specs/BACKWARD_COMPATIBILITY_GUARANTEES.md</a></li>
+  <li><a href="./specs/CAPABILITY_POLICY_SPEC_V1.html">specs/CAPABILITY_POLICY_SPEC_V1.md</a></li>
+  <li><a href="./specs/EXECUTION_MANIFEST_SPEC_V1.html">specs/EXECUTION_MANIFEST_SPEC_V1.md</a></li>
+  <li><a href="./specs/TELEMETRY_EXTENSION_SPEC_V1.html">specs/TELEMETRY_EXTENSION_SPEC_V1.md</a></li>
+  <li><a href="./specs/VALIDATION_SDK.html">specs/VALIDATION_SDK.md</a></li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

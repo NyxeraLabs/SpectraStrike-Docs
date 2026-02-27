@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>sprint-09-9 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-99-engineering-log">Sprint 9.9 Engineering Log</h1>
+
+<h2 id="program-context">Program Context</h2>
+
+<ul>
+  <li>Phase: Phase 3</li>
+  <li>Sprint: Sprint 9.9</li>
+  <li>Status: Completed</li>
+  <li>Primary Architecture Layers: Reporting / Compliance, Orchestration Pipeline, Detection Engine Access Control</li>
+</ul>
+
+<h2 id="architectural-objective">Architectural Objective</h2>
+
+<p>Implement a unified legal acknowledgment and governance enforcement subsystem that works consistently across self-hosted, enterprise on-prem, and SaaS-target design paths, while preserving offline capability and low-coupling integration boundaries.</p>
+
+<h2 id="implementation-scope">Implementation Scope</h2>
+
+<h3 id="governance-core">Governance Core</h3>
+
+<ul>
+  <li>Added legal enforcement service and hooks:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">core/governance/legal-enforcement.service.ts</code></li>
+    </ul>
+  </li>
+  <li>Added centralized legal version config:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">config/legal.config.ts</code></li>
+    </ul>
+  </li>
+  <li>Implemented environment-aware legal evaluation:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">self-hosted</code> (default)</li>
+      <li><code class="language-plaintext highlighter-rouge">enterprise</code></li>
+      <li><code class="language-plaintext highlighter-rouge">saas</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="self-hosted-persistence-model">Self-Hosted Persistence Model</h3>
+
+<ul>
+  <li>Self-hosted acceptance persisted to:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">.spectrastrike/legal/acceptance.json</code> (local/default execution paths)</li>
+    </ul>
+  </li>
+  <li>Dockerized runtime persistence hardened to writable path:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">/var/lib/spectrastrike/legal/acceptance.json</code></li>
+      <li>volume-backed for read-only container compatibility</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="authentication-and-access-gating">Authentication and Access Gating</h3>
+
+<ul>
+  <li>Legal gate integrated into auth flow before protected access and demo token issuance.</li>
+  <li>Enforced failure model:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">LEGAL_ACCEPTANCE_REQUIRED</code></li>
+    </ul>
+  </li>
+  <li>Added legal acceptance write path:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">/ui/api/v1/auth/legal/accept</code></li>
+    </ul>
+  </li>
+  <li>Web UI legal acceptance workflow integrated with re-acceptance path.</li>
+  <li>Admin TUI/CLI startup flow aligned to legal enforcement status.</li>
+</ul>
+
+<h3 id="enterprise-and-saas-readiness">Enterprise and SaaS Readiness</h3>
+
+<ul>
+  <li>Enterprise installation-level acceptance schema draft delivered.</li>
+  <li>SaaS user-level acceptance schema draft delivered.</li>
+  <li>Re-acceptance logic implemented through version comparison against active legal version config.</li>
+</ul>
+
+<h2 id="qa-and-runtime-validation">QA and Runtime Validation</h2>
+
+<ul>
+  <li>Validated legal acceptance endpoint behavior in dockerized runtime.</li>
+  <li>Validated persistence behavior under read-only filesystem constraints.</li>
+  <li>Hardened legal endpoint error handling with structured failure responses.</li>
+  <li>Stabilized <code class="language-plaintext highlighter-rouge">ui-web</code> healthcheck behavior for <code class="language-plaintext highlighter-rouge">make up</code> startup sequence.</li>
+  <li>Resolved infra startup regressions caused by non-executable mounted scripts in:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">rabbitmq</code></li>
+      <li><code class="language-plaintext highlighter-rouge">postgres</code></li>
+      <li><code class="language-plaintext highlighter-rouge">redis</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="security-and-compliance-posture">Security and Compliance Posture</h2>
+
+<ul>
+  <li>Legal acceptance is now an explicit governance control gate in authentication lifecycle.</li>
+  <li>Version mismatch invalidates stale acceptance and requires explicit re-acknowledgment.</li>
+  <li>Governance subsystem remains local-first, offline-capable, and deployable in air-gapped environments.</li>
+  <li>Documentation and governance index updated for auditability and release traceability.</li>
+</ul>
+
+<h2 id="documentation-delta">Documentation Delta</h2>
+
+<ul>
+  <li>Updated:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">docs/ROADMAP.md</code></li>
+      <li><code class="language-plaintext highlighter-rouge">docs/kanban-board.csv</code></li>
+      <li><code class="language-plaintext highlighter-rouge">README.md</code></li>
+      <li><code class="language-plaintext highlighter-rouge">docs/manuals/QA_RUNBOOK.md</code></li>
+      <li><code class="language-plaintext highlighter-rouge">docs/manuals/USER_GUIDE.md</code></li>
+      <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/INDEX.md</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="risk-and-follow-up">Risk and Follow-Up</h2>
+
+<ul>
+  <li>Web UI dependency bootstrap constraints from Sprint 9.8 remain environment-dependent and should continue to be tracked until dependency mirror or connected CI lane is available.</li>
+  <li>Next sprint should focus on release hardening burn-in for governance + auth integration under expanded regression coverage.</li>
+</ul>
+
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

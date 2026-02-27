@@ -5,27 +5,42 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Whitepaper | SpectraStrike Documentation</title>
   <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
-  <link rel="stylesheet" href="/pages/NyxeraLabs/SpectraStrike-Docs/assets/css/style.css" />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-  <script>document.addEventListener('DOMContentLoaded', () => { if (window.mermaid) mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' }); });</script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
 </head>
 <body>
   <header class="topbar">
     <div class="brand-wrap">
-      <img src="/pages/NyxeraLabs/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
-      <img src="/pages/NyxeraLabs/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
       <div>
         <h1>SpectraStrike Documentation</h1>
-        <p>Static docs and whitepaper portal</p>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
       </div>
     </div>
     <nav class="nav">
-      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/">Home</a>
-      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/end-user/">End User</a>
-      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/sdk/">SDK</a>
-      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/integration/">Integration</a>
-      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/architecture/">Architecture</a>
-      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
     </nav>
   </header>
 

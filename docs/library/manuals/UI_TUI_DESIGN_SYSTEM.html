@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UI TUI DESIGN SYSTEM | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="spectrastrike-uitui-design-system">SpectraStrike UI/TUI Design System</h1>
+<p><img src="../../ui/web/assets/images/SprectraStrike_Logo.png" alt="SpectraStrike Logo" /></p>
+
+<h2 id="1-palette">1. Palette</h2>
+
+<p>Core backgrounds:</p>
+<ul>
+  <li>Primary background: <code class="language-plaintext highlighter-rouge">#0B1020</code></li>
+  <li>Secondary surface: <code class="language-plaintext highlighter-rouge">#131A2E</code></li>
+  <li>Elevated surface: <code class="language-plaintext highlighter-rouge">#1A2238</code></li>
+  <li>Border subtle: <code class="language-plaintext highlighter-rouge">#222C4A</code></li>
+</ul>
+
+<p>Primary accent:</p>
+<ul>
+  <li>Spectral Violet: <code class="language-plaintext highlighter-rouge">#7C5CFF</code></li>
+  <li>Electric Iris: <code class="language-plaintext highlighter-rouge">#9D8CFF</code></li>
+  <li>Deep Violet hover: <code class="language-plaintext highlighter-rouge">#5E3FE6</code></li>
+  <li>Focus ring: <code class="language-plaintext highlighter-rouge">#B6A8FF</code></li>
+</ul>
+
+<p>Telemetry/Execution accent:</p>
+<ul>
+  <li>Cyan signal: <code class="language-plaintext highlighter-rouge">#00D4FF</code></li>
+  <li>Deep cyan: <code class="language-plaintext highlighter-rouge">#0095B6</code></li>
+  <li>Telemetry glow: <code class="language-plaintext highlighter-rouge">#33E1FF</code></li>
+</ul>
+
+<p>Status colors:</p>
+<ul>
+  <li>Success: <code class="language-plaintext highlighter-rouge">#1ED760</code></li>
+  <li>Warning: <code class="language-plaintext highlighter-rouge">#F5A524</code></li>
+  <li>Critical: <code class="language-plaintext highlighter-rouge">#FF4D4F</code></li>
+  <li>Info: <code class="language-plaintext highlighter-rouge">#3B82F6</code></li>
+</ul>
+
+<h2 id="2-typography">2. Typography</h2>
+
+<p>Web UI:</p>
+<ul>
+  <li>Primary: <code class="language-plaintext highlighter-rouge">Inter</code> (400, 500, 600, 700)</li>
+  <li>Display accents: <code class="language-plaintext highlighter-rouge">Space Grotesk</code> (major headings only)</li>
+  <li>Monospace: <code class="language-plaintext highlighter-rouge">JetBrains Mono</code> (logs, telemetry, audit, task output)</li>
+</ul>
+
+<p>TUI:</p>
+<ul>
+  <li>Primary text: <code class="language-plaintext highlighter-rouge">#E6E9F5</code></li>
+  <li>Muted text: <code class="language-plaintext highlighter-rouge">#94A3B8</code></li>
+  <li>Monospace default: <code class="language-plaintext highlighter-rouge">JetBrains Mono</code> or <code class="language-plaintext highlighter-rouge">IBM Plex Mono</code></li>
+</ul>
+
+<h2 id="3-component-rules">3. Component Rules</h2>
+
+<p>Buttons:</p>
+<ul>
+  <li>Primary: background <code class="language-plaintext highlighter-rouge">#7C5CFF</code>, hover <code class="language-plaintext highlighter-rouge">#5E3FE6</code>, text white, radius <code class="language-plaintext highlighter-rouge">12px</code>, glow <code class="language-plaintext highlighter-rouge">0 0 12px rgba(124, 92, 255, 0.35)</code>.</li>
+  <li>Secondary: transparent background, <code class="language-plaintext highlighter-rouge">1px</code> border <code class="language-plaintext highlighter-rouge">#7C5CFF</code>, hover <code class="language-plaintext highlighter-rouge">rgba(124, 92, 255, 0.1)</code>.</li>
+</ul>
+
+<p>Cards/Panels:</p>
+<ul>
+  <li>Background <code class="language-plaintext highlighter-rouge">#131A2E</code>, border <code class="language-plaintext highlighter-rouge">#222C4A</code>, subtle shadow only.</li>
+</ul>
+
+<p>Glow usage:</p>
+<ul>
+  <li>Allowed only for active orchestrator task, live telemetry, and critical alerts.</li>
+  <li>Avoid glow on static layout elements.</li>
+</ul>
+
+<h2 id="4-tui-semantic-colors">4. TUI Semantic Colors</h2>
+
+<ul>
+  <li>Command: <code class="language-plaintext highlighter-rouge">#7C5CFF</code></li>
+  <li>Success: <code class="language-plaintext highlighter-rouge">#1ED760</code></li>
+  <li>Warning: <code class="language-plaintext highlighter-rouge">#F5A524</code></li>
+  <li>Error: <code class="language-plaintext highlighter-rouge">#FF4D4F</code></li>
+  <li>Telemetry event: <code class="language-plaintext highlighter-rouge">#00D4FF</code></li>
+  <li>Metadata: <code class="language-plaintext highlighter-rouge">#9CA3AF</code></li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

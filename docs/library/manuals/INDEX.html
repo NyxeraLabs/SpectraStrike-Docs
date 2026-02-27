@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>INDEX | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="spectrastrike-manuals-index">SpectraStrike Manuals Index</h1>
+<p><img src="../../ui/web/assets/images/SprectraStrike_Logo.png" alt="SpectraStrike Logo" /></p>
+
+<p>This index tracks production manuals and governance documents aligned with current implementation status.</p>
+
+<h2 id="core-technical-manuals">Core Technical Manuals</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docs/manuals/USER_GUIDE.md</code>
+    <ul>
+      <li>Operator and platform runbook for deployment, security controls, workflows, and BYOT telemetry SDK usage.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docs/manuals/ORCHESTRATOR_ARCHITECTURE.md</code>
+    <ul>
+      <li>Orchestrator design, messaging backbone, and security data-plane behavior.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docs/manuals/ARMORY_RUNNER_EXECUTION_FABRIC.md</code>
+    <ul>
+      <li>Sprint 11-13 Armory registry, universal runner verification, and QA control contracts.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docs/manuals/FIRECRACKER_MICROVM_TRANSITION.md</code>
+    <ul>
+      <li>Sprint 34 firecracker backend integration, isolation enforcement, and runtime attestation runbook.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docs/manuals/MUTUAL_ATTESTATION_KEY_DERIVATION.md</code>
+    <ul>
+      <li>Sprint 35 mutual attestation, TPM identity contracts, and per-execution key derivation controls.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docs/manuals/VECTORVUE_API_CLIENT_DESIGN.md</code>
+    <ul>
+      <li>VectorVue client contracts, retry behavior, and integration error model.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docs/manuals/WHITEPAPER_COMPLIANCE.md</code>
+    <ul>
+      <li>Sprint-aligned implementation compliance assessment against <code class="language-plaintext highlighter-rouge">docs/WHITEPAPER.md</code>.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docs/manuals/UI_ARCHITECTURE_API_CONTRACTS.md</code>
+    <ul>
+      <li>Sprint 9.6 UI baseline architecture and internal API contracts.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docs/manuals/UI_TUI_DESIGN_SYSTEM.md</code>
+    <ul>
+      <li>Canonical visual and interaction standards for web UI and admin TUI.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="qa-and-release-governance">QA and Release Governance</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docs/manuals/QA_RUNBOOK.md</code>
+    <ul>
+      <li>Enterprise QA gate matrix, evidence process, and blocker escalation protocol.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/INDEX.md</code>
+    <ul>
+      <li>Sprint-by-sprint engineering logs with architecture and implementation detail (includes Sprint 9.9 governance/legal enforcement log).</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="program-and-tracking-artifacts">Program and Tracking Artifacts</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docs/ROADMAP.md</code>
+    <ul>
+      <li>Sprint-level implementation and QA status.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docs/kanban-board.csv</code>
+    <ul>
+      <li>Task-level tracking across architecture, development, QA, and security workstreams.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="specifications">Specifications</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docs/specs/EXECUTION_MANIFEST_SPEC_V1.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/specs/TELEMETRY_EXTENSION_SPEC_V1.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/specs/CAPABILITY_POLICY_SPEC_V1.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/specs/BACKWARD_COMPATIBILITY_GUARANTEES.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/specs/VALIDATION_SDK.md</code></li>
+</ul>
+
+<h2 id="compliance-and-policy">Compliance and Policy</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docs/COMPLIANCE_STATEMENT.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/ARCHITECTURE_SECURITY_OVERVIEW.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/THREAT_MODEL.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/PRIVACY_POLICY.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/ACCEPTABLE_USE_POLICY.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/compliance/INDEX.md</code>
+    <ul>
+      <li>Sprint 32 compliance mapping package (SOC 2, ISO 27001 Annex A, NIST 800-53, MITRE ATT&amp;CK telemetry, Secure SDLC package).</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="governance--legal">Governance &amp; Legal</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docs/DISCLAIMER.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/EULA.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/ACCEPTABLE_USE_POLICY.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/PRIVACY_POLICY.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/USER_REGISTRATION_POLICY.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/SECURITY_POLICY.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/THREAT_MODEL.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/ARCHITECTURE_SECURITY_OVERVIEW.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/COMPLIANCE_STATEMENT.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">SECURITY.md</code></li>
+</ul>
+
+<h2 id="product-level-governance">Product-Level Governance</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">README.md</code>
+    <ul>
+      <li>Product scope, architecture posture, and runtime status summary.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">SECURITY.md</code>
+    <ul>
+      <li>Security policy and vulnerability disclosure workflow.</li>
+    </ul>
+  </li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

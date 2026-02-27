@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>QA RUNBOOK | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="spectrastrike-qa-runbook">SpectraStrike QA Runbook</h1>
+<p><img src="../../ui/web/assets/images/SprectraStrike_Logo.png" alt="SpectraStrike Logo" /></p>
+
+<h2 id="1-purpose">1. Purpose</h2>
+
+<p>This runbook defines the enterprise QA governance process for SpectraStrike across application logic, infrastructure hardening, security controls, and documentation integrity.</p>
+
+<p>This runbook is release-gating. Any failed or blocked gate must be recorded in:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docs/ROADMAP.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/kanban-board.csv</code></li>
+  <li>sprint log in <code class="language-plaintext highlighter-rouge">docs/dev-logs/</code></li>
+</ul>
+
+<h2 id="2-qa-domains">2. QA Domains</h2>
+
+<ul>
+  <li>Platform Core QA: orchestrator, telemetry ingestion, task lifecycle, AAA, audit trail.</li>
+  <li>Messaging QA: broker-backed delivery, retries, idempotency, DLQ behavior.</li>
+  <li>UI/TUI QA: operator workflows, API wiring, regression behavior.</li>
+  <li>Security QA: compose hardening policy, mTLS paths, pinning behavior, supply-chain checks.</li>
+  <li>Documentation QA: roadmap/kanban/manual consistency, schema checks, license header compliance.</li>
+</ul>
+
+<h2 id="3-environment-preconditions">3. Environment Preconditions</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">.env</code> is configured.</li>
+  <li>Secrets are initialized and rotated from placeholders.</li>
+  <li>TLS and internal PKI are generated.</li>
+  <li>Docker runtime is healthy.</li>
+  <li>Python venv is available for local test execution.</li>
+</ul>
+
+<p>Bootstrap sequence:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp</span> .env.example .env
+make secrets-init
+make tls-dev-cert
+make pki-internal
+make up
+</code></pre></div></div>
+
+<h2 id="4-mandatory-qa-command-matrix">4. Mandatory QA Command Matrix</h2>
+
+<h3 id="41-policy-and-configuration-gates">4.1 Policy and configuration gates</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make policy-check
+docker compose <span class="nt">-f</span> docker-compose.dev.yml config <span class="o">&gt;</span>/dev/null
+docker compose <span class="nt">-f</span> docker-compose.prod.yml config <span class="o">&gt;</span>/dev/null
+</code></pre></div></div>
+
+<h3 id="42-python-test-gates">4.2 Python test gates</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make <span class="nb">test
+</span>make test-unit
+make test-integration
+make test-docker
+</code></pre></div></div>
+
+<h3 id="43-security-gate">4.3 Security gate</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make security-check
+make sbom
+make vuln-scan
+make security-gate
+</code></pre></div></div>
+
+<h3 id="44-sprint-98-consolidation-suite">4.4 Sprint 9.8 consolidation suite</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./.venv/bin/pytest <span class="nt">-q</span> <span class="se">\</span>
+  tests/unit/test_telemetry_messaging.py <span class="se">\</span>
+  tests/integration/test_messaging_publish_consume.py <span class="se">\</span>
+  tests/unit/test_remote_endpoint_config.py <span class="se">\</span>
+  tests/unit/integration/test_metasploit_manual_ingestion.py <span class="se">\</span>
+  tests/unit/test_ui_admin_client.py <span class="se">\</span>
+  tests/unit/test_ui_admin_shell.py <span class="se">\</span>
+  tests/qa/test_ui_admin_tui_qa.py <span class="se">\</span>
+  tests/unit/test_aaa_framework.py <span class="se">\</span>
+  tests/unit/test_orchestrator_audit_trail.py <span class="se">\</span>
+  tests/qa/test_orchestrator_qa.py <span class="se">\</span>
+  tests/qa/test_docs_qa.py
+</code></pre></div></div>
+
+<p>Expected current result: <code class="language-plaintext highlighter-rouge">39 passed</code>.</p>
+
+<h3 id="45-governance-and-legal-enforcement-gate">4.5 Governance and legal enforcement gate</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> .spectrastrike/legal/acceptance.json
+docker compose <span class="nt">-f</span> docker-compose.dev.yml <span class="nb">exec</span> <span class="nt">-T</span> ui-web sh <span class="nt">-lc</span> <span class="s1">'cat /var/lib/spectrastrike/legal/acceptance.json'</span>
+</code></pre></div></div>
+
+<p>Acceptance file must exist in self-hosted mode and match active versions:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">eula: 2026.1</code></li>
+  <li><code class="language-plaintext highlighter-rouge">aup: 2026.1</code></li>
+  <li><code class="language-plaintext highlighter-rouge">privacy: 2026.1</code> (required for SaaS and enterprise-per-user mode)</li>
+</ul>
+
+<p>Notes:</p>
+<ul>
+  <li>local/default non-container path: <code class="language-plaintext highlighter-rouge">.spectrastrike/legal/acceptance.json</code></li>
+  <li>dockerized runtime path: <code class="language-plaintext highlighter-rouge">/var/lib/spectrastrike/legal/acceptance.json</code></li>
+</ul>
+
+<p>If versions differ from <code class="language-plaintext highlighter-rouge">config/legal.config.ts</code>, access must be blocked with:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">LEGAL_ACCEPTANCE_REQUIRED</code></li>
+</ul>
+
+<h3 id="46-sprint-167168-host-integration-smoke">4.6 Sprint 16.7/16.8 host integration smoke</h3>
+
+<p>Validate host-installed tooling and integration contracts (tenant-aware telemetry, optional RPC/API live checks).
+Sprint 16.8 routes VectorVue validation through RabbitMQ bridge flow.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">SPECTRASTRIKE_TENANT_ID</span><span class="o">=</span>tenant-a
+make host-integration-smoke
+
+<span class="c"># optional live checks when endpoints/credentials are configured</span>
+<span class="nv">PYTHONPATH</span><span class="o">=</span>src .venv/bin/python <span class="nt">-m</span> pkg.integration.host_integration_smoke <span class="se">\</span>
+  <span class="nt">--tenant-id</span> <span class="s2">"</span><span class="nv">$SPECTRASTRIKE_TENANT_ID</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--check-metasploit-rpc</span> <span class="se">\</span>
+  <span class="nt">--check-sliver-command</span> <span class="se">\</span>
+  <span class="nt">--check-mythic-task</span> <span class="se">\</span>
+  <span class="nt">--check-vectorvue</span>
+
+<span class="c"># optional standalone broker drain -&gt; VectorVue federation gateway sync</span>
+make vectorvue-rabbitmq-sync
+</code></pre></div></div>
+
+<p>Expected output shape:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">HOST_SMOKE tenant_id=... nmap_binary_ok=True nmap_scan_ok=True telemetry_ingest_ok=True metasploit_binary_ok=True</code></li>
+  <li>when Sliver/Mythic checks are enabled:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">sliver_binary_ok=True</code></li>
+      <li><code class="language-plaintext highlighter-rouge">sliver_command_ok=True</code></li>
+      <li><code class="language-plaintext highlighter-rouge">mythic_binary_ok=True</code></li>
+      <li><code class="language-plaintext highlighter-rouge">mythic_task_ok=True</code></li>
+    </ul>
+  </li>
+  <li>When <code class="language-plaintext highlighter-rouge">--check-vectorvue</code> is enabled:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">rabbitmq_publish_ok=True</code></li>
+      <li><code class="language-plaintext highlighter-rouge">vectorvue_ok=True</code></li>
+      <li><code class="language-plaintext highlighter-rouge">vectorvue_event_status=accepted|replayed</code></li>
+      <li><code class="language-plaintext highlighter-rouge">vectorvue_finding_status=accepted|replayed</code></li>
+      <li><code class="language-plaintext highlighter-rouge">vectorvue_status_poll_status=accepted|partial|replayed</code></li>
+    </ul>
+  </li>
+</ul>
+
+<p>If <code class="language-plaintext highlighter-rouge">--check-metasploit-rpc</code> is enabled, <code class="language-plaintext highlighter-rouge">MSF_RPC_*</code> must point to a reachable RPC endpoint.
+If <code class="language-plaintext highlighter-rouge">--check-vectorvue</code> is enabled, <code class="language-plaintext highlighter-rouge">VECTORVUE_*</code> credentials and endpoint must be configured.</p>
+
+<p>Latest local federation evidence (2026-02-27):</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">nmap + metasploit + sliver + vectorvue</code> host smoke accepted:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">vectorvue_event_status=accepted</code></li>
+      <li><code class="language-plaintext highlighter-rouge">vectorvue_finding_status=accepted</code></li>
+      <li><code class="language-plaintext highlighter-rouge">vectorvue_status_poll_status=accepted</code></li>
+    </ul>
+  </li>
+  <li>Mythic-inclusive host smoke currently blocks with:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">HostIntegrationError: required binary not found on host: mythic-cli</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="47-sprint-17-zero-trust-qa">4.7 Sprint 17 zero-trust QA</h3>
+
+<p>Run explicit Sprint 17 denial and containment checks:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">PYTHONPATH</span><span class="o">=</span>src .venv/bin/pytest <span class="nt">-q</span> tests/qa/test_zero_trust_sprint17_qa.py
+</code></pre></div></div>
+
+<p>Expected current result: <code class="language-plaintext highlighter-rouge">3 passed</code>.</p>
+
+<h3 id="48-sprint-17-carry-over-validation-165167168">4.8 Sprint 17 carry-over validation (16.5/16.7/16.8)</h3>
+
+<p>Run carry-over regression checks inside Sprint 17 QA gate:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">PYTHONPATH</span><span class="o">=</span>src .venv/bin/pytest <span class="nt">-q</span> <span class="se">\</span>
+  tests/unit/test_telemetry_sdk.py <span class="se">\</span>
+  tests/unit/test_nmap_wrapper.py <span class="se">\</span>
+  tests/unit/test_metasploit_wrapper.py <span class="se">\</span>
+  tests/unit/test_host_integration_smoke.py <span class="se">\</span>
+  tests/unit/integration/test_vectorvue_rabbitmq_bridge.py
+</code></pre></div></div>
+
+<p>Expected current result: <code class="language-plaintext highlighter-rouge">28 passed</code>.</p>
+
+<h3 id="49-sprint-34-microvm-transition-validation">4.9 Sprint 34 microVM transition validation</h3>
+
+<p>Run Firecracker transition validation suites:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">PYTHONPATH</span><span class="o">=</span>src .venv/bin/pytest <span class="nt">-q</span> <span class="se">\</span>
+  tests/unit/test_firecracker_microvm_runner.py <span class="se">\</span>
+  tests/unit/test_universal_edge_runner.py <span class="se">\</span>
+  tests/qa/test_sprint34_microvm_transition_qa.py
+</code></pre></div></div>
+
+<p>Expected current result: <code class="language-plaintext highlighter-rouge">12 passed</code>.</p>
+
+<h3 id="410-sprint-35-mutual-attestation-and-key-derivation-validation">4.10 Sprint 35 mutual attestation and key-derivation validation</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">PYTHONPATH</span><span class="o">=</span>src .venv/bin/pytest <span class="nt">-q</span> <span class="se">\</span>
+  tests/unit/test_runner_attestation.py <span class="se">\</span>
+  tests/unit/test_universal_edge_runner.py <span class="se">\</span>
+  tests/qa/test_sprint35_mutual_attestation_qa.py
+</code></pre></div></div>
+
+<p>Expected current result: <code class="language-plaintext highlighter-rouge">12 passed</code>.</p>
+
+<h2 id="5-web-ui-qa-execution-path">5. Web UI QA Execution Path</h2>
+
+<h3 id="51-required-dependency-bootstrap">5.1 Required dependency bootstrap</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm <span class="nt">--prefix</span> ui/web <span class="nb">install</span> <span class="nt">--no-audit</span> <span class="nt">--no-fund</span>
+</code></pre></div></div>
+
+<h3 id="52-unit-and-e2e-suites">5.2 Unit and E2E suites</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm <span class="nt">--prefix</span> ui/web run <span class="nb">test</span>:unit
+npm <span class="nt">--prefix</span> ui/web run <span class="nb">test</span>:e2e
+</code></pre></div></div>
+
+<h3 id="53-current-known-blocker-sprint-98">5.3 Current known blocker (Sprint 9.8)</h3>
+
+<p>If network DNS cannot resolve npm registry, Web UI QA is blocked and must be recorded exactly.</p>
+
+<p>Observed exact outputs:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">npm --prefix ui/web install --no-audit --no-fund</code> -&gt; <code class="language-plaintext highlighter-rouge">EAI_AGAIN getaddrinfo EAI_AGAIN registry.npmjs.org</code></li>
+  <li><code class="language-plaintext highlighter-rouge">npm --prefix ui/web run test:unit</code> -&gt; <code class="language-plaintext highlighter-rouge">sh: line 1: vitest: command not found</code></li>
+  <li><code class="language-plaintext highlighter-rouge">npm --prefix ui/web run test:e2e</code> -&gt; <code class="language-plaintext highlighter-rouge">error: unknown command 'test'</code></li>
+</ul>
+
+<h2 id="6-mtlstransport-verification">6. mTLS/Transport Verification</h2>
+
+<p>Run targeted transport checks inside runtime containers:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker compose <span class="nt">-f</span> docker-compose.dev.yml <span class="nb">exec</span> <span class="nt">-T</span> redis redis-cli <span class="nt">--tls</span> <span class="nt">--cacert</span> /etc/redis/pki/ca.crt <span class="nt">--cert</span> /etc/redis/pki/app/client.crt <span class="nt">--key</span> /etc/redis/pki/app/client.key <span class="nt">-p</span> 6380 ping
+docker compose <span class="nt">-f</span> docker-compose.dev.yml <span class="nb">exec</span> <span class="nt">-T</span> postgres psql <span class="s2">"host=postgres dbname=spectrastrike user=</span><span class="si">$(</span><span class="nb">cat </span>docker/secrets/postgres_user.txt<span class="si">)</span><span class="s2"> sslmode=verify-ca sslrootcert=/etc/postgresql/pki/ca.crt sslcert=/etc/postgresql/pki/app/client.crt sslkey=/etc/postgresql/pki/app/client.key"</span> <span class="nt">-c</span> <span class="s2">"select version();"</span>
+docker compose <span class="nt">-f</span> docker-compose.dev.yml <span class="nb">exec</span> <span class="nt">-T</span> app python <span class="nt">-c</span> <span class="s2">"from pkg.orchestrator.messaging import RabbitMQPublisher; print('rabbitmq tls config loaded')"</span>
+</code></pre></div></div>
+
+<h2 id="7-documentation-qa-gate">7. Documentation QA Gate</h2>
+
+<p>Documentation gate is mandatory before release tagging.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./.venv/bin/python scripts/check_license_headers.py
+./.venv/bin/pytest <span class="nt">-q</span> tests/qa/test_docs_qa.py
+</code></pre></div></div>
+
+<p>The docs QA test enforces:</p>
+<ul>
+  <li>manuals index references resolve to existing files</li>
+  <li>Sprint 9.5/9.6/9.7 sections in roadmap are complete</li>
+  <li>kanban CSV schema remains valid</li>
+</ul>
+
+<h2 id="8-exit-criteria">8. Exit Criteria</h2>
+
+<p>A release candidate is QA-passing only when all are true:</p>
+<ul>
+  <li>policy checks pass</li>
+  <li>mandatory pytest suites pass</li>
+  <li>security gate passes</li>
+  <li>docs gate passes</li>
+  <li>web UI suites pass or are explicitly blocked with evidence and approved risk acceptance</li>
+</ul>
+
+<h2 id="9-incident-and-escalation-procedure">9. Incident and Escalation Procedure</h2>
+
+<p>If a gate fails or is blocked:</p>
+<ol>
+  <li>Record command, timestamp, environment, and raw output.</li>
+  <li>Update <code class="language-plaintext highlighter-rouge">docs/ROADMAP.md</code> and <code class="language-plaintext highlighter-rouge">docs/kanban-board.csv</code>.</li>
+  <li>Open remediation task with owner and due sprint.</li>
+  <li>Re-run full QA set after fix.</li>
+  <li>Attach evidence in sprint log under <code class="language-plaintext highlighter-rouge">docs/dev-logs/</code>.</li>
+</ol>
+
+<h2 id="10-audit-artifacts">10. Audit Artifacts</h2>
+
+<p>Maintain these artifacts per QA cycle:</p>
+<ul>
+  <li>command transcript summary</li>
+  <li>test pass/fail snapshot</li>
+  <li>blocker evidence (if any)</li>
+  <li>remediation linkage</li>
+  <li>final release recommendation</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

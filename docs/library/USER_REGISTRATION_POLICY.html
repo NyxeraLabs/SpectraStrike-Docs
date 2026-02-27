@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>USER REGISTRATION POLICY | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <h1 id="spectrastrike--user-registration--access-policy">SpectraStrike – User Registration &amp; Access Policy</h1>
+
+<p>SpectraStrike may operate in:</p>
+
+<ul>
+  <li>Self-hosted mode</li>
+  <li>Enterprise managed deployment</li>
+  <li>SaaS deployment (future)</li>
+</ul>
+
+<p>This document defines user access principles.</p>
+
+<h2 id="1-account-eligibility">1. Account Eligibility</h2>
+
+<p>Users must:</p>
+
+<ul>
+  <li>Be 18 years or older</li>
+  <li>Represent an organization OR</li>
+  <li>Have documented authorization for security testing</li>
+</ul>
+
+<p>Anonymous offensive usage is prohibited.</p>
+
+<h2 id="2-organizational-responsibility">2. Organizational Responsibility</h2>
+
+<p>If registering on behalf of an organization:</p>
+
+<ul>
+  <li>You confirm you are authorized</li>
+  <li>You accept responsibility for team usage</li>
+  <li>You ensure lawful deployment</li>
+</ul>
+
+<h2 id="3-access-control-model">3. Access Control Model</h2>
+
+<p>SpectraStrike supports:</p>
+
+<ul>
+  <li>Role-Based Access Control (RBAC)</li>
+  <li>Telemetry-scoped permissions</li>
+  <li>Orchestrator privilege tiers</li>
+  <li>Audit logging of user actions</li>
+</ul>
+
+<p>Administrative access must be restricted.</p>
+
+<h2 id="4-logging--audit">4. Logging &amp; Audit</h2>
+
+<p>All user actions may be logged for:</p>
+
+<ul>
+  <li>Compliance validation</li>
+  <li>Detection verification</li>
+  <li>Security auditing</li>
+  <li>Forensic review</li>
+</ul>
+
+<p>Logs may include:</p>
+
+<ul>
+  <li>Task execution metadata</li>
+  <li>Correlation decisions</li>
+  <li>Risk scoring events</li>
+  <li>Configuration changes</li>
+</ul>
+
+<h2 id="5-prohibited-registrations">5. Prohibited Registrations</h2>
+
+<p>Registration will be denied or revoked if:</p>
+
+<ul>
+  <li>False identity information is provided</li>
+  <li>Platform is used for illegal testing</li>
+  <li>Infrastructure ownership cannot be verified (enterprise mode)</li>
+</ul>
+
+<h2 id="6-data-responsibility">6. Data Responsibility</h2>
+
+<p>Users are responsible for:</p>
+
+<ul>
+  <li>Secure storage of credentials</li>
+  <li>MFA enforcement (recommended)</li>
+  <li>Protecting API keys</li>
+  <li>Securing telemetry endpoints</li>
+</ul>
+
+<p>Nyxera Labs does not assume responsibility for credential leakage.</p>
+
+<h2 id="7-account-termination">7. Account Termination</h2>
+
+<p>Nyxera Labs reserves the right to suspend accounts that:</p>
+
+<ul>
+  <li>Violate the EULA</li>
+  <li>Abuse orchestration features</li>
+  <li>Attempt platform exploitation</li>
+  <li>Engage in malicious behavior</li>
+</ul>
+
+<hr />
+
+<p>SpectraStrike is an engineering-grade orchestration platform.
+Access implies accountability.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

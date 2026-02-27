@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CAPABILITY POLICY SPEC V1 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="capability-policy-specification-v1">Capability Policy Specification v1</h1>
+
+<p>Version: <code class="language-plaintext highlighter-rouge">1.0.0</code>
+Status: Published (Sprint 33)</p>
+
+<h2 id="1-purpose">1. Purpose</h2>
+
+<p>Define the stable input contract used by SpectraStrike when delegating execution authorization to OPA.</p>
+
+<h2 id="2-policy-input-contract">2. Policy Input Contract</h2>
+
+<p>Required input fields:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">operator_id</code> (string, non-empty)</li>
+  <li><code class="language-plaintext highlighter-rouge">tenant_id</code> (string, non-empty)</li>
+  <li><code class="language-plaintext highlighter-rouge">tool_sha256</code> (<code class="language-plaintext highlighter-rouge">sha256:&lt;64 lowercase hex&gt;</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">target_urn</code> (<code class="language-plaintext highlighter-rouge">urn:&lt;nid&gt;:&lt;nss&gt;</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">action</code> (string, non-empty)</li>
+</ul>
+
+<p>Reference code path:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">pkg.orchestrator.opa.OPAExecutionAuthorizer</code></li>
+  <li><code class="language-plaintext highlighter-rouge">pkg.orchestrator.opa.OPAAAAPolicyAdapter</code></li>
+</ul>
+
+<h2 id="3-decision-endpoints">3. Decision Endpoints</h2>
+
+<p>OPA queries:</p>
+<ul>
+  <li>Input contract validation: <code class="language-plaintext highlighter-rouge">/v1/data/spectrastrike/capabilities/input_contract_valid</code></li>
+  <li>Allow decision: <code class="language-plaintext highlighter-rouge">/v1/data/spectrastrike/capabilities/allow</code></li>
+</ul>
+
+<p>Authorization sequence:</p>
+<ol>
+  <li>Validate input contract endpoint returns <code class="language-plaintext highlighter-rouge">result: true</code>.</li>
+  <li>Validate allow endpoint returns <code class="language-plaintext highlighter-rouge">result: true</code>.</li>
+  <li>Any false response MUST deny execution pre-sign.</li>
+</ol>
+
+<h2 id="4-security-semantics">4. Security Semantics</h2>
+
+<ul>
+  <li>Authorization is policy-driven, not hardcoded in business logic.</li>
+  <li>Capability tuple combines identity and execution context.</li>
+  <li>OPA transport/response failures MUST fail closed.</li>
+</ul>
+
+<h2 id="5-compatibility-rules">5. Compatibility Rules</h2>
+
+<ul>
+  <li>New optional fields MAY be added without breaking v1.</li>
+  <li>Existing required field semantics MUST remain stable for major version <code class="language-plaintext highlighter-rouge">1</code>.</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

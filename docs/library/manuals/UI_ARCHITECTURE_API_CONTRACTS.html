@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UI ARCHITECTURE API CONTRACTS | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="spectrastrike-ui-architecture-and-api-contracts-sprint-96-step-1">SpectraStrike UI Architecture and API Contracts (Sprint 9.6 Step 1)</h1>
+<p><img src="../../ui/web/assets/images/SprectraStrike_Logo.png" alt="SpectraStrike Logo" /></p>
+
+<h2 id="1-scope">1. Scope</h2>
+
+<p>This document defines the UI baseline architecture and API contracts for Sprint 9.6 with a strict local-only, dockerized runtime model.</p>
+
+<h2 id="2-dockerized-ui-topology">2. Dockerized UI Topology</h2>
+
+<p>UI components (planned for implementation in next Sprint 9.6 steps):</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ui-web</code>: Next.js App Router + Tailwind CSS container.</li>
+  <li><code class="language-plaintext highlighter-rouge">ui-admin</code>: terminal-based admin UI container for operator workflows.</li>
+</ul>
+
+<p>Traffic model:</p>
+<ol>
+  <li>Operator browser -&gt; <code class="language-plaintext highlighter-rouge">nginx</code> (TLS edge).</li>
+  <li><code class="language-plaintext highlighter-rouge">nginx</code> routes <code class="language-plaintext highlighter-rouge">/ui/*</code> and <code class="language-plaintext highlighter-rouge">/api/*</code> to internal services.</li>
+  <li><code class="language-plaintext highlighter-rouge">ui-web</code> calls orchestrator API over internal Docker network.</li>
+  <li><code class="language-plaintext highlighter-rouge">ui-admin</code> calls orchestrator API over internal Docker network.</li>
+</ol>
+
+<p>Security model:</p>
+<ul>
+  <li>No cloud dependencies.</li>
+  <li>Internal service access over segmented Docker networks.</li>
+  <li>UI services are not directly exposed to host unless explicitly proxied.</li>
+  <li>Authn/authz delegated to existing AAA controls in orchestrator.</li>
+</ul>
+
+<h2 id="3-ui-service-boundaries">3. UI Service Boundaries</h2>
+
+<p><code class="language-plaintext highlighter-rouge">ui-web</code> responsibilities:</p>
+<ul>
+  <li>Authentication views.</li>
+  <li>Operator dashboard shell.</li>
+  <li>Telemetry feed visualization.</li>
+  <li>Findings/evidence navigation.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">ui-admin</code> responsibilities:</p>
+<ul>
+  <li>Task submission.</li>
+  <li>Telemetry watch.</li>
+  <li>Manual integration sync triggers.</li>
+  <li>Session-oriented terminal operations (<code class="language-plaintext highlighter-rouge">health</code>, <code class="language-plaintext highlighter-rouge">login</code>, <code class="language-plaintext highlighter-rouge">demo</code>, <code class="language-plaintext highlighter-rouge">logout</code>, <code class="language-plaintext highlighter-rouge">task</code>, <code class="language-plaintext highlighter-rouge">sync</code>, <code class="language-plaintext highlighter-rouge">telemetry</code>, <code class="language-plaintext highlighter-rouge">findings</code>).</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">app</code> (orchestrator/API) responsibilities:</p>
+<ul>
+  <li>Authentication and session/token validation.</li>
+  <li>Task orchestration and execution lifecycle.</li>
+  <li>Telemetry retrieval and filtering.</li>
+  <li>Findings/evidence retrieval.</li>
+  <li>Audit and access-control enforcement.</li>
+</ul>
+
+<h2 id="4-api-contract-baseline">4. API Contract Baseline</h2>
+
+<p>All endpoints are internal API contracts served by orchestrator and consumed by both UI clients.</p>
+
+<h3 id="41-authentication">4.1 Authentication</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">POST /api/v1/auth/login</code>
+    <ul>
+      <li>Request:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">username: string</code></li>
+          <li><code class="language-plaintext highlighter-rouge">password: string</code></li>
+          <li><code class="language-plaintext highlighter-rouge">mfa_code?: string</code></li>
+        </ul>
+      </li>
+      <li>Response:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">access_token: string</code></li>
+          <li><code class="language-plaintext highlighter-rouge">expires_at: string (ISO-8601)</code></li>
+          <li><code class="language-plaintext highlighter-rouge">roles: string[]</code></li>
+          <li><code class="language-plaintext highlighter-rouge">Set-Cookie: spectrastrike_session</code> (<code class="language-plaintext highlighter-rouge">HttpOnly</code>, <code class="language-plaintext highlighter-rouge">SameSite=Strict</code>, <code class="language-plaintext highlighter-rouge">Secure</code>)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">POST /api/v1/auth/register</code>
+    <ul>
+      <li>Request:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">username: string</code></li>
+          <li><code class="language-plaintext highlighter-rouge">full_name: string</code></li>
+          <li><code class="language-plaintext highlighter-rouge">email: string</code></li>
+          <li><code class="language-plaintext highlighter-rouge">password: string</code></li>
+          <li><code class="language-plaintext highlighter-rouge">password_confirm: string</code></li>
+          <li><code class="language-plaintext highlighter-rouge">accepted_license: boolean</code></li>
+          <li><code class="language-plaintext highlighter-rouge">accepted_eula: boolean</code></li>
+          <li><code class="language-plaintext highlighter-rouge">accepted_security_policy: boolean</code></li>
+          <li><code class="language-plaintext highlighter-rouge">registration_token?: string</code> (required only if server policy enforces it)</li>
+        </ul>
+      </li>
+      <li>Response:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">status: registered</code></li>
+          <li><code class="language-plaintext highlighter-rouge">user: { id, username, full_name, email, roles, created_at }</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">POST /api/v1/auth/logout</code>
+    <ul>
+      <li>Request: bearer token</li>
+      <li>Response: <code class="language-plaintext highlighter-rouge">204 No Content</code></li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">POST /api/v1/auth/demo</code>
+    <ul>
+      <li>Purpose: issue a demo operator session for local development/demo flows.</li>
+      <li>Guard: controlled by <code class="language-plaintext highlighter-rouge">UI_AUTH_ENABLE_DEMO_LOGIN</code>.</li>
+      <li>Response:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">access_token: string</code></li>
+          <li><code class="language-plaintext highlighter-rouge">expires_at: string (ISO-8601)</code></li>
+          <li><code class="language-plaintext highlighter-rouge">roles: string[]</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="42-dashboard-and-telemetry">4.2 Dashboard and Telemetry</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">GET /api/v1/dashboard/summary</code>
+    <ul>
+      <li>Response:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">open_findings: number</code></li>
+          <li><code class="language-plaintext highlighter-rouge">active_tasks: number</code></li>
+          <li><code class="language-plaintext highlighter-rouge">telemetry_events_24h: number</code></li>
+          <li><code class="language-plaintext highlighter-rouge">last_sync_at: string|null</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">GET /api/v1/telemetry/events</code>
+    <ul>
+      <li>Query:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">source?: nmap|metasploit|manual</code></li>
+          <li><code class="language-plaintext highlighter-rouge">status?: success|failed</code></li>
+          <li><code class="language-plaintext highlighter-rouge">limit?: number</code></li>
+          <li><code class="language-plaintext highlighter-rouge">cursor?: string</code></li>
+        </ul>
+      </li>
+      <li>Response:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">items: TelemetryEvent[]</code></li>
+          <li><code class="language-plaintext highlighter-rouge">next_cursor?: string</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="43-findings-and-evidence">4.3 Findings and Evidence</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">GET /api/v1/findings</code>
+    <ul>
+      <li>Query:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">severity?: low|medium|high|critical</code></li>
+          <li><code class="language-plaintext highlighter-rouge">status?: open|accepted|resolved</code></li>
+          <li><code class="language-plaintext highlighter-rouge">limit?: number</code></li>
+          <li><code class="language-plaintext highlighter-rouge">cursor?: string</code></li>
+        </ul>
+      </li>
+      <li>Response:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">items: Finding[]</code></li>
+          <li><code class="language-plaintext highlighter-rouge">next_cursor?: string</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">GET /api/v1/findings/{finding_id}/evidence</code>
+    <ul>
+      <li>Response:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">finding_id: string</code></li>
+          <li><code class="language-plaintext highlighter-rouge">evidence: EvidenceItem[]</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="44-operator-actions">4.4 Operator Actions</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">POST /api/v1/tasks</code>
+    <ul>
+      <li>Request:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">tool: string</code></li>
+          <li><code class="language-plaintext highlighter-rouge">target: string</code></li>
+          <li><code class="language-plaintext highlighter-rouge">parameters: object</code></li>
+        </ul>
+      </li>
+      <li>Response:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">task_id: string</code></li>
+          <li><code class="language-plaintext highlighter-rouge">status: queued|running|completed|failed</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">POST /api/v1/integrations/metasploit/manual-sync</code>
+    <ul>
+      <li>Request:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">actor?: string</code></li>
+          <li><code class="language-plaintext highlighter-rouge">checkpoint_override?: string</code></li>
+        </ul>
+      </li>
+      <li>Response:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">emitted_events: number</code></li>
+          <li><code class="language-plaintext highlighter-rouge">observed_sessions: number</code></li>
+          <li><code class="language-plaintext highlighter-rouge">observed_session_events: number</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="5-shared-schema-contracts">5. Shared Schema Contracts</h2>
+
+<p><code class="language-plaintext highlighter-rouge">TelemetryEvent</code>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">event_id: string</code></li>
+  <li><code class="language-plaintext highlighter-rouge">event_type: string</code></li>
+  <li><code class="language-plaintext highlighter-rouge">actor: string</code></li>
+  <li><code class="language-plaintext highlighter-rouge">target: string</code></li>
+  <li><code class="language-plaintext highlighter-rouge">status: string</code></li>
+  <li><code class="language-plaintext highlighter-rouge">timestamp: string (ISO-8601)</code></li>
+  <li><code class="language-plaintext highlighter-rouge">attributes: object</code></li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">Finding</code>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">finding_id: string</code></li>
+  <li><code class="language-plaintext highlighter-rouge">title: string</code></li>
+  <li><code class="language-plaintext highlighter-rouge">severity: low|medium|high|critical</code></li>
+  <li><code class="language-plaintext highlighter-rouge">status: open|accepted|resolved</code></li>
+  <li><code class="language-plaintext highlighter-rouge">created_at: string (ISO-8601)</code></li>
+  <li><code class="language-plaintext highlighter-rouge">updated_at: string (ISO-8601)</code></li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">EvidenceItem</code>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">evidence_id: string</code></li>
+  <li><code class="language-plaintext highlighter-rouge">type: log|artifact|command_output|screenshot</code></li>
+  <li><code class="language-plaintext highlighter-rouge">content_ref: string</code></li>
+  <li><code class="language-plaintext highlighter-rouge">captured_at: string (ISO-8601)</code></li>
+</ul>
+
+<h2 id="6-non-functional-requirements">6. Non-Functional Requirements</h2>
+
+<ul>
+  <li>Dockerized-only execution for UI and API runtime.</li>
+  <li>Internal API latency target: p95 &lt;= 300ms for list endpoints at normal load.</li>
+  <li>Cursor-based pagination for telemetry/findings endpoints.</li>
+  <li>Every mutation endpoint must emit an audit event.</li>
+  <li>API responses must be deterministic and machine-parseable JSON.</li>
+</ul>
+
+<h2 id="7-delivery-note">7. Delivery Note</h2>
+
+<p>This is the contract and architecture baseline for Sprint 9.6 Step 1 only.
+Implementation of web/admin UI containers and endpoint wiring is tracked in the next Sprint 9.6 items.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

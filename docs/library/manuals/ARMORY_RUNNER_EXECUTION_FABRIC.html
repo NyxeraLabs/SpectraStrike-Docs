@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ARMORY RUNNER EXECUTION FABRIC | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+
+You may:
+Study
+Modify
+Use for internal security testing
+
+You may NOT:
+Offer as a commercial service
+Sell derived competing products
+-->
+
+<h1 id="armory--universal-runner-execution-fabric">Armory + Universal Runner Execution Fabric</h1>
+<p><img src="../../ui/web/assets/images/SprectraStrike_Logo.png" alt="SpectraStrike Logo" /></p>
+
+<h2 id="scope">Scope</h2>
+<p>This document captures Phase 4 Sprint 11-13 implementation boundaries for Armory registry controls, universal runner verification, and QA gates.</p>
+
+<h2 id="armory-workflow">Armory Workflow</h2>
+<ol>
+  <li>Ingest BYOT artifact (<code class="language-plaintext highlighter-rouge">tool_name</code>, <code class="language-plaintext highlighter-rouge">image_ref</code>, binary payload).</li>
+  <li>Compute immutable digest (<code class="language-plaintext highlighter-rouge">sha256</code>).</li>
+  <li>Generate SBOM metadata.</li>
+  <li>Run vulnerability summary pipeline.</li>
+  <li>Generate signing metadata (Cosign/Sigstore-equivalent contract).</li>
+  <li>Require explicit approval before digest becomes execution-authorized.</li>
+</ol>
+
+<h2 id="runner-workflow">Runner Workflow</h2>
+<p>Runner reference implementation is in Go under <code class="language-plaintext highlighter-rouge">src/runner-go</code>.</p>
+
+<ol>
+  <li>Validate compact JWS on edge side.</li>
+  <li>Resolve authorized tool digest from Armory.</li>
+  <li>Enforce exact digest match against signed manifest.</li>
+  <li>Build isolated command contract (<code class="language-plaintext highlighter-rouge">runsc</code> + AppArmor + read-only + no capabilities + no network baseline).</li>
+  <li>Execute workload and map output to CloudEvents (<code class="language-plaintext highlighter-rouge">stdout</code>, <code class="language-plaintext highlighter-rouge">stderr</code>, <code class="language-plaintext highlighter-rouge">exit_code</code>, <code class="language-plaintext highlighter-rouge">manifest_jws</code>).</li>
+</ol>
+
+<h2 id="qa-controls-sprint-13">QA Controls (Sprint 13)</h2>
+<ul>
+  <li>Forged JWS signatures must fail.</li>
+  <li>Tampered tool digests must fail.</li>
+  <li>Execution output must map to standardized CloudEvents payload.</li>
+</ul>
+
+<h2 id="current-constraints">Current Constraints</h2>
+<ul>
+  <li>HS256 path is fully verified in deterministic QA suites.</li>
+  <li>ES256 verifier backend is not yet wired in Go runtime and remains a planned integration task.</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

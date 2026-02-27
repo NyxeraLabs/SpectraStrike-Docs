@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BACKWARD COMPATIBILITY GUARANTEES | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="backward-compatibility-guarantees">Backward Compatibility Guarantees</h1>
+
+<p>Status: Published (Sprint 33)</p>
+
+<h2 id="1-versioning-policy">1. Versioning Policy</h2>
+
+<ul>
+  <li>Major version changes indicate breaking changes.</li>
+  <li>Minor/Patch updates in major <code class="language-plaintext highlighter-rouge">1</code> MUST remain backward compatible unless explicitly documented as exception.</li>
+</ul>
+
+<h2 id="2-execution-manifest-guarantees">2. Execution Manifest Guarantees</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">manifest_version</code> major <code class="language-plaintext highlighter-rouge">1</code> payloads remain supported within policy range.</li>
+  <li>Canonical serialization and deterministic hash behavior are stable contracts.</li>
+  <li>Required field names and semantics are stable for major <code class="language-plaintext highlighter-rouge">1</code>.</li>
+</ul>
+
+<h2 id="3-telemetry-contract-guarantees">3. Telemetry Contract Guarantees</h2>
+
+<ul>
+  <li>Parsers continue supporting CloudEvents + internal + legacy ingestion shapes.</li>
+  <li>Normalized canonical fields (<code class="language-plaintext highlighter-rouge">event_type</code>, <code class="language-plaintext highlighter-rouge">actor</code>, <code class="language-plaintext highlighter-rouge">target</code>, <code class="language-plaintext highlighter-rouge">status</code>, <code class="language-plaintext highlighter-rouge">tenant_id</code>) are stable.</li>
+  <li>Extension fields may grow; existing keys retain semantics.</li>
+</ul>
+
+<h2 id="4-capability-policy-guarantees">4. Capability Policy Guarantees</h2>
+
+<ul>
+  <li>OPA input required fields remain stable for major <code class="language-plaintext highlighter-rouge">1</code>.</li>
+  <li>Added optional fields MUST NOT invalidate existing v1 clients.</li>
+  <li>Fail-closed authorization behavior is non-negotiable and stable.</li>
+</ul>
+
+<h2 id="5-federationfeedback-guarantees">5. Federation/Feedback Guarantees</h2>
+
+<ul>
+  <li>Signed, mTLS-backed federation paths remain mandatory for trust-critical flows.</li>
+  <li>Replay and tenant-bound checks remain mandatory and non-optional.</li>
+  <li>Execution fingerprint binding remains invariant for cross-system traceability.</li>
+</ul>
+
+<h2 id="6-deprecation-workflow">6. Deprecation Workflow</h2>
+
+<p>Deprecations require:</p>
+<ol>
+  <li>roadmap entry</li>
+  <li>published migration note</li>
+  <li>overlap period with tests covering old and new shapes</li>
+  <li>explicit removal sprint marker</li>
+</ol>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

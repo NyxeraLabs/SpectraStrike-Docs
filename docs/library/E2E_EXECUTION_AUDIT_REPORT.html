@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>E2E EXECUTION AUDIT REPORT | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: Jose Maria Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="e2e-execution-audit-report">E2E Execution Audit Report</h1>
+
+<h2 id="scope">Scope</h2>
+
+<p>Asymmetric federation hardening verification for SpectraStrike &lt;-&gt; VectorVue with local persistent federation config.</p>
+
+<h2 id="commands-used">Commands Used</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>SpectraStrike
+make local-federation-up
+<span class="nv">PYTHONPATH</span><span class="o">=</span>src .venv/bin/python <span class="nt">-m</span> pkg.integration.host_integration_smoke <span class="nt">--tenant-id</span> 10000000-0000-0000-0000-000000000001 <span class="nt">--check-vectorvue</span>
+sliver-client version
+<span class="nv">PYTHONPATH</span><span class="o">=</span>src .venv/bin/pytest <span class="nt">-q</span> tests/unit/test_firecracker_microvm_runner.py
+</code></pre></div></div>
+
+<p>Signed cognitive verification command path:</p>
+
+<ul>
+  <li>Sent signed execution graph metadata to <code class="language-plaintext highlighter-rouge">/internal/v1/cognitive/execution-graph</code></li>
+  <li>Queried <code class="language-plaintext highlighter-rouge">/internal/v1/cognitive/feedback/adjustments/query</code></li>
+  <li>Verified response signature and attestation hash binding in SpectraStrike client</li>
+</ul>
+
+<h2 id="runtime-evidence">Runtime Evidence</h2>
+
+<p>Primary host smoke output:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">vectorvue_event_status=accepted</code></li>
+  <li><code class="language-plaintext highlighter-rouge">vectorvue_finding_status=accepted</code></li>
+  <li><code class="language-plaintext highlighter-rouge">vectorvue_status_poll_status=accepted</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nmap_binary_ok=True</code></li>
+  <li><code class="language-plaintext highlighter-rouge">metasploit_binary_ok=True</code></li>
+</ul>
+
+<p>Cognitive verification output:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">graph_status=accepted</code></li>
+  <li><code class="language-plaintext highlighter-rouge">feedback_status=accepted</code></li>
+  <li><code class="language-plaintext highlighter-rouge">feedback_signature_verified=True</code></li>
+  <li><code class="language-plaintext highlighter-rouge">attestation_hash_verified=True</code></li>
+</ul>
+
+<p>Firecracker runtime evidence:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">tests/unit/test_firecracker_microvm_runner.py</code> -&gt; <code class="language-plaintext highlighter-rouge">4 passed</code></li>
+</ul>
+
+<p>Audit log artifact:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">local_docs/audit/final-e2e-asymmetric-20260227-134036.log</code></li>
+</ul>
+
+<h2 id="signature-verification-proof">Signature Verification Proof</h2>
+
+<ul>
+  <li>Telemetry ingress accepted only when Ed25519 signature validated at gateway.</li>
+  <li>Feedback response included <code class="language-plaintext highlighter-rouge">kid</code>, <code class="language-plaintext highlighter-rouge">signature_algorithm=Ed25519</code>, <code class="language-plaintext highlighter-rouge">signed_at</code>, <code class="language-plaintext highlighter-rouge">nonce</code>.</li>
+  <li>SpectraStrike verifier marked feedback envelope as <code class="language-plaintext highlighter-rouge">verified=True</code>.</li>
+</ul>
+
+<h2 id="attestation-proof">Attestation Proof</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">attestation_measurement_hash</code> present in signed cognitive graph payload.</li>
+  <li>Returned feedback adjustments preserved attestation hash.</li>
+  <li>SpectraStrike attestation match check returned <code class="language-plaintext highlighter-rouge">attestation_hash_verified=True</code>.</li>
+</ul>
+
+<h2 id="failure-cases-tested">Failure Cases Tested</h2>
+
+<ul>
+  <li>Sliver wrapper dry-run failed with CLI flag mismatch (<code class="language-plaintext highlighter-rouge">--target</code>) and was rejected as execution path failure.</li>
+  <li>Replay/signed-response rejection, forged signature rejection, and schema mismatch paths are covered by updated federation unit tests.</li>
+</ul>
+
+<h2 id="final-conclusion">Final Conclusion</h2>
+
+<p>Federation path is operating under asymmetric cryptographic controls with hard-fail verification, attestation propagation, and accepted end-to-end telemetry/finding flow. Remaining operational gap is Sliver wrapper CLI compatibility, which is isolated from the federation trust controls.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

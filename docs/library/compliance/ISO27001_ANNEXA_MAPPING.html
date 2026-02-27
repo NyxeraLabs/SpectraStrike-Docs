@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ISO27001 ANNEXA MAPPING | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="isoiec-27001-annex-a-mapping-sprint-32">ISO/IEC 27001 Annex A Mapping (Sprint 32)</h1>
+
+<p>This mapping tracks SpectraStrike controls to selected Annex A themes relevant to offensive validation infrastructure.</p>
+
+<h2 id="mapping-table">Mapping Table</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Annex A Domain</th>
+      <th>SpectraStrike Control Implementation</th>
+      <th>Primary Evidence Artifacts</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>A.5 Organizational controls</td>
+      <td>Policy-governed execution with documented governance gates and legal controls</td>
+      <td><code class="language-plaintext highlighter-rouge">docs/SECURITY_POLICY.md</code>, <code class="language-plaintext highlighter-rouge">docs/EULA.md</code>, <code class="language-plaintext highlighter-rouge">docs/ACCEPTABLE_USE_POLICY.md</code></td>
+    </tr>
+    <tr>
+      <td>A.5.15 Access control</td>
+      <td>Tenant-aware authorization boundaries and operator capability validation</td>
+      <td><code class="language-plaintext highlighter-rouge">src/pkg/aaa/framework.py</code>, <code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/opa_client.py</code>, <code class="language-plaintext highlighter-rouge">tests/qa/test_zero_trust_sprint17_qa.py</code></td>
+    </tr>
+    <tr>
+      <td>A.5.17 Authentication information</td>
+      <td>Managed auth flows, lockout controls, and tenant context propagation</td>
+      <td><code class="language-plaintext highlighter-rouge">src/pkg/aaa/framework.py</code>, <code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/telemetry_ingestion.py</code></td>
+    </tr>
+    <tr>
+      <td>A.8.9 Configuration management</td>
+      <td>Immutable runtime policies and auditable control-plane configuration checks</td>
+      <td><code class="language-plaintext highlighter-rouge">make policy-check</code>, <code class="language-plaintext highlighter-rouge">tests/qa/test_docs_qa.py</code>, <code class="language-plaintext highlighter-rouge">docs/manuals/QA_RUNBOOK.md</code></td>
+    </tr>
+    <tr>
+      <td>A.8.15 Logging</td>
+      <td>Structured telemetry, operator-attributed events, and bridge transaction status</td>
+      <td><code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/telemetry_ingestion.py</code>, <code class="language-plaintext highlighter-rouge">src/pkg/integration/vectorvue/client.py</code></td>
+    </tr>
+    <tr>
+      <td>A.8.16 Monitoring activities</td>
+      <td>Security gates, regression suites, and operational runbook-driven validation</td>
+      <td><code class="language-plaintext highlighter-rouge">docs/manuals/QA_RUNBOOK.md</code>, <code class="language-plaintext highlighter-rouge">tests/qa/</code></td>
+    </tr>
+    <tr>
+      <td>A.8.24 Use of cryptography</td>
+      <td>JWS signing, execution fingerprinting, mTLS, signature verification and replay controls</td>
+      <td><code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/execution_fingerprint.py</code>, <code class="language-plaintext highlighter-rouge">src/pkg/integration/vectorvue/client.py</code>, <code class="language-plaintext highlighter-rouge">docs/WHITEPAPER.md</code></td>
+    </tr>
+    <tr>
+      <td>A.8.25 Secure development lifecycle</td>
+      <td>Sprint-driven engineering logs, QA evidence, security gate and license governance</td>
+      <td><code class="language-plaintext highlighter-rouge">docs/dev-logs/</code>, <code class="language-plaintext highlighter-rouge">docs/manuals/QA_RUNBOOK.md</code>, <code class="language-plaintext highlighter-rouge">scripts/check_license_headers.py</code></td>
+    </tr>
+    <tr>
+      <td>A.8.28 Secure coding</td>
+      <td>Deterministic serialization, explicit input validation, replay and tenant checks</td>
+      <td><code class="language-plaintext highlighter-rouge">src/pkg/integration/vectorvue/client.py</code>, <code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/cognitive_feedback.py</code></td>
+    </tr>
+    <tr>
+      <td>A.8.30 Outsourced development and dependencies</td>
+      <td>SBOM and vulnerability scan controls for tool ingestion and release workflow</td>
+      <td><code class="language-plaintext highlighter-rouge">docs/manuals/QA_RUNBOOK.md</code>, <code class="language-plaintext highlighter-rouge">docs/manuals/ARMORY_RUNNER_EXECUTION_FABRIC.md</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="scope-notes">Scope Notes</h2>
+
+<ul>
+  <li>Mapping references platform capabilities and evidence paths only.</li>
+  <li>Formal Statement of Applicability and certification decisioning remain external audit activities.</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

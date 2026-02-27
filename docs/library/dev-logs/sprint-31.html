@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>sprint-31 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-31-engineering-log">Sprint 31 Engineering Log</h1>
+
+<h2 id="program-context">Program Context</h2>
+
+<ul>
+  <li>Phase: Phase 8</li>
+  <li>Sprint: Sprint 31</li>
+  <li>Status: Implemented (Awaiting Signed Commit Promotion)</li>
+  <li>Primary Architecture Layers: VectorVue Integration Layer, Orchestration Pipeline, UI Dashboard</li>
+</ul>
+
+<h2 id="architectural-intent">Architectural Intent</h2>
+
+<p>Implement the bidirectional cognitive feedback loop between SpectraStrike and VectorVue:
+push execution graph metadata upstream, synchronize actionable feedback downstream, and bind
+feedback-driven adjustments into policy evaluation context with visible effectiveness metrics.</p>
+
+<h2 id="implementation-detail">Implementation Detail</h2>
+
+<ul>
+  <li>Added Sprint 31 cognitive loop core module:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/cognitive_feedback.py</code></li>
+      <li><code class="language-plaintext highlighter-rouge">FeedbackAdjustment</code> contract for VectorVue-supplied guidance</li>
+      <li><code class="language-plaintext highlighter-rouge">FeedbackPolicyEngine</code> for feedback-bound policy context and allow decisions</li>
+      <li><code class="language-plaintext highlighter-rouge">CognitiveFeedbackLoopService</code> for graph push + feedback sync + policy application</li>
+      <li>defensive effectiveness metric aggregation helpers for reporting/UI</li>
+    </ul>
+  </li>
+  <li>Extended VectorVue client with cognitive endpoints:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">send_execution_graph_metadata(...)</code></li>
+      <li><code class="language-plaintext highlighter-rouge">fetch_feedback_adjustments(...)</code></li>
+    </ul>
+  </li>
+  <li>Added UI API contract and dashboard visualization:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">GET /api/defensive/effectiveness</code></li>
+      <li>dashboard “Defensive Effectiveness” metric panel</li>
+    </ul>
+  </li>
+  <li>Added unit and QA coverage for end-to-end cognitive loop behavior.</li>
+</ul>
+
+<h2 id="security-and-control-posture">Security and Control Posture</h2>
+
+<ul>
+  <li>AAA scope and authorization boundaries are enforced according to current orchestrator policy.</li>
+  <li>Feedback adjustments are explicitly scoped by tenant and target URN.</li>
+  <li>Policy adjustments are bound via deterministic in-memory context mapping before decision.</li>
+  <li>Integration contracts remain loosely coupled and testable for VectorVue interoperability.</li>
+</ul>
+
+<h2 id="qa-and-validation-evidence">QA and Validation Evidence</h2>
+
+<p>Validated through:</p>
+<ul>
+  <li>unit tests for VectorVue cognitive client endpoints</li>
+  <li>unit tests for cognitive loop service policy binding and effectiveness metrics</li>
+  <li>Sprint 31 QA test that exercises full graph push -&gt; feedback sync -&gt; policy deny decision flow</li>
+</ul>
+
+<h2 id="risk-register">Risk Register</h2>
+
+<p>Risk: production drift between local fallback metrics and live orchestrator API data.
+Mitigation: retain explicit API contract route and keep no-store fetch behavior for runtime refresh.</p>
+
+<h2 id="forward-linkage">Forward Linkage</h2>
+
+<p>Sprint 32 transitions into compliance mapping and formal control evidence packaging.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

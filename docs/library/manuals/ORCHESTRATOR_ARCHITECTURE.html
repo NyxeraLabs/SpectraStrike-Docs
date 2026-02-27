@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ORCHESTRATOR ARCHITECTURE | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+
+You may:
+Study
+Modify
+Use for internal security testing
+
+You may NOT:
+Offer as a commercial service
+Sell derived competing products
+-->
+
+<h1 id="orchestrator-architecture-phase-2-design">Orchestrator Architecture (Phase 2 Design)</h1>
+<p><img src="../../ui/web/assets/images/SprectraStrike_Logo.png" alt="SpectraStrike Logo" /></p>
+
+<h2 id="purpose">Purpose</h2>
+<p>The orchestrator is the central control plane for SpectraStrike. It coordinates tool wrappers, enforces AAA policy, records audit trails, and publishes telemetry.</p>
+
+<h2 id="core-components">Core Components</h2>
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">OrchestratorEngine</code>
+    <ul>
+      <li>Owns runtime lifecycle (<code class="language-plaintext highlighter-rouge">start</code>, <code class="language-plaintext highlighter-rouge">stop</code>, <code class="language-plaintext highlighter-rouge">health</code>).</li>
+      <li>Wires scheduler, telemetry pipeline, and policy enforcement.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">TaskScheduler</code>
+    <ul>
+      <li>Accepts tasks from integrations and manual API.</li>
+      <li>Prioritizes and schedules async execution.</li>
+      <li>Supports retry policy and failure isolation.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">ExecutionWorkers</code>
+    <ul>
+      <li>Async workers that execute normalized tool tasks.</li>
+      <li>Emit structured execution events for logging and telemetry.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">AAAServiceAdapter</code>
+    <ul>
+      <li>Wraps <code class="language-plaintext highlighter-rouge">pkg.security.aaa_framework.AAAService</code>.</li>
+      <li>Enforces authentication and role authorization for each action.</li>
+      <li>Produces accounting records for all privileged operations.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">TelemetryPipeline</code>
+    <ul>
+      <li>Normalizes runtime events.</li>
+      <li>Buffers and batches telemetry for downstream export.</li>
+      <li>Supports secure transport abstraction for VectorVue integration.</li>
+      <li>Supports broker-backed async publishing via <code class="language-plaintext highlighter-rouge">TelemetryPublisher</code>.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">AuditLogger</code>
+    <ul>
+      <li>Uses <code class="language-plaintext highlighter-rouge">pkg.logging.framework</code>.</li>
+      <li>Writes structured audit events for auth decisions, task execution, and failures.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="data-contracts">Data Contracts</h2>
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">OrchestratorTask</code>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">task_id</code>, <code class="language-plaintext highlighter-rouge">source</code>, <code class="language-plaintext highlighter-rouge">tool</code>, <code class="language-plaintext highlighter-rouge">action</code>, <code class="language-plaintext highlighter-rouge">payload</code>, <code class="language-plaintext highlighter-rouge">requested_by</code>, <code class="language-plaintext highlighter-rouge">required_role</code>.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">ExecutionResult</code>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">task_id</code>, <code class="language-plaintext highlighter-rouge">status</code>, <code class="language-plaintext highlighter-rouge">started_at</code>, <code class="language-plaintext highlighter-rouge">ended_at</code>, <code class="language-plaintext highlighter-rouge">output</code>, <code class="language-plaintext highlighter-rouge">error</code>, <code class="language-plaintext highlighter-rouge">metadata</code>.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">TelemetryEvent</code>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">event_id</code>, <code class="language-plaintext highlighter-rouge">event_type</code>, <code class="language-plaintext highlighter-rouge">timestamp</code>, <code class="language-plaintext highlighter-rouge">actor</code>, <code class="language-plaintext highlighter-rouge">target</code>, <code class="language-plaintext highlighter-rouge">status</code>, <code class="language-plaintext highlighter-rouge">attributes</code>.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="runtime-flow">Runtime Flow</h2>
+<ol>
+  <li>Receive task request.</li>
+  <li>Authenticate actor and authorize required role.</li>
+  <li>Record accounting event and enqueue task.</li>
+  <li>Worker executes task asynchronously.</li>
+  <li>Emit operational logs and audit events.</li>
+  <li>Emit telemetry events and batch for export.</li>
+  <li>Persist result and expose status query.</li>
+</ol>
+
+<h2 id="messaging-backbone-sprint-95">Messaging Backbone (Sprint 9.5)</h2>
+<ol>
+  <li>Broker standard: RabbitMQ (dockerized deployment target).</li>
+  <li>Logical model:
+    <ul>
+      <li>Exchange: <code class="language-plaintext highlighter-rouge">spectrastrike.telemetry</code></li>
+      <li>Routing key: <code class="language-plaintext highlighter-rouge">telemetry.events</code></li>
+      <li>Main queue: <code class="language-plaintext highlighter-rouge">telemetry.events</code></li>
+      <li>Dead-letter queue: <code class="language-plaintext highlighter-rouge">telemetry.events.dlq</code></li>
+    </ul>
+  </li>
+  <li>Delivery policy:
+    <ul>
+      <li>Idempotency key per event (<code class="language-plaintext highlighter-rouge">event_id</code>) to deduplicate replays.</li>
+      <li>Bounded retry attempts for transient broker failures.</li>
+      <li>Dead-letter routing when retries are exhausted.</li>
+    </ul>
+  </li>
+  <li>Runtime adapters:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">RabbitMQTelemetryPublisher</code>: in-memory RabbitMQ model for deterministic tests.</li>
+      <li><code class="language-plaintext highlighter-rouge">PikaRabbitMQTelemetryPublisher</code>: dockerized RabbitMQ adapter for real runtime publish.</li>
+    </ul>
+  </li>
+  <li>Telemetry transport security:
+    <ul>
+      <li>RabbitMQ listener configured TLS-only (<code class="language-plaintext highlighter-rouge">5671</code>) with client-certificate verification.</li>
+      <li>App-side publisher supports CA/cert/key configuration from <code class="language-plaintext highlighter-rouge">RABBITMQ_SSL_*</code>.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="cryptographic-signing-sprint-10">Cryptographic Signing (Sprint 10)</h2>
+<ol>
+  <li>Signer integration: <code class="language-plaintext highlighter-rouge">pkg.orchestrator.signing.VaultTransitSigner</code>.</li>
+  <li>Key management:
+    <ul>
+      <li>Transit key metadata and signing operations are delegated to HashiCorp Vault.</li>
+      <li>Optional key bootstrap is supported through <code class="language-plaintext highlighter-rouge">VAULT_TRANSIT_AUTO_CREATE_KEY=true</code>.</li>
+    </ul>
+  </li>
+  <li>Runtime config:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">VAULT_ADDR</code>, <code class="language-plaintext highlighter-rouge">VAULT_TOKEN</code>, <code class="language-plaintext highlighter-rouge">VAULT_NAMESPACE</code>, <code class="language-plaintext highlighter-rouge">VAULT_VERIFY_TLS</code>.</li>
+      <li><code class="language-plaintext highlighter-rouge">VAULT_TRANSIT_MOUNT</code>, <code class="language-plaintext highlighter-rouge">VAULT_TRANSIT_KEY_NAME</code>, <code class="language-plaintext highlighter-rouge">VAULT_TRANSIT_KEY_TYPE</code>.</li>
+    </ul>
+  </li>
+  <li>Security controls:
+    <ul>
+      <li>HTTPS is required by default (<code class="language-plaintext highlighter-rouge">VAULT_REQUIRE_HTTPS=true</code>).</li>
+      <li>Token and key material are never logged.</li>
+      <li>Public key retrieval is version-aware for future manifest verification.</li>
+    </ul>
+  </li>
+  <li>JWS generation:
+    <ul>
+      <li>Compact JWS payload generation is handled by <code class="language-plaintext highlighter-rouge">pkg.orchestrator.jws.CompactJWSGenerator</code>.</li>
+      <li>The signing input is canonical JSON (<code class="language-plaintext highlighter-rouge">sort_keys=True</code>) and encoded as <code class="language-plaintext highlighter-rouge">base64url(header).base64url(payload)</code>.</li>
+      <li>Signatures from Vault transit are requested with JWS marshaling and normalized into compact JWS signature segment encoding.</li>
+    </ul>
+  </li>
+  <li>Execution Manifest schema:
+    <ul>
+      <li>Schema is defined in <code class="language-plaintext highlighter-rouge">pkg.orchestrator.manifest.ExecutionManifest</code>.</li>
+      <li>Required fields: <code class="language-plaintext highlighter-rouge">task_context</code>, <code class="language-plaintext highlighter-rouge">target_urn</code>, <code class="language-plaintext highlighter-rouge">tool_sha256</code>, <code class="language-plaintext highlighter-rouge">parameters</code>.</li>
+      <li><code class="language-plaintext highlighter-rouge">task_context</code> enforces tenant and operator attribution (<code class="language-plaintext highlighter-rouge">tenant_id</code>, <code class="language-plaintext highlighter-rouge">operator_id</code>) and task lineage (<code class="language-plaintext highlighter-rouge">task_id</code>, <code class="language-plaintext highlighter-rouge">correlation_id</code>).</li>
+      <li><code class="language-plaintext highlighter-rouge">target_urn</code> and <code class="language-plaintext highlighter-rouge">tool_sha256</code> are strictly validated before signing to reduce forged/tampered dispatch risk.</li>
+    </ul>
+  </li>
+  <li>Anti-replay controls:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">ExecutionManifest</code> includes a per-request <code class="language-plaintext highlighter-rouge">nonce</code> and <code class="language-plaintext highlighter-rouge">issued_at</code> timestamp.</li>
+      <li><code class="language-plaintext highlighter-rouge">pkg.orchestrator.anti_replay.AntiReplayGuard</code> validates allowed time window and nonce uniqueness before dispatch.</li>
+      <li>Replay storage is tenant-scoped (<code class="language-plaintext highlighter-rouge">tenant_id + nonce</code>) to preserve isolation boundaries.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="security-and-reliability-requirements">Security and Reliability Requirements</h2>
+<ol>
+  <li>No secrets in code or logs.</li>
+  <li>TLS-only transport for outbound telemetry.</li>
+  <li>Role-based authorization enforced before execution.</li>
+  <li>Audit trail for denied and successful operations.</li>
+  <li>Retry with bounded backoff; circuit-break style failure protection.</li>
+  <li>Tamper-evident audit stream via hash-chained audit event records.</li>
+</ol>
+
+<h2 id="armory--universal-runner-sprints-11-13">Armory + Universal Runner (Sprints 11-13)</h2>
+<ol>
+  <li>Armory registry:
+    <ul>
+      <li>Internal OCI registry service (<code class="language-plaintext highlighter-rouge">armory-registry</code>) is deployed in compose.</li>
+      <li>Registry delete operations are disabled for immutable artifact posture.</li>
+    </ul>
+  </li>
+  <li>Armory control service:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">pkg.armory.service.ArmoryService</code> handles ingest pipeline:
+        <ul>
+          <li>upload digesting (<code class="language-plaintext highlighter-rouge">sha256</code>),</li>
+          <li>SBOM metadata generation,</li>
+          <li>vulnerability summary generation,</li>
+          <li>signing metadata generation,</li>
+          <li>operator approval gating.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Runner cryptographic gate:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">pkg.runner.jws_verify.RunnerJWSVerifier</code> validates compact JWS before execution admission.</li>
+      <li>Forged signature attempts are hard-failed before any tool resolution.</li>
+    </ul>
+  </li>
+  <li>Signed tool retrieval:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">pkg.runner.universal.UniversalEdgeRunner</code> resolves only approved Armory digests that exactly match <code class="language-plaintext highlighter-rouge">ExecutionManifest.tool_sha256</code>.</li>
+    </ul>
+  </li>
+  <li>Sandbox profile:
+    <ul>
+      <li>Runner command contract enforces <code class="language-plaintext highlighter-rouge">--runtime=runsc</code>, AppArmor profile pinning, read-only rootfs, dropped capabilities, and no-network baseline.</li>
+    </ul>
+  </li>
+  <li>Execution contract:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">stdout</code>/<code class="language-plaintext highlighter-rouge">stderr</code>/<code class="language-plaintext highlighter-rouge">exit_code</code> are mapped into CloudEvents v1.0 via <code class="language-plaintext highlighter-rouge">pkg.runner.cloudevents.map_execution_to_cloudevent</code>.</li>
+    </ul>
+  </li>
+  <li>QA guarantees:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">tests/qa/test_execution_fabric_qa.py</code> validates forged-JWS rejection, tampered-digest rejection, and CloudEvents output integrity.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="opa-capability-policies-sprint-14">OPA Capability Policies (Sprint 14)</h2>
+<ol>
+  <li>Pre-sign authorization:
+    <ul>
+      <li>Orchestrator pre-sign flow can query OPA before issuing compact JWS manifests.</li>
+    </ul>
+  </li>
+  <li>Capability tuple model:
+    <ul>
+      <li>Policy evaluation uses a tuple match on <code class="language-plaintext highlighter-rouge">operator_id + tenant_id + tool_sha256 + target_urn</code>.</li>
+    </ul>
+  </li>
+  <li>Policy defaults:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">spectrastrike.capabilities.allow</code> is deny-by-default.</li>
+      <li>Input contract validation is exposed through <code class="language-plaintext highlighter-rouge">spectrastrike.capabilities.input_contract_valid</code>.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="wrapper-telemetry-migration-sprint-165">Wrapper Telemetry Migration (Sprint 16.5)</h2>
+<ol>
+  <li>Legacy wrapper direct telemetry emission (<code class="language-plaintext highlighter-rouge">telemetry.ingest(...)</code> in wrappers) is deprecated.</li>
+  <li>Wrappers emit SDK-built payloads (<code class="language-plaintext highlighter-rouge">pkg.telemetry.sdk</code>) and submit through unified parser path (<code class="language-plaintext highlighter-rouge">telemetry.ingest_payload(...)</code>).</li>
+  <li>Security invariants are preserved by parser/enforcement gates:
+    <ul>
+      <li>strict tenant context propagation (<code class="language-plaintext highlighter-rouge">tenant_id</code> required),</li>
+      <li>unified schema validation before buffering/publishing.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="control-plane-integrity-hardening-sprint-19">Control Plane Integrity Hardening (Sprint 19)</h2>
+<ol>
+  <li>Signed startup config gate:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">pkg.orchestrator.control_plane_integrity.ControlPlaneIntegrityEnforcer</code> enforces JWS signature validation before startup acceptance.</li>
+      <li>Unsigned or invalid signatures are hard-rejected.</li>
+    </ul>
+  </li>
+  <li>Policy trust pinning:
+    <ul>
+      <li>Startup config must include <code class="language-plaintext highlighter-rouge">policy_sha256</code> that matches <code class="language-plaintext highlighter-rouge">OPA_POLICY_PINNED_SHA256</code>.</li>
+      <li>Any mismatch is rejected with integrity audit evidence.</li>
+    </ul>
+  </li>
+  <li>Runtime baseline integrity:
+    <ul>
+      <li>Optional startup binary baseline (<code class="language-plaintext highlighter-rouge">SPECTRASTRIKE_ENFORCE_BINARY_HASH=true</code>) validates SHA-256 against signed envelope value.</li>
+    </ul>
+  </li>
+  <li>Immutable configuration history:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">ImmutableConfigurationHistory</code> stores append-only config versions with hash chaining and duplicate-version rejection.</li>
+    </ul>
+  </li>
+  <li>Integrity audit channel:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">pkg.logging.framework.emit_integrity_audit_event</code> writes hash-chained records to dedicated logger <code class="language-plaintext highlighter-rouge">spectrastrike.audit.integrity</code>.</li>
+    </ul>
+  </li>
+  <li>Vault hardening workflow:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">pkg.orchestrator.vault_hardening.VaultHardeningWorkflow</code> automates transit key rotation checks and unseal share policy enforcement.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="high-assurance-aaa-controls-sprint-20">High-Assurance AAA Controls (Sprint 20)</h2>
+<ol>
+  <li>Hardware-backed MFA for privileged actions:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">pkg.security.aaa_framework.AAAService</code> now supports hardware assertion verification via <code class="language-plaintext highlighter-rouge">HardwareMFAVerifier</code>.</li>
+      <li>Privileged role authorization can require <code class="language-plaintext highlighter-rouge">hardware_mfa_assertion</code> in policy context.</li>
+    </ul>
+  </li>
+  <li>Time-bound privilege elevation:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">pkg.security.high_assurance.PrivilegeElevationService</code> issues short-lived, one-time elevation tokens.</li>
+      <li>AAA privileged authorization can consume required <code class="language-plaintext highlighter-rouge">elevation_token_id</code> via validator hook.</li>
+    </ul>
+  </li>
+  <li>Dual-control Armory approval:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">pkg.armory.service.ArmoryService</code> enforces approval quorum (<code class="language-plaintext highlighter-rouge">approval_quorum=2</code> default) for tool authorization.</li>
+      <li>Distinct approvers are required before a digest is marked authorized.</li>
+    </ul>
+  </li>
+  <li>Dual-signature high-risk manifests:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">pkg.orchestrator.dual_signature.HighRiskManifestDualSigner</code> enforces independent second signature for <code class="language-plaintext highlighter-rouge">high/critical</code> risk levels.</li>
+    </ul>
+  </li>
+  <li>Break-glass and session recording:
+    <ul>
+      <li>Break-glass activation uses irreversible audit flag semantics.</li>
+      <li><code class="language-plaintext highlighter-rouge">PrivilegedSessionRecorder</code> provides structured session start/command/end event capture for privileged activity evidence.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="deterministic-execution-guarantees-sprint-21">Deterministic Execution Guarantees (Sprint 21)</h2>
+<ol>
+  <li>Canonical manifest serialization:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">pkg.orchestrator.manifest.canonical_manifest_json</code> enforces deterministic compact JSON (<code class="language-plaintext highlighter-rouge">sort_keys=True</code>, fixed separators).</li>
+    </ul>
+  </li>
+  <li>Deterministic hashing:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">pkg.orchestrator.manifest.deterministic_manifest_hash</code> computes stable SHA-256 over canonical manifest payload.</li>
+    </ul>
+  </li>
+  <li>Schema semantic versioning:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">ManifestSchemaVersionPolicy</code> enforces <code class="language-plaintext highlighter-rouge">MAJOR.MINOR.PATCH</code> format and supported major compatibility bounds.</li>
+    </ul>
+  </li>
+  <li>Non-canonical submission rejection:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">parse_and_validate_manifest_submission</code> rejects payloads that are not canonical JSON before manifest construction.</li>
+    </ul>
+  </li>
+  <li>Runtime ingress guard:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">OrchestratorEngine.validate_manifest_submission</code> exposes canonical validation path for raw manifest intake.</li>
+    </ul>
+  </li>
+  <li>CI regression guard:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">scripts/manifest_schema_regression.py</code> validates stable schema hash and is executed in CI (<code class="language-plaintext highlighter-rouge">.github/workflows/lint-test.yml</code>).</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="federation-fingerprint-binding-sprint-22">Federation Fingerprint Binding (Sprint 22)</h2>
+<ol>
+  <li>Unified execution fingerprint schema:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">manifest_hash + tool_hash + operator_id + tenant_id + policy_decision_hash + timestamp</code>.</li>
+      <li>Implemented in <code class="language-plaintext highlighter-rouge">pkg.orchestrator.execution_fingerprint.ExecutionFingerprintInput</code>.</li>
+    </ul>
+  </li>
+  <li>Fingerprint generation and validation:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">generate_execution_fingerprint</code> creates deterministic SHA-256 execution fingerprint.</li>
+      <li><code class="language-plaintext highlighter-rouge">validate_fingerprint_before_c2_dispatch</code> enforces pre-dispatch integrity gate.</li>
+    </ul>
+  </li>
+  <li>Tamper-evident fingerprint audit:
+    <ul>
+      <li>Fingerprint bind/validate outcomes are emitted to integrity audit channel via <code class="language-plaintext highlighter-rouge">emit_integrity_audit_event</code>.</li>
+    </ul>
+  </li>
+  <li>VectorVue federation payload binding:
+    <ul>
+      <li>RabbitMQ bridge includes <code class="language-plaintext highlighter-rouge">execution_fingerprint</code> in outgoing telemetry metadata and federation bundle.</li>
+      <li>Bridge uses federated gateway dispatch path (<code class="language-plaintext highlighter-rouge">send_federated_telemetry</code>).</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="federation-channel-enforcement-sprint-23">Federation Channel Enforcement (Sprint 23)</h2>
+<ol>
+  <li>Single outbound gateway:
+    <ul>
+      <li>Bridge dispatch uses only internal federation endpoint (<code class="language-plaintext highlighter-rouge">/internal/v1/telemetry</code>) via <code class="language-plaintext highlighter-rouge">send_federated_telemetry</code>.</li>
+    </ul>
+  </li>
+  <li>Legacy path removal:
+    <ul>
+      <li>Direct bridge event/finding API emission path is removed from active bridge runtime.</li>
+    </ul>
+  </li>
+  <li>mTLS-only federation:
+    <ul>
+      <li>Federation dispatch requires TLS verification plus configured mTLS client cert/key.</li>
+    </ul>
+  </li>
+  <li>Signed telemetry required:
+    <ul>
+      <li>Federation dispatch requires payload signature secret configuration; unsigned federation payloads are denied.</li>
+    </ul>
+  </li>
+  <li>Producer replay detection:
+    <ul>
+      <li>Bridge tracks nonce replay window and denies duplicate producer nonce usage.</li>
+    </ul>
+  </li>
+  <li>Idempotent bounded retry:
+    <ul>
+      <li>Idempotency key for federation dispatch is execution fingerprint hash, aligning retries with deterministic replay-safe semantics.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="anti-repudiation-closure-sprint-24">Anti-Repudiation Closure (Sprint 24)</h2>
+<ol>
+  <li>Operator-identity-bound fingerprint:
+    <ul>
+      <li>Operator identity is required and validated when generating execution fingerprint.</li>
+    </ul>
+  </li>
+  <li>Write-ahead execution intent:
+    <ul>
+      <li>Pre-dispatch execution intent records are appended before outbound federation dispatch.</li>
+      <li>Intent records are hash-chained (<code class="language-plaintext highlighter-rouge">prev_hash -&gt; intent_hash</code>) for tamper evidence.</li>
+    </ul>
+  </li>
+  <li>Execution intent verification API:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">verify_execution_intent_api</code> exposes verification contract for <code class="language-plaintext highlighter-rouge">execution_fingerprint</code> and optional <code class="language-plaintext highlighter-rouge">operator_id</code> checks.</li>
+    </ul>
+  </li>
+  <li>Reconciliation and repudiation detection:
+    <ul>
+      <li>Operator-to-execution reconciliation confirms immutable attribution.</li>
+      <li>Repudiation attempts (claiming wrong operator) are detected and emitted to integrity audit stream.</li>
+    </ul>
+  </li>
+  <li>Federation bundle intent metadata:
+    <ul>
+      <li>Outbound federation bundle now includes <code class="language-plaintext highlighter-rouge">intent_id</code>, <code class="language-plaintext highlighter-rouge">intent_hash</code>, and <code class="language-plaintext highlighter-rouge">write_ahead=true</code>.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="testing-strategy-for-next-tasks">Testing Strategy (for next tasks)</h2>
+<ol>
+  <li>Unit tests for scheduler ordering and retry behavior.</li>
+  <li>Unit tests for AAA enforcement on task submission.</li>
+  <li>Unit tests for telemetry event normalization.</li>
+  <li>Integration tests for async execution lifecycle.</li>
+</ol>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

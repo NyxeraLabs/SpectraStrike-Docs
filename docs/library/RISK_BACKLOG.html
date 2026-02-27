@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RISK BACKLOG | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="sprint-18-unresolved-risk-backlog">Sprint 18 Unresolved Risk Backlog</h1>
+
+<p>This backlog captures unresolved risks discovered during Sprint 18 Threat Model v1.0.</p>
+
+<h2 id="open-risks">Open Risks</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Risk ID</th>
+      <th>Category</th>
+      <th>Description</th>
+      <th>Impact</th>
+      <th>Planned Mitigation Sprint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>RISK-S18-001</td>
+      <td>Configuration integrity</td>
+      <td>Unsigned runtime configuration may be accepted by control plane startup path.</td>
+      <td>High</td>
+      <td>Sprint 19</td>
+    </tr>
+    <tr>
+      <td>RISK-S18-002</td>
+      <td>Policy integrity</td>
+      <td>OPA bundle/policy hash not pinned at runtime, allowing stale or swapped policy use.</td>
+      <td>High</td>
+      <td>Sprint 19</td>
+    </tr>
+    <tr>
+      <td>RISK-S18-003</td>
+      <td>Privileged auth</td>
+      <td>Privileged actions do not enforce hardware-backed MFA.</td>
+      <td>High</td>
+      <td>Sprint 20</td>
+    </tr>
+    <tr>
+      <td>RISK-S18-004</td>
+      <td>Determinism</td>
+      <td>Manifest canonicalization and stable hashing guarantees are not yet mandatory.</td>
+      <td>High</td>
+      <td>Sprint 21</td>
+    </tr>
+    <tr>
+      <td>RISK-S18-005</td>
+      <td>Supply chain</td>
+      <td>Build/bootstrap in disconnected environments still has dependency trust gaps.</td>
+      <td>Medium</td>
+      <td>Sprint 19</td>
+    </tr>
+    <tr>
+      <td>RISK-S18-006</td>
+      <td>Multi-tenant isolation</td>
+      <td>Per-tenant broker resource quotas are not yet enforced for noisy-tenant DoS resistance.</td>
+      <td>Medium</td>
+      <td>Sprint 21</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="tracking-rules">Tracking Rules</h2>
+
+<ul>
+  <li>Each risk must be closed only with linked code changes, tests, and roadmap checkbox completion.</li>
+  <li>Any mitigation without regression tests remains “open”.</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

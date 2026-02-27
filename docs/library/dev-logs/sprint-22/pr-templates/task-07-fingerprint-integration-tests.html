@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>task-07-fingerprint-integration-tests | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: Jose Maria Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="pr-template---sprint-22-task-07">PR Template - Sprint 22 Task 07</h1>
+
+<h2 id="task">Task</h2>
+<p>Add integration tests for fingerprint integrity.</p>
+
+<h2 id="summary">Summary</h2>
+<ul>
+  <li>Added unit/integration regression coverage for deterministic fingerprint generation and bridge mismatch rejection.</li>
+</ul>
+
+<h2 id="scope">Scope</h2>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">tests/unit/test_execution_fingerprint.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">tests/unit/integration/test_vectorvue_rabbitmq_bridge.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">tests/qa/test_sprint22_federation_fingerprint_qa.py</code></li>
+</ul>
+
+<h2 id="validation">Validation</h2>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">PYTHONPATH=src .venv/bin/pytest -q tests/unit/test_execution_fingerprint.py tests/unit/integration/test_vectorvue_rabbitmq_bridge.py tests/qa/test_sprint22_federation_fingerprint_qa.py</code></li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

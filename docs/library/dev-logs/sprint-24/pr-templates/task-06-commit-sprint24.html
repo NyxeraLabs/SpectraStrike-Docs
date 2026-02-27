@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>task-06-commit-sprint24 | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: Jose Maria Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="pr-template---sprint-24-task-06">PR Template - Sprint 24 Task 06</h1>
+
+<h2 id="task">Task</h2>
+<p>Commit Sprint 24 Anti-Repudiation Closure.</p>
+
+<h2 id="summary">Summary</h2>
+<ul>
+  <li>Prepared Sprint 24 anti-repudiation package for signed commit and merge.</li>
+</ul>
+
+<h2 id="scope">Scope</h2>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/anti_repudiation.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">src/pkg/orchestrator/execution_fingerprint.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">src/pkg/integration/vectorvue/rabbitmq_bridge.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">tests/unit/test_anti_repudiation.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">tests/unit/test_execution_fingerprint.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">tests/unit/integration/test_vectorvue_rabbitmq_bridge.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">tests/qa/test_sprint24_anti_repudiation_qa.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/ROADMAP.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/dev-logs/sprint-24.md</code></li>
+</ul>
+
+<h2 id="validation">Validation</h2>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">PYTHONPATH=src .venv/bin/pytest -q tests/unit/test_anti_repudiation.py tests/unit/test_execution_fingerprint.py tests/unit/integration/test_vectorvue_rabbitmq_bridge.py tests/qa/test_sprint24_anti_repudiation_qa.py</code></li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ACCEPTABLE USE POLICY | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/SpectraStrike-Docs/">Home</a>
+      <a href="/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+      <a href="/SpectraStrike-Docs/docs/library/">Full Library</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="spectrastrike-acceptable-use-policy">SpectraStrike Acceptable Use Policy</h1>
+
+<h2 id="1-authorized-use-requirement">1. Authorized Use Requirement</h2>
+
+<p>SpectraStrike may only be used for systems and environments where the operator has explicit legal authorization.</p>
+
+<p>Operators and organizations must maintain scope documentation for all validation activities.</p>
+
+<h2 id="2-permitted-use-cases">2. Permitted Use Cases</h2>
+
+<p>Permitted activities include:</p>
+<ul>
+  <li>authorized adversary emulation</li>
+  <li>detection engineering validation</li>
+  <li>telemetry and correlation research in controlled environments</li>
+  <li>incident response simulation and readiness testing</li>
+  <li>compliance-oriented security control validation</li>
+</ul>
+
+<h2 id="3-prohibited-use-cases">3. Prohibited Use Cases</h2>
+
+<p>Prohibited activities include:</p>
+<ul>
+  <li>unauthorized system access or exploitation</li>
+  <li>attacks against third-party systems without legal authorization</li>
+  <li>intentional disruption, data destruction, or exfiltration outside approved scope</li>
+  <li>operation of SpectraStrike as an unauthorized commercial hosted competitor</li>
+  <li>unlawful surveillance or privacy violations</li>
+</ul>
+
+<h2 id="4-operational-safety-requirements">4. Operational Safety Requirements</h2>
+
+<p>All validation programs must include:</p>
+<ul>
+  <li>written scope and target boundaries</li>
+  <li>designated accountable owner</li>
+  <li>rollback/stop controls for high-risk tasks</li>
+  <li>logging and evidence retention</li>
+  <li>incident escalation path for unintended impact</li>
+</ul>
+
+<h2 id="5-data-and-privacy-obligations">5. Data and Privacy Obligations</h2>
+
+<p>Customers are responsible for lawful telemetry collection, retention, and access controls under applicable law and contractual obligations.</p>
+
+<h2 id="6-security-and-abuse-monitoring">6. Security and Abuse Monitoring</h2>
+
+<p>Nyxera Labs reserves rights to investigate reported misuse and take appropriate corrective action under license and applicable law.</p>
+
+<h2 id="7-enforcement">7. Enforcement</h2>
+
+<p>Policy violations may result in:</p>
+<ul>
+  <li>suspension or revocation of usage rights</li>
+  <li>contractual enforcement actions</li>
+  <li>referral to legal or regulatory authorities where required</li>
+</ul>
+
+<h2 id="8-reporting-suspected-misuse">8. Reporting Suspected Misuse</h2>
+
+<p>Suspected misuse should be escalated through enterprise security governance channels and, where appropriate, to Nyxera Labs security contact points.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
