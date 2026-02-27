@@ -4,7 +4,7 @@ body { margin:0; font-family:"Avenir Next","Segoe UI",Arial,sans-serif; backgrou
 .topbar { border-bottom:1px solid var(--border); background:rgba(7,11,28,.88); padding:16px 20px; position:sticky; top:0; backdrop-filter: blur(8px); }
 .brand-wrap { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
 .brand-logo { width:34px; height:34px; object-fit:contain; }
-.product-logo { width:40px; height:40px; object-fit:contain; }
+.product-logo { width:56px; height:56px; object-fit:contain; }
 .brand-wrap h1 { margin:0; font-size:1.1rem; }
 .brand-wrap p { margin:2px 0 0; color:var(--muted); font-size:.88rem; }
 .nav { display:flex; gap:14px; margin-top:12px; flex-wrap:wrap; }
