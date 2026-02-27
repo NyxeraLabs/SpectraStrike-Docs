@@ -7,7 +7,21 @@
   <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-  <script>document.addEventListener('DOMContentLoaded', () => { if (window.mermaid) mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' }); });</script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.mermaid) return;
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
+        const pre = codeEl.closest('pre');
+        if (!pre) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = codeEl.textContent || '';
+        pre.replaceWith(wrapper);
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+  </script>
 </head>
 <body>
   <header class="topbar">
@@ -16,7 +30,7 @@
       <img src="{{ '/assets/img/product-logo.png' | relative_url }}" alt="SpectraStrike logo" class="product-logo" />
       <div>
         <h1>SpectraStrike Documentation</h1>
-        <p>Static docs and whitepaper portal</p>
+        <p>Enterprise-grade technical documentation and whitepapers</p>
       </div>
     </div>
     <nav class="nav">
@@ -26,6 +40,7 @@
       <a href="{{ '/docs/integration/' | relative_url }}">Integration</a>
       <a href="{{ '/docs/architecture/' | relative_url }}">Architecture</a>
       <a href="{{ '/docs/whitepaper/' | relative_url }}">Whitepaper</a>
+      <a href="{{ '/docs/library/' | relative_url }}">Full Library</a>
     </nav>
   </header>
 
