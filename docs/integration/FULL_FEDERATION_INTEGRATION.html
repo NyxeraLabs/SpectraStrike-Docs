@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FULL FEDERATION INTEGRATION | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/pages/NyxeraLabs/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', () => { if (window.mermaid) mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' }); });</script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/pages/NyxeraLabs/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/pages/NyxeraLabs/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Static docs and whitepaper portal</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/">Home</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: Jose Maria Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="full-federation-integration">Full Federation Integration</h1>
+
+<h2 id="trust-model">Trust Model</h2>
+
+<ul>
+  <li>No implicit network trust.</li>
+  <li>Trust is established by mTLS identity and Ed25519 signatures.</li>
+  <li>Tenant boundaries are explicit and enforced.</li>
+</ul>
+
+<h2 id="threat-model">Threat Model</h2>
+
+<ul>
+  <li>Payload tampering</li>
+  <li>Replay attacks</li>
+  <li>Key misuse/rotation drift</li>
+  <li>Cross-tenant impersonation</li>
+  <li>Redirect/downgrade attempts</li>
+</ul>
+
+<h2 id="cryptographic-flows">Cryptographic Flows</h2>
+
+<ul>
+  <li>SpectraStrike signs telemetry payloads with Ed25519 private key.</li>
+  <li>VectorVue verifies against configured SpectraStrike public key.</li>
+  <li>VectorVue signs feedback with Ed25519 private key (<code class="language-plaintext highlighter-rouge">kid</code>).</li>
+  <li>SpectraStrike verifies feedback with keyring lookup by <code class="language-plaintext highlighter-rouge">kid</code>.</li>
+</ul>
+
+<h2 id="mtls-handshake-flow">mTLS Handshake Flow</h2>
+
+<ol>
+  <li>SpectraStrike opens TLS session to VectorVue gateway.</li>
+  <li>Client certificate is presented.</li>
+  <li>Gateway checks pinned cert fingerprint for declared service identity.</li>
+  <li>Requests without valid mTLS identity are rejected.</li>
+</ol>
+
+<h2 id="signing-flow">Signing Flow</h2>
+
+<ol>
+  <li>Canonical JSON serialization.</li>
+  <li>Signature input: <code class="language-plaintext highlighter-rouge">timestamp + nonce + payload</code> (telemetry).</li>
+  <li>Feedback signature input includes <code class="language-plaintext highlighter-rouge">tenant|signed_at|nonce|schema|kid|canonical_data</code>.</li>
+  <li>Verification is fail-closed.</li>
+</ol>
+
+<h2 id="attestation-propagation">Attestation Propagation</h2>
+
+<p><code class="language-plaintext highlighter-rouge">attestation_measurement_hash</code> is embedded in:</p>
+
+<ul>
+  <li>Canonical telemetry payload</li>
+  <li>Execution fingerprint input</li>
+  <li>Finding records</li>
+  <li>Policy engine feedback binding</li>
+  <li>Signed payloads</li>
+</ul>
+
+<h2 id="policy-engine-binding">Policy Engine Binding</h2>
+
+<ul>
+  <li>Feedback is applied only when signature and replay checks pass.</li>
+  <li>Adjustment context includes attestation hash.</li>
+  <li>Optional graph anchoring rejects fingerprint/attestation mismatches.</li>
+</ul>
+
+<h2 id="replay-protection-model">Replay Protection Model</h2>
+
+<ul>
+  <li>Signed timestamp bounded by allowed clock skew.</li>
+  <li>Nonce uniqueness enforced with TTL.</li>
+  <li>Reused nonce causes hard rejection.</li>
+</ul>
+
+<h2 id="failure-modes">Failure Modes</h2>
+
+<ul>
+  <li>Invalid signature -&gt; <code class="language-plaintext highlighter-rouge">401/serialization error</code></li>
+  <li>Schema mismatch -&gt; <code class="language-plaintext highlighter-rouge">422</code></li>
+  <li>Unknown <code class="language-plaintext highlighter-rouge">kid</code> -&gt; verification failure</li>
+  <li>Mapping violation -&gt; <code class="language-plaintext highlighter-rouge">403</code></li>
+  <li>Replay -&gt; <code class="language-plaintext highlighter-rouge">409</code></li>
+</ul>
+
+<h2 id="audit-logging-model">Audit Logging Model</h2>
+
+<ul>
+  <li>Accept/reject lifecycle events are emitted with request id.</li>
+  <li>Signature and mapping failures are logged as security events.</li>
+  <li>E2E smoke outputs are stored under <code class="language-plaintext highlighter-rouge">local_docs/audit/</code>.</li>
+</ul>
+
+<h2 id="production-deployment-considerations">Production Deployment Considerations</h2>
+
+<ul>
+  <li>Store Ed25519 keys in HSM/Vault-backed secret stores.</li>
+  <li>Rotate certs and signing keys on fixed schedule.</li>
+  <li>Enforce per-tenant key domains for large deployments.</li>
+  <li>Forward gateway audit logs into immutable SIEM storage.</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

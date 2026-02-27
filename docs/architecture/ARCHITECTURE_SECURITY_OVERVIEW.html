@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ARCHITECTURE SECURITY OVERVIEW | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/pages/NyxeraLabs/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', () => { if (window.mermaid) mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' }); });</script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/pages/NyxeraLabs/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/pages/NyxeraLabs/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Static docs and whitepaper portal</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/">Home</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: José María Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="spectrastrike-architecture-security-overview">SpectraStrike Architecture Security Overview</h1>
+
+<h2 id="1-security-architecture-principle">1. Security Architecture Principle</h2>
+
+<p>SpectraStrike follows a layered security architecture with explicit trust boundaries and defense-in-depth controls across ingress, processing, orchestration, transport, and evidence layers.</p>
+
+<h2 id="2-layer-by-layer-controls">2. Layer-by-Layer Controls</h2>
+
+<h3 id="ingestion-layer">Ingestion Layer</h3>
+<ul>
+  <li>schema-normalized telemetry intake</li>
+  <li>bounded input contracts and parser controls</li>
+  <li>event attribution requirements</li>
+</ul>
+
+<h3 id="correlation-and-processing-layer">Correlation and Processing Layer</h3>
+<ul>
+  <li>deterministic orchestration pathways</li>
+  <li>controlled task lifecycle transitions</li>
+  <li>bounded retry/error semantics</li>
+</ul>
+
+<h3 id="orchestration-and-control-layer">Orchestration and Control Layer</h3>
+<ul>
+  <li>AAA enforcement at command and task boundaries</li>
+  <li>audit chain continuity across critical actions</li>
+  <li>explicit operator/action traceability</li>
+</ul>
+
+<h3 id="integration-and-export-layer">Integration and Export Layer</h3>
+<ul>
+  <li>contract-first external adapters</li>
+  <li>TLS and pinning support for outbound integrations</li>
+  <li>batching and error-isolation controls for export pathways</li>
+</ul>
+
+<h3 id="runtime-and-infrastructure-layer">Runtime and Infrastructure Layer</h3>
+<ul>
+  <li>hardened container runtime profile</li>
+  <li>network segmentation and least-exposed ports</li>
+  <li>internal mTLS for broker and data services</li>
+  <li>policy-check and security-gate workflows</li>
+</ul>
+
+<h2 id="3-identity-and-authorization-model">3. Identity and Authorization Model</h2>
+
+<ul>
+  <li>role-based access control with enforcement in orchestrator and UI APIs</li>
+  <li>account lockout and optional MFA path</li>
+  <li>session-bound operator context in admin interfaces</li>
+</ul>
+
+<h2 id="4-transport-and-data-protection">4. Transport and Data Protection</h2>
+
+<ul>
+  <li>HTTPS edge via Nginx</li>
+  <li>internal mTLS for app-to-broker and app-to-data services</li>
+  <li>certificate pinning support for selected integrations</li>
+  <li>secrets externalized via environment and secrets files</li>
+</ul>
+
+<h2 id="5-integrity-and-auditability">5. Integrity and Auditability</h2>
+
+<ul>
+  <li>structured logs with deterministic fields</li>
+  <li>tamper-evident audit chain design</li>
+  <li>command-level and integration-level evidence recording</li>
+</ul>
+
+<h2 id="6-operational-security-assurance">6. Operational Security Assurance</h2>
+
+<p>Security posture is verified through:</p>
+<ul>
+  <li>compose hardening policy checks</li>
+  <li>QA and regression test suites</li>
+  <li>supply-chain artifacts (SBOM/CVE/signature workflows)</li>
+  <li>runbook-defined escalation and blocker recording protocols</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

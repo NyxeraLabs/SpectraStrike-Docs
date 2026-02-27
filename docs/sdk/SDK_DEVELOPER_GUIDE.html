@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SDK DEVELOPER GUIDE | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/pages/NyxeraLabs/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', () => { if (window.mermaid) mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' }); });</script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/pages/NyxeraLabs/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/pages/NyxeraLabs/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Static docs and whitepaper portal</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/">Home</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: Jose Maria Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="spectrastrike-sdk-developer-guide">SpectraStrike SDK Developer Guide</h1>
+
+<h2 id="architecture-overview">Architecture Overview</h2>
+
+<ul>
+  <li>Wrappers execute tools and emit normalized telemetry.</li>
+  <li>Orchestrator enriches payloads with tenant/operator/policy/attestation context.</li>
+  <li>VectorVue client signs payloads and sends over mTLS.</li>
+  <li>Feedback responses are verified before policy application.</li>
+</ul>
+
+<h2 id="how-federation-signing-works">How Federation Signing Works</h2>
+
+<ul>
+  <li>Outbound: SpectraStrike signs <code class="language-plaintext highlighter-rouge">{timestamp}.{nonce}.{canonical_payload}</code> with Ed25519.</li>
+  <li>Inbound feedback: SpectraStrike verifies Ed25519 signature using <code class="language-plaintext highlighter-rouge">kid</code>-selected verify key.</li>
+</ul>
+
+<h2 id="canonical-telemetry-schema-definition">Canonical Telemetry Schema Definition</h2>
+
+<p>Required normalized fields include:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">event_id</code>, <code class="language-plaintext highlighter-rouge">event_type</code>, <code class="language-plaintext highlighter-rouge">tenant_id</code>, <code class="language-plaintext highlighter-rouge">operator_id</code></li>
+  <li><code class="language-plaintext highlighter-rouge">attributes.schema_version</code></li>
+  <li><code class="language-plaintext highlighter-rouge">attributes.attestation_measurement_hash</code></li>
+  <li><code class="language-plaintext highlighter-rouge">attributes.policy_decision_hash</code></li>
+  <li><code class="language-plaintext highlighter-rouge">execution_fingerprint</code></li>
+</ul>
+
+<h2 id="how-to-extend-tool-wrappers-metasploit-sliver-mythic">How To Extend Tool Wrappers (Metasploit, Sliver, Mythic)</h2>
+
+<ol>
+  <li>Add execution method in wrapper module.</li>
+  <li>Normalize command output into SDK event schema.</li>
+  <li>Attach tenant/operator metadata.</li>
+  <li>Attach <code class="language-plaintext highlighter-rouge">attestation_measurement_hash</code>.</li>
+  <li>Emit through telemetry ingestion pipeline.</li>
+</ol>
+
+<h2 id="how-to-emit-signed-telemetry">How To Emit Signed Telemetry</h2>
+
+<ol>
+  <li>Configure <code class="language-plaintext highlighter-rouge">VECTORVUE_FEDERATION_SIGNING_KEY_PATH</code>.</li>
+  <li>Configure mTLS cert/key and CA file.</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">VectorVueClient.send_federated_telemetry(...)</code>.</li>
+  <li>Ensure nonces/timestamps are unique and current.</li>
+</ol>
+
+<h2 id="how-to-validate-feedback-signatures">How To Validate Feedback Signatures</h2>
+
+<ol>
+  <li>Configure <code class="language-plaintext highlighter-rouge">VECTORVUE_FEEDBACK_VERIFY_KEYS_JSON</code>.</li>
+  <li>Validate <code class="language-plaintext highlighter-rouge">kid</code>, <code class="language-plaintext highlighter-rouge">signature_algorithm</code>, <code class="language-plaintext highlighter-rouge">signed_at</code>, <code class="language-plaintext highlighter-rouge">nonce</code>, <code class="language-plaintext highlighter-rouge">schema_version</code>.</li>
+  <li>Verify Ed25519 signature on canonical response tuple.</li>
+  <li>Reject replayed nonce or stale timestamp.</li>
+</ol>
+
+<h2 id="test-strategy">Test Strategy</h2>
+
+<ul>
+  <li>Unit tests for signing, verification, replay, schema validation.</li>
+  <li>Integration tests for gateway acceptance/rejection paths.</li>
+  <li>Host smoke tests for nmap/metasploit/sliver/firecracker workflows.</li>
+</ul>
+
+<h2 id="key-rotation-strategy">Key Rotation Strategy</h2>
+
+<ul>
+  <li>Maintain keyring map: <code class="language-plaintext highlighter-rouge">{kid: public_key_ref}</code> on verifier side.</li>
+  <li>Rotate by adding new key and switching active <code class="language-plaintext highlighter-rouge">kid</code> on signer side.</li>
+  <li>Keep old key for overlap window, then remove.</li>
+  <li>Test old/new <code class="language-plaintext highlighter-rouge">kid</code> handling in CI before cutover.</li>
+</ul>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

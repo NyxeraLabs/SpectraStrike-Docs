@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>END USER GUIDE | SpectraStrike Documentation</title>
+  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <link rel="stylesheet" href="/pages/NyxeraLabs/SpectraStrike-Docs/assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', () => { if (window.mermaid) mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' }); });</script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <img src="/pages/NyxeraLabs/SpectraStrike-Docs/assets/img/nyxera-logo.png" alt="NyxeraLabs logo" class="brand-logo" />
+      <img src="/pages/NyxeraLabs/SpectraStrike-Docs/assets/img/product-logo.png" alt="SpectraStrike logo" class="product-logo" />
+      <div>
+        <h1>SpectraStrike Documentation</h1>
+        <p>Static docs and whitepaper portal</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/">Home</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/end-user/">End User</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/sdk/">SDK</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/integration/">Integration</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/architecture/">Architecture</a>
+      <a href="/pages/NyxeraLabs/SpectraStrike-Docs/docs/whitepaper/">Whitepaper</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <!--
+Copyright (c) 2026 NyxeraLabs
+Author: Jose Maria Micoli
+Licensed under BSL 1.1
+Change Date: 2033-02-22 -> Apache-2.0
+-->
+
+<h1 id="spectrastrike--vectorvue-end-user-guide">SpectraStrike + VectorVue End User Guide</h1>
+
+<h2 id="1-installation-linuxmacos">1) Installation (Linux/macOS)</h2>
+
+<ol>
+  <li>Install <code class="language-plaintext highlighter-rouge">git</code>, <code class="language-plaintext highlighter-rouge">make</code>, <code class="language-plaintext highlighter-rouge">docker</code>, and <code class="language-plaintext highlighter-rouge">docker compose</code>.</li>
+  <li>Clone both repositories side-by-side: <code class="language-plaintext highlighter-rouge">SpectraStrike</code> and <code class="language-plaintext highlighter-rouge">VectorVue</code>.</li>
+  <li>In <code class="language-plaintext highlighter-rouge">SpectraStrike</code>, run <code class="language-plaintext highlighter-rouge">python -m venv .venv &amp;&amp; .venv/bin/pip install -r requirements.txt</code>.</li>
+  <li>In <code class="language-plaintext highlighter-rouge">VectorVue</code>, install Python dependencies with <code class="language-plaintext highlighter-rouge">pip install -r requirements.txt</code>.</li>
+</ol>
+
+<h2 id="2-docker-requirements">2) Docker Requirements</h2>
+
+<ul>
+  <li>Docker Engine 24+</li>
+  <li>Docker Compose v2+</li>
+  <li>Minimum host: 4 CPU, 8 GB RAM, 20 GB free disk</li>
+</ul>
+
+<p>Validate:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker <span class="nt">--version</span>
+docker compose version
+</code></pre></div></div>
+
+<h2 id="3-how-to-generate-certs">3) How To Generate Certs</h2>
+
+<ol>
+  <li>Use existing local cert generation in VectorVue deploy assets:
+<code class="language-plaintext highlighter-rouge">ls VectorVue/deploy/certs</code></li>
+  <li>Required files:
+<code class="language-plaintext highlighter-rouge">ca.crt</code>, <code class="language-plaintext highlighter-rouge">server.crt</code>, <code class="language-plaintext highlighter-rouge">server.key</code>, <code class="language-plaintext highlighter-rouge">client.crt</code>, <code class="language-plaintext highlighter-rouge">client.key</code></li>
+  <li>Required federation keys:
+<code class="language-plaintext highlighter-rouge">spectrastrike_ed25519.key</code> and <code class="language-plaintext highlighter-rouge">vectorvue_feedback_ed25519.key</code></li>
+</ol>
+
+<h2 id="4-how-to-start-both-platforms">4) How To Start Both Platforms</h2>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">cd SpectraStrike</code></li>
+  <li><code class="language-plaintext highlighter-rouge">make local-federation-up</code></li>
+  <li>Confirm services: <code class="language-plaintext highlighter-rouge">docker compose ps</code> (in each repo)</li>
+</ol>
+
+<p>The command autoloads gitignored local federation env files and compose override files.</p>
+
+<h2 id="5-how-to-run-first-execution-nmap-example">5) How To Run First Execution (nmap example)</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>SpectraStrike
+<span class="nv">PYTHONPATH</span><span class="o">=</span>src .venv/bin/python <span class="nt">-m</span> pkg.integration.host_integration_smoke <span class="se">\</span>
+  <span class="nt">--tenant-id</span> 10000000-0000-0000-0000-000000000001 <span class="se">\</span>
+  <span class="nt">--check-vectorvue</span>
+</code></pre></div></div>
+
+<h2 id="6-how-to-verify-federation-is-active">6) How To Verify Federation Is Active</h2>
+
+<p>Check smoke output fields:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">vectorvue_event_status=accepted</code></li>
+  <li><code class="language-plaintext highlighter-rouge">vectorvue_finding_status=accepted</code></li>
+  <li><code class="language-plaintext highlighter-rouge">vectorvue_status_poll_status=accepted|partial</code></li>
+</ul>
+
+<p>Then inspect <code class="language-plaintext highlighter-rouge">local_docs/audit/final-e2e-asymmetric-*.log</code>.</p>
+
+<h2 id="7-how-to-view-findings-in-vectorvue">7) How To View Findings In VectorVue</h2>
+
+<ol>
+  <li>Open VectorVue UI.</li>
+  <li>Login with tenant user credentials.</li>
+  <li>Navigate to findings/risk views.</li>
+  <li>Filter by tenant and latest timestamp.</li>
+</ol>
+
+<h2 id="8-how-feedback-loop-works">8) How Feedback Loop Works</h2>
+
+<ol>
+  <li>SpectraStrike sends signed execution graph metadata.</li>
+  <li>VectorVue validates signatures and mapping, then computes adjustments.</li>
+  <li>VectorVue returns Ed25519-signed feedback (<code class="language-plaintext highlighter-rouge">kid</code>, <code class="language-plaintext highlighter-rouge">signature</code>, <code class="language-plaintext highlighter-rouge">nonce</code>, <code class="language-plaintext highlighter-rouge">signed_at</code>).</li>
+  <li>SpectraStrike verifies signature and replay conditions before applying policy changes.</li>
+</ol>
+
+<h2 id="9-troubleshooting">9) Troubleshooting</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">401 Invalid telemetry signature</code>: verify SpectraStrike signing key and VectorVue trusted public key.</li>
+  <li><code class="language-plaintext highlighter-rouge">401 certificate fingerprint mismatch</code>: update pinned cert hash in local federation env.</li>
+  <li><code class="language-plaintext highlighter-rouge">409 Replay detected</code>: regenerate nonce; do not reuse request bodies.</li>
+  <li><code class="language-plaintext highlighter-rouge">422 schema version not allowed</code>: align payload schema to gateway allowed schema.</li>
+  <li><code class="language-plaintext highlighter-rouge">feedback uses unknown key id</code>: update <code class="language-plaintext highlighter-rouge">VECTORVUE_FEEDBACK_VERIFY_KEYS_JSON</code> with active <code class="language-plaintext highlighter-rouge">kid</code>.</li>
+</ul>
+
+<h2 id="10-security-explanation-plain-english">10) Security Explanation (Plain English)</h2>
+
+<p>The platforms trust only requests that pass all checks: mTLS identity, certificate pinning, signature verification, schema checks, and anti-replay logic. If any check fails, the request is rejected and not processed.</p>
+
+  </main>
+
+  <footer class="footer">
+    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
