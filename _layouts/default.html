@@ -4,58 +4,60 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>{{ page.title }} | {{ site.title }}</title>
-  <meta name="description" content="Static SpectraStrike documentation and whitepapers by NyxeraLabs." />
+  <meta name="description" content="SpectraStrike documentation by Nyxera Labs" />
+  <link rel="icon" href="{{ '/assets/img/product-logo.png' | relative_url }}" />
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      if (!window.mermaid) return;
-      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
-      document.querySelectorAll('pre code.language-mermaid').forEach((codeEl) => {
-        const pre = codeEl.closest('pre');
-        if (!pre) return;
-        const wrapper = document.createElement('div');
-        wrapper.className = 'mermaid';
-        wrapper.textContent = codeEl.textContent || '';
-        pre.replaceWith(wrapper);
-      });
-      mermaid.run({ querySelector: '.mermaid' });
-    });
-  </script>
 </head>
 <body>
   <header class="topbar">
-    <div class="brand-wrap">
-      <img src="{{ '/assets/img/nyxera-logo.png' | relative_url }}" alt="NyxeraLabs logo" class="brand-logo" />
-      <img src="{{ '/assets/img/product-logo.png' | relative_url }}" alt="SpectraStrike logo" class="product-logo" />
-      <div>
-        <h1>SpectraStrike Documentation</h1>
-        <p>Operational, architecture, SDK, and integration guidance</p>
+    <div class="topbar-row">
+      <div class="brand-wrap">
+        <img src="{{ '/assets/img/product-logo.png' | relative_url }}" alt="SpectraStrike logo" class="product-logo" />
+        <div>
+          <h1>SpectraStrike Documentation</h1>
+          <p>Standardized operational and integration references</p>
+        </div>
       </div>
+      <nav class="nav" aria-label="Global Links">
+        <a href="https://spectrastrike.nyxera.cloud">Product</a>
+        <a href="https://docs.spectrastrike.nyxera.cloud">Docs</a>
+        <a href="https://nyxera-nexus.nyxera.cloud">Nyxera Nexus</a>
+      </nav>
     </div>
-    <nav class="nav">
-      <a href="{{ '/' | relative_url }}">Overview</a>
-      <a href="https://spectrastrike.nyxera.cloud" target="_blank" rel="noreferrer noopener">Product Website</a>
-      <a href="{{ '/docs/end-user/' | relative_url }}">Operator Guide</a>
-      <a href="{{ '/docs/sdk/' | relative_url }}">SDK</a>
-      <a href="{{ '/docs/integration/' | relative_url }}">Integration</a>
-      <a href="{{ '/docs/architecture/' | relative_url }}">Architecture</a>
-      <a href="{{ '/docs/whitepaper/' | relative_url }}">Whitepaper</a>
-      <a href="{{ '/docs/library/' | relative_url }}">Full Library</a>
-    </nav>
   </header>
 
-  <main class="content">
-    {{ content }}
-  </main>
+  <div class="shell">
+    <aside class="sidebar">
+      <p class="sidebar-title">Documentation</p>
+      <a href="{{ '/overview/' | relative_url }}">Overview</a>
+      <a href="{{ '/getting-started/' | relative_url }}">Getting Started</a>
+      <a href="{{ '/architecture/' | relative_url }}">Architecture</a>
+      <a href="{{ '/security/' | relative_url }}">Security</a>
+      <a href="{{ '/developers/' | relative_url }}">Developers</a>
+      <a href="{{ '/api/' | relative_url }}">API</a>
+      <a href="{{ '/integration/' | relative_url }}">Integration</a>
+      <a href="{{ '/compliance/' | relative_url }}">Compliance</a>
+      <a href="{{ '/manuals/' | relative_url }}">Manuals</a>
+      <a href="{{ '/troubleshooting/' | relative_url }}">Troubleshooting</a>
+      <a href="{{ '/reference/' | relative_url }}">Reference</a>
+      <a href="{{ '/INDEX/' | relative_url }}">INDEX.md</a>
+    </aside>
+
+    <main class="content">{{ content }}</main>
+  </div>
 
   <footer class="footer">
-    <span>SpectraStrike by NyxeraLabs — All Rights Reserved © <span id="year"></span></span>
-    <div style="margin-top:6px; font-size:.86rem;">
-      <a href="https://spectrastrike.nyxera.cloud" style="color:#a9b6e6; text-decoration:none; margin-right:12px;">Product Site</a>
-      <a href="https://github.com/NyxeraLabs/SpectraStrike" style="color:#a9b6e6; text-decoration:none;">GitHub Repository</a>
+    <div class="footer-row">
+      <div class="footer-brand">
+        <img src="{{ '/assets/img/nyxera-logo.png' | relative_url }}" alt="Nyxera Labs logo" class="brand-logo" />
+        <span>SpectraStrike by Nyxera Labs. All rights reserved © 2026</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://nyxera.cloud">Nyxera Cloud</a>
+        <a href="https://vectorvue.nyxera.cloud">VectorVue</a>
+        <a href="https://nyxera-nexus.nyxera.cloud">Nyxera Nexus</a>
+      </div>
     </div>
   </footer>
-  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>

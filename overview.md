@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Home
-permalink: /
+title: Overview
+permalink: /overview/
 ---
 
 # Overview

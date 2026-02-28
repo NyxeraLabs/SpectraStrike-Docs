@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://docs.spectrastrike.nyxera.cloud/sitemap.xml
