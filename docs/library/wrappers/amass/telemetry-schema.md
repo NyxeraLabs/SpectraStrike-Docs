@@ -1,8 +1,3 @@
----
-layout: default
-title: telemetry schema
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

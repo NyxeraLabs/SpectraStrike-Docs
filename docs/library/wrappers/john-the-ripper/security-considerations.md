@@ -1,8 +1,3 @@
----
-layout: default
-title: security considerations
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli
