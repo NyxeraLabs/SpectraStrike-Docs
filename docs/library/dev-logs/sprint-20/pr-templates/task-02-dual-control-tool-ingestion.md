@@ -1,3 +1,8 @@
+---
+layout: default
+title: task 02 dual control tool ingestion
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

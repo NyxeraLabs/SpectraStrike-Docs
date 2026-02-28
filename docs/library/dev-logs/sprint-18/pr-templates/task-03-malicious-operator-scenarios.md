@@ -1,3 +1,8 @@
+---
+layout: default
+title: task 03 malicious operator scenarios
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

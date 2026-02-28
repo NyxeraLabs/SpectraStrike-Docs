@@ -1,3 +1,8 @@
+---
+layout: default
+title: QA RUNBOOK
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

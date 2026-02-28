@@ -1,3 +1,8 @@
+---
+layout: default
+title: task 08 integrity audit channel
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

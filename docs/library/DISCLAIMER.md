@@ -1,3 +1,8 @@
+---
+layout: default
+title: DISCLAIMER
+---
+
 # SpectraStrike – Legal Disclaimer
 
 © 2026 Nyxera Labs. All rights reserved.

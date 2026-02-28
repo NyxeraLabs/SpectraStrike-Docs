@@ -1,3 +1,8 @@
+---
+layout: default
+title: SDK DEVELOPER GUIDE
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

@@ -1,3 +1,8 @@
+---
+layout: default
+title: task 07 runtime binary baseline
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli
