@@ -1,3 +1,8 @@
+---
+layout: default
+title: SECURITY POLICY
+---
+
 # SpectraStrike – Security Policy
 
 Nyxera Labs is committed to maintaining the security and integrity of SpectraStrike.

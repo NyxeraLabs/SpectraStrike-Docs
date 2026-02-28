@@ -1,3 +1,8 @@
+---
+layout: default
+title: task 03 manifest schema semver
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

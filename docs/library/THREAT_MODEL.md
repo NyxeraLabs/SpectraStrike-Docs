@@ -1,3 +1,8 @@
+---
+layout: default
+title: THREAT MODEL
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

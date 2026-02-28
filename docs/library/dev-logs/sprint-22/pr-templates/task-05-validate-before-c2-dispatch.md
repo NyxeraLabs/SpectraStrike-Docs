@@ -1,3 +1,8 @@
+---
+layout: default
+title: task 05 validate before c2 dispatch
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

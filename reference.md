@@ -6,4 +6,7 @@ permalink: /reference/
 
 # Reference
 
-Use `docs/` and `docs/library/` for full reference details and archived sprint artifacts.
+- [Specs]({{ '/docs/library/specs/' | relative_url }})
+- [Wrappers]({{ '/docs/library/wrappers/' | relative_url }})
+- [Compliance Library]({{ '/docs/library/compliance/' | relative_url }})
+- [Full Library Root]({{ '/docs/library/' | relative_url }})

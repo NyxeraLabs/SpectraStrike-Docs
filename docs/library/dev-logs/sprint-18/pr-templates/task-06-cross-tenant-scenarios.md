@@ -1,3 +1,8 @@
+---
+layout: default
+title: task 06 cross tenant scenarios
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

@@ -1,3 +1,8 @@
+---
+layout: default
+title: E2E EXECUTION AUDIT REPORT
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

@@ -1,3 +1,8 @@
+---
+layout: default
+title: task 06 privileged session recording
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

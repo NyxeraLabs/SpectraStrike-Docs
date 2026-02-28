@@ -1,3 +1,8 @@
+---
+layout: default
+title: task 05 vault key rotation workflow
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

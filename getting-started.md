@@ -6,6 +6,6 @@ permalink: /getting-started/
 
 # Getting Started
 
-1. Configure tenant context and signing keys.
-2. Validate wrapper contracts and host smoke checks.
-3. Enable federation channel to VectorVue when required.
+- [End User Guide]({{ '/docs/library/END_USER_GUIDE' | relative_url }})
+- [Manuals User Guide]({{ '/docs/library/manuals/USER_GUIDE' | relative_url }})
+- [QA Runbook]({{ '/docs/library/manuals/QA_RUNBOOK' | relative_url }})

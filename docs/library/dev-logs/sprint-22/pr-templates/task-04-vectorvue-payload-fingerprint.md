@@ -1,3 +1,8 @@
+---
+layout: default
+title: task 04 vectorvue payload fingerprint
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

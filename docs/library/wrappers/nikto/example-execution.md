@@ -1,3 +1,8 @@
+---
+layout: default
+title: example execution
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli
