@@ -1,8 +1,3 @@
----
-layout: default
-title: task-07-fingerprint-integration-tests
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

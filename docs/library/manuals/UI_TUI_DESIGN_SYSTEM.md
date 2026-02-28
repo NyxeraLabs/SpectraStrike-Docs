@@ -1,8 +1,3 @@
----
-layout: default
-title: UI TUI DESIGN SYSTEM
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

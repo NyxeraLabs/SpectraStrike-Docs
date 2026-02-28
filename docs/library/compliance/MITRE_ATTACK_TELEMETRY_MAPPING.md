@@ -1,8 +1,3 @@
----
-layout: default
-title: MITRE ATTACK TELEMETRY MAPPING
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

@@ -1,8 +1,3 @@
----
-layout: default
-title: task-01-stride-threat-model
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

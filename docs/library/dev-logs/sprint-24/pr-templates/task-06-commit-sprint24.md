@@ -1,8 +1,3 @@
----
-layout: default
-title: task-06-commit-sprint24
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

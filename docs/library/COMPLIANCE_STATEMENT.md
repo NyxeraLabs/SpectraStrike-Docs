@@ -1,8 +1,3 @@
----
-layout: default
-title: COMPLIANCE STATEMENT
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

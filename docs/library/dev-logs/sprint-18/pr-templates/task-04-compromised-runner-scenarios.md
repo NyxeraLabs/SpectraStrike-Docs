@@ -1,8 +1,3 @@
----
-layout: default
-title: task-04-compromised-runner-scenarios
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

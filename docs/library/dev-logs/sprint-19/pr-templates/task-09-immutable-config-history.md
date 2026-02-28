@@ -1,8 +1,3 @@
----
-layout: default
-title: task-09-immutable-config-history
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

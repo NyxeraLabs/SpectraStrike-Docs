@@ -1,8 +1,3 @@
----
-layout: default
-title: task-08-commit-sprint23
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

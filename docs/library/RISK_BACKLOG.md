@@ -1,8 +1,3 @@
----
-layout: default
-title: RISK BACKLOG
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli
