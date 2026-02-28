@@ -4,8 +4,9 @@ body { margin:0; font-family:"Avenir Next","Segoe UI",Arial,sans-serif; backgrou
 a { color:inherit; }
 .topbar { border-bottom:1px solid var(--border); background:rgba(7,11,28,.9); position:sticky; top:0; z-index:20; }
 .topbar-row { max-width:1300px; margin:0 auto; padding:14px 16px; display:flex; gap:14px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
-.brand-wrap { display:flex; align-items:center; gap:10px; }
-.product-logo { width:46px; height:46px; object-fit:contain; }
+.brand-wrap { display:flex; align-items:center; gap:12px; }
+.product-logo-wrap { width:64px; height:64px; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:8px; }
+.product-logo { width:64px; height:64px; object-fit:contain; }
 .brand-wrap h1 { margin:0; font-size:1.05rem; }
 .brand-wrap p { margin:2px 0 0; color:var(--muted); font-size:.86rem; }
 .nav { display:flex; gap:8px; flex-wrap:wrap; }

@@ -6,4 +6,7 @@ permalink: /compliance/
 
 # Compliance
 
-Compliance mappings include NIST, ISO 27001, and SOC 2 evidence readiness paths.
+- [Compliance Statement]({{ '/docs/library/COMPLIANCE_STATEMENT' | relative_url }})
+- [SOC2 Control Mapping]({{ '/docs/library/compliance/SOC2_CONTROL_MAPPING' | relative_url }})
+- [NIST 800-53 Mapping]({{ '/docs/library/compliance/NIST_800_53_MAPPING' | relative_url }})
+- [ISO27001 Annex A Mapping]({{ '/docs/library/compliance/ISO27001_ANNEXA_MAPPING' | relative_url }})

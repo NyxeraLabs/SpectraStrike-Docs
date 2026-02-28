@@ -6,6 +6,6 @@ permalink: /security/
 
 # Security
 
-- Ed25519 signing enforced for wrapper payloads.
-- Execution fingerprints and attestation hashes propagated.
-- Tenant and operator context bound into canonical telemetry.
+- [Security Policy]({{ '/docs/library/SECURITY_POLICY' | relative_url }})
+- [Threat Model]({{ '/docs/library/THREAT_MODEL' | relative_url }})
+- [Mutual Attestation Key Derivation]({{ '/docs/library/manuals/MUTUAL_ATTESTATION_KEY_DERIVATION' | relative_url }})
