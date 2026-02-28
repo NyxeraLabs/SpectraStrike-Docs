@@ -1,3 +1,8 @@
+---
+layout: default
+title: ACCEPTABLE USE POLICY
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

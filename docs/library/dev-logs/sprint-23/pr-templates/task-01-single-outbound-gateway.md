@@ -1,3 +1,8 @@
+---
+layout: default
+title: task 01 single outbound gateway
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

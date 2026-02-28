@@ -1,3 +1,8 @@
+---
+layout: default
+title: ORCHESTRATOR ARCHITECTURE
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

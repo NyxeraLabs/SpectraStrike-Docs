@@ -1,3 +1,8 @@
+---
+layout: default
+title: INDEX
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

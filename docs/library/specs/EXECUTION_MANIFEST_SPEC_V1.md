@@ -1,3 +1,8 @@
+---
+layout: default
+title: EXECUTION MANIFEST SPEC V1
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

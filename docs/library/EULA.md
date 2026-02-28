@@ -1,3 +1,8 @@
+---
+layout: default
+title: EULA
+---
+
 # End-User License Agreement (EULA)
 SpectraStrike – Nyxera Labs
 

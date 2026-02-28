@@ -1,3 +1,8 @@
+---
+layout: default
+title: task 02 generate before dispatch
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

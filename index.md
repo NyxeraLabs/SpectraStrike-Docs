@@ -42,5 +42,5 @@ TelemetryEmitter --> VectorVue
 ## Cross Product Links
 
 - [VectorVue Docs](https://docs.vectorvue.nyxera.cloud)
-- [Nyxera Nexus Docs](https://nyxera-nexus.nyxera.cloud)
+- [Nyxera Nexus Docs](https://docs.nexus.nyxera.cloud)
 - [Nyxera Cloud](https://nyxera.cloud)

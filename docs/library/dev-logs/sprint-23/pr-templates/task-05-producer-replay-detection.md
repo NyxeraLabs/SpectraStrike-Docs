@@ -1,3 +1,8 @@
+---
+layout: default
+title: task 05 producer replay detection
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

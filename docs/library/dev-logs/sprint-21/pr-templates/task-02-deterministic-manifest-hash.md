@@ -1,3 +1,8 @@
+---
+layout: default
+title: task 02 deterministic manifest hash
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli
