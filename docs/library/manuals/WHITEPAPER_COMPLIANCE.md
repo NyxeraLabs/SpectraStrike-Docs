@@ -1,3 +1,8 @@
+---
+layout: default
+title: WHITEPAPER COMPLIANCE
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

@@ -1,3 +1,8 @@
+---
+layout: default
+title: task 08 commit sprint22
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

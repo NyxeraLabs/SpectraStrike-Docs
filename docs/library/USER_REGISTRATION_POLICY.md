@@ -1,3 +1,8 @@
+---
+layout: default
+title: USER REGISTRATION POLICY
+---
+
 # SpectraStrike – User Registration & Access Policy
 
 SpectraStrike may operate in:

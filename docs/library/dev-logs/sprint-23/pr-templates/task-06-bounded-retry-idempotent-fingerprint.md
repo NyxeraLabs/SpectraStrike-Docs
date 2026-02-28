@@ -1,3 +1,8 @@
+---
+layout: default
+title: task 06 bounded retry idempotent fingerprint
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

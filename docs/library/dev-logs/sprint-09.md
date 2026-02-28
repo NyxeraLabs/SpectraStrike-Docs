@@ -1,3 +1,8 @@
+---
+layout: default
+title: sprint 09
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

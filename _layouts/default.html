@@ -12,7 +12,9 @@
   <header class="topbar">
     <div class="topbar-row">
       <div class="brand-wrap">
-        <img src="{{ '/assets/img/product-logo.png' | relative_url }}" alt="SpectraStrike logo" class="product-logo" />
+        <span class="product-logo-wrap">
+          <img src="{{ '/assets/img/product-logo.png' | relative_url }}" alt="SpectraStrike logo" class="product-logo" />
+        </span>
         <div>
           <h1>SpectraStrike Documentation</h1>
           <p>Operational Fabric for Attested Offensive Validation</p>
@@ -21,7 +23,7 @@
       <nav class="nav" aria-label="Global Links">
         <a href="https://spectrastrike.nyxera.cloud">Product</a>
         <a href="https://docs.vectorvue.nyxera.cloud">VectorVue Docs</a>
-        <a href="https://nyxera-nexus.nyxera.cloud">Nexus Docs</a>
+        <a href="https://docs.nexus.nyxera.cloud">Nexus Docs</a>
         <a href="https://nyxera.cloud">nyxera.cloud</a>
       </nav>
     </div>
@@ -56,15 +58,27 @@
       </div>
       <div class="footer-links">
         <a href="https://docs.vectorvue.nyxera.cloud">VectorVue Docs</a>
-        <a href="https://nyxera-nexus.nyxera.cloud">Nexus Docs</a>
+        <a href="https://docs.nexus.nyxera.cloud">Nexus Docs</a>
         <a href="https://nyxera.cloud">nyxera.cloud</a>
       </div>
     </div>
   </footer>
 
-  <script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('pre code.language-mermaid').forEach(function (code) {
+        var pre = code.closest('pre');
+        var block = document.createElement('div');
+        block.className = 'mermaid';
+        block.textContent = code.textContent || '';
+        if (pre) pre.replaceWith(block);
+      });
+      if (window.mermaid) {
+        window.mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+        window.mermaid.run();
+      }
+    });
   </script>
 </body>
 </html>

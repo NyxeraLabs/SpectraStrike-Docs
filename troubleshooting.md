@@ -6,6 +6,6 @@ permalink: /troubleshooting/
 
 # Troubleshooting
 
-- Verify local binaries and signing keys.
-- Run wrapper unit + QA + host smoke tests.
-- Validate federation broker and telemetry ingestion status.
+- [Manual Index]({{ '/docs/library/manuals/INDEX' | relative_url }})
+- [Dev Logs Index]({{ '/docs/library/dev-logs/INDEX' | relative_url }})
+- [Risk Backlog]({{ '/docs/library/RISK_BACKLOG' | relative_url }})

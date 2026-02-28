@@ -1,3 +1,8 @@
+---
+layout: default
+title: signature verification
+---
+
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli
