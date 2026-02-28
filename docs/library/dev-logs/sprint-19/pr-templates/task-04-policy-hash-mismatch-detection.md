@@ -1,8 +1,3 @@
----
-layout: default
-title: task-04-policy-hash-mismatch-detection
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

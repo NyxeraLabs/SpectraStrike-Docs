@@ -1,8 +1,3 @@
----
-layout: default
-title: CAPABILITY POLICY SPEC V1
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

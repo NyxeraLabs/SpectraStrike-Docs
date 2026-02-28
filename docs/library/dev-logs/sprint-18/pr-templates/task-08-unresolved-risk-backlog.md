@@ -1,8 +1,3 @@
----
-layout: default
-title: task-08-unresolved-risk-backlog
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

@@ -1,8 +1,3 @@
----
-layout: default
-title: task-02-write-ahead-intent-record
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

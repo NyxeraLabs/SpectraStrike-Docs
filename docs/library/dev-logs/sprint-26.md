@@ -1,8 +1,3 @@
----
-layout: default
-title: sprint-26
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

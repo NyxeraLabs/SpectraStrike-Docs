@@ -1,8 +1,3 @@
----
-layout: default
-title: task-01-canonical-json-serialization
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

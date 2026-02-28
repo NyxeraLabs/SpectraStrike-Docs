@@ -1,8 +1,3 @@
----
-layout: default
-title: UI ARCHITECTURE API CONTRACTS
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

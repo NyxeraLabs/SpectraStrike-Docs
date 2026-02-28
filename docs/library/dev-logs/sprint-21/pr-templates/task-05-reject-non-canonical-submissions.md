@@ -1,8 +1,3 @@
----
-layout: default
-title: task-05-reject-non-canonical-submissions
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli
