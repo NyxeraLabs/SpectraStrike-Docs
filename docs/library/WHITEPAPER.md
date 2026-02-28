@@ -1,8 +1,3 @@
----
-layout: default
-title: WHITEPAPER
----
-
 **SPECTRASTRIKE PLATFORM ARCHITECTURE WHITEPAPER**
 **Document Classification:** PUBLIC (Whitepaper Draft)
 **Subject:** Policy-Driven, Cryptographically Verifiable Offensive Execution Fabric

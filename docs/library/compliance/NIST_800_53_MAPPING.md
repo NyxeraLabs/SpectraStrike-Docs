@@ -1,8 +1,3 @@
----
-layout: default
-title: NIST 800 53 MAPPING
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

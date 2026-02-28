@@ -1,8 +1,3 @@
----
-layout: default
-title: task-04-operator-execution-reconciliation-test
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

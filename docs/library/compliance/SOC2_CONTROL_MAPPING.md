@@ -1,8 +1,3 @@
----
-layout: default
-title: SOC2 CONTROL MAPPING
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

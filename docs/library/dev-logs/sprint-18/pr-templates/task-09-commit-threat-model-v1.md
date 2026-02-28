@@ -1,8 +1,3 @@
----
-layout: default
-title: task-09-commit-threat-model-v1
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

@@ -1,8 +1,3 @@
----
-layout: default
-title: MUTUAL ATTESTATION KEY DERIVATION
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

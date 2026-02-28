@@ -15,32 +15,34 @@
         <img src="{{ '/assets/img/product-logo.png' | relative_url }}" alt="SpectraStrike logo" class="product-logo" />
         <div>
           <h1>SpectraStrike Documentation</h1>
-          <p>Standardized operational and integration references</p>
+          <p>Operational Fabric for Attested Offensive Validation</p>
         </div>
       </div>
       <nav class="nav" aria-label="Global Links">
         <a href="https://spectrastrike.nyxera.cloud">Product</a>
-        <a href="https://docs.spectrastrike.nyxera.cloud">Docs</a>
-        <a href="https://nyxera-nexus.nyxera.cloud">Nyxera Nexus</a>
+        <a href="https://docs.vectorvue.nyxera.cloud">VectorVue Docs</a>
+        <a href="https://nyxera-nexus.nyxera.cloud">Nexus Docs</a>
+        <a href="https://nyxera.cloud">nyxera.cloud</a>
       </nav>
     </div>
   </header>
 
   <div class="shell">
     <aside class="sidebar">
-      <p class="sidebar-title">Documentation</p>
-      <a href="{{ '/overview/' | relative_url }}">Overview</a>
+      <p class="sidebar-title">Docs Home</p>
+      <a href="{{ '/' | relative_url }}">Overview</a>
       <a href="{{ '/getting-started/' | relative_url }}">Getting Started</a>
       <a href="{{ '/architecture/' | relative_url }}">Architecture</a>
-      <a href="{{ '/security/' | relative_url }}">Security</a>
-      <a href="{{ '/developers/' | relative_url }}">Developers</a>
-      <a href="{{ '/api/' | relative_url }}">API</a>
-      <a href="{{ '/integration/' | relative_url }}">Integration</a>
-      <a href="{{ '/compliance/' | relative_url }}">Compliance</a>
-      <a href="{{ '/manuals/' | relative_url }}">Manuals</a>
-      <a href="{{ '/troubleshooting/' | relative_url }}">Troubleshooting</a>
-      <a href="{{ '/reference/' | relative_url }}">Reference</a>
-      <a href="{{ '/INDEX/' | relative_url }}">INDEX.md</a>
+      <a href="{{ '/execution-engine/' | relative_url }}">Execution Engine</a>
+      <a href="{{ '/wrapper-framework/' | relative_url }}">Wrapper Framework</a>
+      <a href="{{ '/attestation-signing/' | relative_url }}">Attestation & Signing</a>
+      <a href="{{ '/telemetry-model/' | relative_url }}">Telemetry Model</a>
+      <a href="{{ '/policy-enforcement/' | relative_url }}">Policy Enforcement</a>
+      <a href="{{ '/cli-reference/' | relative_url }}">CLI Reference</a>
+      <a href="{{ '/api-reference/' | relative_url }}">API Reference</a>
+      <a href="{{ '/enterprise-deployment/' | relative_url }}">Enterprise Deployment</a>
+      <a href="{{ '/diagrams/' | relative_url }}">Diagrams</a>
+      <a href="{{ '/docs/library/' | relative_url }}">Full Library</a>
     </aside>
 
     <main class="content">{{ content }}</main>
@@ -50,14 +52,19 @@
     <div class="footer-row">
       <div class="footer-brand">
         <img src="{{ '/assets/img/nyxera-logo.png' | relative_url }}" alt="Nyxera Labs logo" class="brand-logo" />
-        <span>SpectraStrike by Nyxera Labs. All rights reserved © 2026</span>
+        <span>© 2026 Nyxera Labs — All Rights Reserved</span>
       </div>
       <div class="footer-links">
-        <a href="https://nyxera.cloud">Nyxera Cloud</a>
-        <a href="https://vectorvue.nyxera.cloud">VectorVue</a>
-        <a href="https://nyxera-nexus.nyxera.cloud">Nyxera Nexus</a>
+        <a href="https://docs.vectorvue.nyxera.cloud">VectorVue Docs</a>
+        <a href="https://nyxera-nexus.nyxera.cloud">Nexus Docs</a>
+        <a href="https://nyxera.cloud">nyxera.cloud</a>
       </div>
     </div>
   </footer>
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+  </script>
 </body>
 </html>

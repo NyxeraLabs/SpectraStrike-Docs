@@ -1,8 +1,3 @@
----
-layout: default
-title: task-04-schema-regression-ci
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli
