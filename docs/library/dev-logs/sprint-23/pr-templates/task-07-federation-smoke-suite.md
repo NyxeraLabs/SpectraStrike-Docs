@@ -1,8 +1,3 @@
----
-layout: default
-title: task-07-federation-smoke-suite
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

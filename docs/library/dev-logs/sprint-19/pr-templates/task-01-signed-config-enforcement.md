@@ -1,8 +1,3 @@
----
-layout: default
-title: task-01-signed-config-enforcement
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

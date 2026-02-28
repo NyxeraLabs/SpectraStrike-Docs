@@ -1,8 +1,3 @@
----
-layout: default
-title: task-03-execution-intent-verification-api
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli

@@ -1,8 +1,3 @@
----
-layout: default
-title: VECTORVUE API CLIENT DESIGN
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

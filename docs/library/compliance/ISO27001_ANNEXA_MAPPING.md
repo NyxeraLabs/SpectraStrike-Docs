@@ -1,8 +1,3 @@
----
-layout: default
-title: ISO27001 ANNEXA MAPPING
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

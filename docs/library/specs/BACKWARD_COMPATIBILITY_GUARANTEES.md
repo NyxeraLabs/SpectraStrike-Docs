@@ -1,8 +1,3 @@
----
-layout: default
-title: BACKWARD COMPATIBILITY GUARANTEES
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: José María Micoli

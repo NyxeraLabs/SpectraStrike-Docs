@@ -1,8 +1,3 @@
----
-layout: default
-title: task-02-trust-boundary-diagram
----
-
 <!--
 Copyright (c) 2026 NyxeraLabs
 Author: Jose Maria Micoli
